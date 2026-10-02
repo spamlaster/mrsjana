@@ -41,6 +41,6 @@ jobs:
           DEPLOY_USER: ${{ secrets.MRSJANA_DEPLOY_USER }}
         run: |
           rsync -avz --delete \
-            -e "ssh -i ~/.ssh/mrsjana_deploy" \
+            -e "ssh -i ~/.ssh/mrsjana_deploy -o IdentitiesOnly=yes" \
             dist/ \
             "$DEPLOY_USER@$DEPLOY_HOST:/var/www/mrsjana/dist/"
