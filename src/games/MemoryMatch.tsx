@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import type { SpeechWord, GameProps } from '../types'
+import { WordPicture } from '../components/WordPicture'
 import { RepetitionCounter } from '../components/RepetitionCounter'
 import './MemoryMatch.css'
 
@@ -11,16 +12,14 @@ interface Card {
 }
 
 export function MemoryMatch({ words, onComplete }: GameProps) {
-  const [cards, setCards] = useState<Card[]>([])
+  const [cards, setCards] = useState<Card[]>(() => [...words, ...words].sort(() => Math.random() - 0.5).map((word, idx) => ({
+    id: `${word.id}-${idx}`, word, isFlipped: false, isMatched: false,
+  })))
   const [flipped, setFlipped] = useState<string[]>([])
   const [matched, setMatched] = useState<string[]>([])
   const [attempts, setAttempts] = useState(0)
   const [reps, setReps] = useState(0)
   const [uniqueWordsFound, setUniqueWordsFound] = useState(new Set<string>())
-
-  useEffect(() => {
-    initializeGame()
-  }, [words])
 
   const initializeGame = () => {
     const doubled = [...words, ...words].sort(() => Math.random() - 0.5)
@@ -99,11 +98,14 @@ export function MemoryMatch({ words, onComplete }: GameProps) {
             className={`memory-card ${flipped.includes(card.id) || matched.includes(card.id) ? 'flipped' : ''}`}
             onClick={() => handleCardClick(card.id)}
             disabled={matched.includes(card.id)}
+            aria-label={flipped.includes(card.id) || matched.includes(card.id) ? card.word.word : 'Flip a mystery card'}
+            aria-pressed={flipped.includes(card.id) || matched.includes(card.id)}
           >
             <div className="card-inner">
-              <div className="card-front">?</div>
-              <div className="card-back">
+              <div className="card-front" aria-hidden="true">?</div>
+              <div className="card-back" aria-hidden={!flipped.includes(card.id) && !matched.includes(card.id)}>
                 <div className="word-content">
+                  <WordPicture word={card.word} />
                   <div className="word-display">{card.word.word}</div>
                 </div>
               </div>

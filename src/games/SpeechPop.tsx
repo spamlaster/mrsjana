@@ -1,34 +1,27 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import type { SpeechWord, GameProps } from '../types'
+import { WordPicture } from '../components/WordPicture'
 import { RepetitionCounter } from '../components/RepetitionCounter'
 import './SpeechPop.css'
 
 interface Bubble {
   id: string
   word: SpeechWord
-  x: number
-  y: number
   isPopping: boolean
 }
 
 const GOAL = 10
 
 export function SpeechPop({ words, onComplete }: GameProps) {
-  const [bubbles, setBubbles] = useState<Bubble[]>([])
+  const [bubbles, setBubbles] = useState<Bubble[]>(() => words.map(word => ({ id: word.id, word, isPopping: false })))
   const [poppedCount, setPoppedCount] = useState(0)
   const [reps, setReps] = useState(0)
   const [currentWordIndex, setCurrentWordIndex] = useState(0)
-
-  useEffect(() => {
-    createNewBubbles()
-  }, [words])
 
   const createNewBubbles = () => {
     const newBubbles: Bubble[] = words.map(word => ({
       id: word.id,
       word,
-      x: Math.random() * 80,
-      y: Math.random() * 60,
       isPopping: false,
     }))
     setBubbles(newBubbles)
@@ -79,6 +72,7 @@ export function SpeechPop({ words, onComplete }: GameProps) {
         </div>
         <div className="current-word-display">
           <span className="label">Say:</span>
+          <WordPicture word={currentWord} />
           <span className="word">{currentWord.word}</span>
         </div>
       </div>
@@ -94,13 +88,12 @@ export function SpeechPop({ words, onComplete }: GameProps) {
           <button
             key={bubble.id}
             className={`bubble ${bubble.isPopping ? 'popping' : ''}`}
-            style={{
-              left: `${bubble.x}%`,
-              top: `${bubble.y}%`,
-            }}
+            aria-label={`Pop ${bubble.word.word}`}
+            disabled={bubble.isPopping}
             onClick={() => handleBubbleClick(bubble.id)}
           >
             <div className="bubble-content">
+              <WordPicture word={bubble.word} />
               <div className="word">{bubble.word.word}</div>
             </div>
           </button>

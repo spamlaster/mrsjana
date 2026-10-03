@@ -1,5 +1,6 @@
 import type { SpeechWord } from '../types'
-import { getPlaceholderColor, getInitials } from '../utils/imageUtils'
+import { WordPicture } from './WordPicture'
+import { getPlaceholderColor } from '../utils/imageUtils'
 import './SpeechWordCard.css'
 
 interface SpeechWordCardProps {
@@ -16,7 +17,6 @@ export function SpeechWordCard({
   size = 'medium',
 }: SpeechWordCardProps) {
   const bgColor = getPlaceholderColor(word.word)
-  const initials = getInitials(word.word)
 
   return (
     <div
@@ -25,7 +25,7 @@ export function SpeechWordCard({
       style={{ '--bg-color': bgColor } as React.CSSProperties}
     >
       <div className="image-placeholder">
-        <div className="initials">{initials}</div>
+        <WordPicture word={word} />
       </div>
       <div className="word-text">{word.word}</div>
     </div>

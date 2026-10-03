@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import type { SpeechWord, GameProps } from '../types'
+import { WordPicture } from '../components/WordPicture'
 import { RepetitionCounter } from '../components/RepetitionCounter'
 import './TreasureHunt.css'
 
@@ -13,15 +14,11 @@ interface Treasure {
 const GOAL = 8
 
 export function TreasureHunt({ words, onComplete }: GameProps) {
-  const [treasures, setTreasures] = useState<Treasure[]>([])
+  const [treasures, setTreasures] = useState<Treasure[]>(() => words.map(word => ({ id: word.id, word, isRevealed: false, earned: false })))
   const [coinsEarned, setCoinsEarned] = useState(0)
   const [reps, setReps] = useState(0)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [showSayPrompt, setShowSayPrompt] = useState(false)
-
-  useEffect(() => {
-    initializeGame()
-  }, [words])
 
   const initializeGame = () => {
     const newTreasures: Treasure[] = words.map(word => ({
@@ -98,6 +95,7 @@ export function TreasureHunt({ words, onComplete }: GameProps) {
         <div className="reveal-panel">
           <div className="reveal-content">
             <p className="say-prompt">Say this word:</p>
+            <WordPicture word={revealedTreasure.word} />
             <div className="revealed-word">{revealedTreasure.word.word}</div>
             <button className="said-it-btn" onClick={handleSaidIt}>
               Said It! ✓
@@ -112,6 +110,7 @@ export function TreasureHunt({ words, onComplete }: GameProps) {
               className={`treasure-box ${treasure.isRevealed ? 'opened' : ''} ${treasure.earned ? 'earned' : ''}`}
               onClick={() => handleTreasureClick(treasure.id)}
               disabled={treasure.isRevealed}
+              aria-label={treasure.isRevealed ? treasure.word.word : "Open a treasure chest"}
             >
               {treasure.earned ? (
                 <div className="earned-state">
@@ -119,6 +118,7 @@ export function TreasureHunt({ words, onComplete }: GameProps) {
                 </div>
               ) : treasure.isRevealed ? (
                 <div className="open-state">
+                  <WordPicture word={treasure.word} />
                   <div className="word-in-box">{treasure.word.word}</div>
                 </div>
               ) : (
