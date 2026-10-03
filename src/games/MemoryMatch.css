@@ -1,0 +1,165 @@
+.memory-match {
+  padding: 1.5rem;
+}
+
+.game-stats {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-bottom: 2rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.memory-card {
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 12px;
+  background: #f0f0f0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+  perspective: 1000px;
+  position: relative;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+.memory-card:disabled {
+  cursor: default;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.memory-card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+}
+
+.card-front {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 32px;
+  font-weight: 700;
+  z-index: 2;
+}
+
+.card-back {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.word-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem;
+}
+
+.word-display {
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: capitalize;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.memory-card:not(:disabled):hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.memory-card:not(:disabled):active {
+  transform: translateY(-2px);
+}
+
+.game-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.replay-btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.replay-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+@media (max-width: 768px) {
+  .cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+  }
+
+  .card-front {
+    font-size: 24px;
+  }
+
+  .word-display {
+    font-size: 14px;
+  }
+
+  .game-stats {
+    gap: 2rem;
+  }
+}

@@ -1,0 +1,256 @@
+.treasure-hunt {
+  padding: 1.5rem;
+}
+
+.game-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.coins-earned {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.coins-icon {
+  font-size: 40px;
+}
+
+.coins-value {
+  color: #667eea;
+}
+
+.progress-text {
+  font-size: 14px;
+  color: #999;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.treasures-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1.5rem;
+  max-width: 700px;
+  margin: 2rem auto;
+}
+
+.treasure-box {
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.treasure-box:disabled {
+  cursor: default;
+}
+
+.closed-state,
+.open-state,
+.earned-state {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.treasure-box:not(:disabled) .closed-state {
+  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  box-shadow: 0 4px 15px rgba(253, 160, 133, 0.3), inset 0 -4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.box-icon {
+  font-size: 48px;
+}
+
+.treasure-box:not(:disabled):hover .closed-state {
+  transform: scale(1.05) rotateZ(-2deg);
+  box-shadow: 0 8px 25px rgba(253, 160, 133, 0.4);
+}
+
+.treasure-box:not(:disabled):active .closed-state {
+  transform: scale(0.98);
+}
+
+.treasure-box.opened .closed-state {
+  display: none;
+}
+
+.treasure-box.opened .open-state {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.word-in-box {
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: capitalize;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.treasure-box.earned .open-state {
+  display: none;
+}
+
+.treasure-box.earned .earned-state {
+  background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+  animation: earnedPulse 0.6s ease;
+}
+
+@keyframes earnedPulse {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.earned-icon {
+  font-size: 44px;
+  animation: earnedSpin 0.8s ease;
+}
+
+@keyframes earnedSpin {
+  0% {
+    transform: rotateZ(0deg) scale(0.5);
+  }
+  100% {
+    transform: rotateZ(360deg) scale(1);
+  }
+}
+
+.reveal-panel {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  margin: 2rem 0;
+  color: white;
+  text-align: center;
+  animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-content {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.say-prompt {
+  margin: 0 0 1rem;
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.revealed-word {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-transform: capitalize;
+  animation: wordReveal 0.5s ease;
+}
+
+@keyframes wordReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.said-it-btn {
+  padding: 1rem 2rem;
+  border: 2px solid white;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.said-it-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.said-it-btn:active {
+  transform: translateY(0);
+}
+
+.game-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.restart-btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.restart-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+@media (max-width: 768px) {
+  .treasures-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .revealed-word {
+    font-size: 36px;
+  }
+
+  .box-icon {
+    font-size: 36px;
+  }
+
+  .word-in-box {
+    font-size: 14px;
+  }
+}

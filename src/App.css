@@ -1,184 +1,53 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
-
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-}
-
-.hero {
-  position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
-}
-
-#center {
+.app-container {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
 }
 
-#next-steps {
-  display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-}
-
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
-}
-
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
-}
-
-.ticks {
-  position: relative;
+.screen {
+  flex: 1;
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
   width: 100%;
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
-  }
+/* Focus states for accessibility */
+button:focus-visible {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
+}
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
-  }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
+/* Ensure large tap targets for touch devices */
+@media (max-width: 768px) {
+  button {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
+
+/* Smooth transitions */
+* {
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+/* A shared playroom style for setup and practice. */
+.screen { padding-top: 30px; }
+.app-nav { max-width: 1130px; width: 100%; margin: auto; padding: 22px 20px 0; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+.app-home { color: #57418c; font-size: 20px; font-weight: 900; min-height: 44px; }
+.practice-steps { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; font-size: 12px; color: #776e85; }
+.practice-steps li { padding: 7px 12px; border-radius: 20px; background: #f0ebe3; }.practice-steps .current { background: #e6daf8; color: #57418c; font-weight: 800; }
+.category-selector, .game-selector { text-align: center; }.category-card { background: #ece3fa; color: #57418c; border: 2px solid #d5c7f1; border-radius: 24px; box-shadow: 0 5px 0 #d5c7f1; }.category-symbol { display: block; color: #9b78d2; font-size: 32px; margin-bottom: 10px; }.category-hint { display: block; font-size: 12px; font-weight: 500; margin-top: 8px; }
+.game-card { color: #343047; background: #ece3fa; border: 2px solid #d5c7f1; border-radius: 26px; box-shadow: 0 5px 0 #d5c7f1; }.game-card:nth-child(2) { background: #ffeadf; border-color: #f5ceba; box-shadow: 0 5px 0 #f5ceba; }.game-card:nth-child(3) { background: #e6eee2; border-color: #cbdcbc; box-shadow: 0 5px 0 #cbdcbc; }.game-icon { display: block; font-size: 52px; margin-bottom: 18px; }.game-description { color: #625a70; }.game-play { display: block; margin-top: 25px; font-size: 14px; font-weight: 800; }.session-header { background: #e9def8; color: #57418c; border: 2px solid #d5c7f1; border-radius: 20px; }.session-details { background: #f0eafa; }
+@media (max-width: 600px) { .app-nav { flex-direction: column; align-items: flex-start; }.practice-steps { gap: 5px; }.practice-steps li { padding: 6px 9px; }.screen { padding-top: 10px; } }
+.app-nav { position: sticky; top: 0; z-index: 10; background: #fffcf5; padding-bottom: 16px; border-bottom: 1px solid #e9e3d7; }
+.app-home { background: white; border: 2px solid #d5c7f1; padding: 8px 16px; border-radius: 16px; font-size: 15px; }
+.back-to-games { display: block; padding: 12px 18px; border-radius: 16px; margin-bottom: 18px; color: #57418c; background: #e9def8; font-weight: 800; }
+.stories-nav-label { color: #57418c; font-weight: 800; }

@@ -1,0 +1,19 @@
+.session-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.breadcrumb {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .breadcrumb {
+    font-size: 14px;
+  }
+}
