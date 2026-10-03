@@ -13,9 +13,9 @@ export function HomePage({ sounds, onStartPractice, onOpenStories }: HomePagePro
   return (
     <div className="home-page">
       <header className="home-nav">
-        <a className="brand" href="#"><span aria-hidden="true">✳</span> Mrs. Jana<span className="brand-dot">.</span></a>
+        <a className="brand" href="#/"><span aria-hidden="true">✳</span> Mrs. Jana<span className="brand-dot">.</span></a>
         <span className="nav-note">Little practice. Big adventures.</span>
-        <a className="nav-link" href="#sounds">Let’s play <span aria-hidden="true">↗</span></a>
+        <button className="nav-link" onClick={() => onStartPractice('')}>Let’s play <span aria-hidden="true">↗</span></button>
       </header>
       <main>
         <section className="hero-section">
@@ -41,8 +41,9 @@ export function HomePage({ sounds, onStartPractice, onOpenStories }: HomePagePro
           <button className="cta-button" onClick={onOpenStories}>Explore stories →</button>
         </section>
         <section className="adventure-preview">
-          <p className="eyebrow">A PEEK AT PLAYTIME</p><h2>Three ways to say “I did it!”</h2>
+          <p className="eyebrow">A PEEK AT PLAYTIME</p><h2>Four ways to say “I did it!”</h2>
           <div className="preview-grid">
+            <div className="preview-card"><span aria-hidden="true">🔑</span><h3>Key House</h3><p>Match a key. Unlock a word!</p></div>
             <div className="preview-card"><span aria-hidden="true">🃏</span><h3>Memory Match</h3><p>Flip, say, and find a pair.</p></div>
             <div className="preview-card"><span aria-hidden="true">🎈</span><h3>Speech Pop</h3><p>Say your words and pop away!</p></div>
             <div className="preview-card"><span aria-hidden="true">🏴‍☠️</span><h3>Treasure Hunt</h3><p>A word adventure full of discoveries.</p></div>

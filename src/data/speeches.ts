@@ -117,6 +117,11 @@ export const speechSounds: SpeechSound[] = [
 
 export const games = [
   {
+    id: 'key-house',
+    name: 'Key House',
+    description: 'Match colorful keys to the doors and discover picture words inside',
+  },
+  {
     id: 'memory-match',
     name: 'Memory Match',
     description: 'Flip cards to find matching pairs and practice saying the words',

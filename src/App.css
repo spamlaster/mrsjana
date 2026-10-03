@@ -51,3 +51,4 @@ button:focus-visible {
 .app-home { background: white; border: 2px solid #d5c7f1; padding: 8px 16px; border-radius: 16px; font-size: 15px; }
 .back-to-games { display: block; padding: 12px 18px; border-radius: 16px; margin-bottom: 18px; color: #57418c; background: #e9def8; font-weight: 800; }
 .stories-nav-label { color: #57418c; font-weight: 800; }
+.app-nav-actions { display: flex; gap: 10px; }

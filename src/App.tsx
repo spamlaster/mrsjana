@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { getRoute, goBack, navigate, useRoute } from './routing/router'
 import { StoriesPage } from './pages/StoriesPage'
 import { HomePage } from './pages/HomePage'
 import { SoundSelector } from './components/SoundSelector'
@@ -8,6 +8,7 @@ import { SessionHeader } from './components/SessionHeader'
 import { SessionComplete } from './components/SessionComplete'
 import { MemoryMatch } from './games/MemoryMatch'
 import { SpeechPop } from './games/SpeechPop'
+import { KeyHouse } from './games/KeyHouse'
 import { TreasureHunt } from './games/TreasureHunt'
 import {
   speechSounds,
@@ -17,103 +18,45 @@ import {
 } from './data/speeches'
 import './App.css'
 
-type Screen = 'home' | 'sound-select' | 'category-select' | 'game-select' | 'playing' | 'complete' | 'stories'
-
 interface SessionStats {
   wordsPracticed: number
   speechReps: number
 }
 
 function App() {
-  const gameRun = useRef(0)
-  const [screen, setScreen] = useState<Screen>('home')
-  const [selectedSound, setSelectedSound] = useState<string | null>(null)
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [selectedGame, setSelectedGame] = useState<string | null>(null)
-  const [sessionStats, setSessionStats] = useState<SessionStats>({
-    wordsPracticed: 0,
-    speechReps: 0,
-  })
-
+  const route = useRoute()
+  const { screen, soundId: selectedSound, categoryId: selectedCategory, gameId: selectedGame } = route
+  const sessionStats = route.stats || { wordsPracticed: 0, speechReps: 0 }
+  const soundPath = `/sounds/${selectedSound}`
+  const categoryPath = `${soundPath}/${selectedCategory}`
+  const gamePath = `${categoryPath}/${selectedGame}`
   const currentSound = selectedSound ? getSpeechSound(selectedSound) : null
   const currentCategory = selectedCategory
     ? getSpeechCategory(selectedSound || '', selectedCategory)
     : null
   const currentGameDef = selectedGame ? games.find(g => g.id === selectedGame) : null
 
-  const handleStartPractice = (soundId: string) => {
-    if (soundId) {
-      setSelectedSound(soundId)
-      setScreen('category-select')
-    } else {
-      setScreen('sound-select')
-    }
-  }
-
-  const handleSelectSound = (soundId: string) => {
-    setSelectedSound(soundId)
-    setScreen('category-select')
-  }
-
-  const handleBackFromCategory = () => {
-    setSelectedSound(null)
-    setScreen('sound-select')
-  }
-
-  const handleSelectCategory = (categoryId: string) => {
-    setSelectedCategory(categoryId)
-    setScreen('game-select')
-  }
-
-  const handleBackFromGame = () => {
-    setSelectedCategory(null)
-    setScreen('category-select')
-  }
-
-  const handleSelectGame = (gameId: string) => {
-    gameRun.current += 1
-    setSelectedGame(gameId)
-    setScreen('playing')
-  }
-
-  const handleGameComplete = (stats: { wordsPracticed: number; speechReps: number }) => {
-    setSessionStats(stats)
-    setScreen('complete')
-  }
-
-  const handlePlayAgain = () => {
-    gameRun.current += 1
-    setScreen('playing')
-  }
-
-  const handleChooseGame = () => {
-    gameRun.current += 1
-    setScreen('game-select')
-  }
-
-  const handleChangeSound = () => {
-    setSelectedSound(null)
-    setSelectedCategory(null)
-    setSelectedGame(null)
-    setScreen('sound-select')
-  }
-
-  const handleHome = () => {
-    gameRun.current += 1
-    setSelectedSound(null)
-    setSelectedCategory(null)
-    setSelectedGame(null)
-    setScreen('home')
-  }
+  const handleStartPractice = (soundId: string) => navigate(soundId ? `/sounds/${soundId}` : '/sounds')
+  const handleSelectSound = (soundId: string) => navigate(`/sounds/${soundId}`)
+  const handleBackFromCategory = () => goBack('/sounds')
+  const handleSelectCategory = (categoryId: string) => navigate(`${soundPath}/${categoryId}`)
+  const handleBackFromGame = () => goBack(soundPath)
+  const handleSelectGame = (gameId: string) => navigate(`${categoryPath}/${gameId}`)
+  const handleGameComplete = (stats: SessionStats) => navigate(`${gamePath}/complete`, stats)
+  const handlePlayAgain = () => navigate(gamePath)
+  const handleChooseGame = () => navigate(categoryPath)
+  const handleChangeSound = () => navigate('/sounds')
+  const handleHome = () => navigate('/')
 
   const renderGame = () => {
     if (!currentCategory) return null
 
-    const run = gameRun.current
     const completeCurrentGame = (stats: SessionStats) => {
-      if (gameRun.current === run) handleGameComplete(stats)
+      if (getRoute() === route) handleGameComplete(stats)
     }
     switch (selectedGame) {
+      case 'key-house':
+        return <KeyHouse words={currentCategory.words} onComplete={completeCurrentGame} />
       case 'memory-match':
         return (
           <MemoryMatch
@@ -141,10 +84,10 @@ function App() {
   }
 
   return (
-    <div className="app-container">
+    <div className="app-container" key={`${screen}-${selectedSound}-${selectedCategory}-${selectedGame}`}>
       {screen !== 'home' && (
         <nav className="app-nav" aria-label="Practice navigation">
-          <button className="app-home" onClick={handleHome}>← Back to home</button>
+          <div className="app-nav-actions"><button className="app-home" onClick={() => goBack('/')}>← Back</button><button className="app-home" onClick={handleHome}>Home</button></div>
           {screen === 'stories' ? <span className="stories-nav-label">📚 Story time</span> : <ol className="practice-steps" aria-label="Practice steps">
             <li className={screen === 'sound-select' ? 'current' : ''} aria-current={screen === 'sound-select' ? 'step' : undefined}>1 · Sound</li>
             <li className={screen === 'category-select' ? 'current' : ''} aria-current={screen === 'category-select' ? 'step' : undefined}>2 · Words</li>
@@ -153,7 +96,7 @@ function App() {
         </nav>
       )}
       {screen === 'home' && (
-        <HomePage sounds={speechSounds} onStartPractice={handleStartPractice} onOpenStories={() => setScreen('stories')} />
+        <HomePage sounds={speechSounds} onStartPractice={handleStartPractice} onOpenStories={() => navigate('/stories')} />
       )}
 
       {screen === 'stories' && <main className="screen"><StoriesPage /></main>}
@@ -192,7 +135,7 @@ function App() {
 
       {screen === 'playing' && currentSound && currentCategory && currentGameDef && (
         <div className="screen">
-          <button className="back-to-games" onClick={handleChooseGame}>← Back to games</button>
+          <button className="back-to-games" onClick={() => goBack(categoryPath)}>← Back to games</button>
           <SessionHeader
             soundName={currentSound.name}
             categoryName={currentCategory.name}

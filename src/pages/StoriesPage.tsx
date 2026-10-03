@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { goBack, navigate, useRoute } from '../routing/router'
 import { speechSounds } from '../data/speeches'
 import { stories, type PracticeStory } from '../data/stories'
 import './StoriesPage.css'
@@ -11,17 +11,19 @@ function HighlightedText({ text, letters }: { text: string; letters: string }) {
 }
 
 function StoryReader({ story, onBack }: { story: PracticeStory; onBack: () => void }) {
-  const [page, setPage] = useState(0)
-  const [finished, setFinished] = useState(false)
+  const route = useRoute()
+  const page = (route.page || 1) - 1
+  const finished = page === story.pages.length
+  const openPage = (nextPage: number) => navigate(`/stories/${story.id}/${nextPage + 1}`)
   const current = story.pages[page]
   return (
     <article className="story-reader">
-      <button className="story-back" onClick={onBack}>← All stories</button>
+      <button className="story-back" onClick={onBack}>← Back</button>
       <p className="eyebrow">{story.targetLetters.toUpperCase()} · READ & SAY</p>
       <h1>{story.title}</h1>
       {finished ? <div className="story-finished" aria-live="polite">
         <span aria-hidden="true">🌟</span><h2>You read the whole story!</h2><p>Every word was a little adventure. Great trying!</p>
-        <button className="cta-button" onClick={() => { setPage(0); setFinished(false) }}>Read again ↻</button>
+        <button className="cta-button" onClick={() => openPage(0)}>Read again ↻</button>
       </div> : <>
         <p className="story-tip">Read together or on your own. Look for the highlighted {story.targetLetters.toUpperCase()} letters!</p>
         <progress value={page + 1} max={story.pages.length} aria-label="Story progress" />
@@ -33,9 +35,9 @@ function StoryReader({ story, onBack }: { story: PracticeStory; onBack: () => vo
           </div>
         </div>
         <div className="story-controls">
-          <button className="story-back" disabled={page === 0} onClick={() => setPage(p => p - 1)}>← Previous</button>
+          <button className="story-back" disabled={page === 0} onClick={() => openPage(page - 1)}>← Previous</button>
           <span aria-live="polite">Page {page + 1} of {story.pages.length}</span>
-          <button className="cta-button" onClick={() => page === story.pages.length - 1 ? setFinished(true) : setPage(p => p + 1)}>{page === story.pages.length - 1 ? 'Finish story ★' : 'Next page →'}</button>
+          <button className="cta-button" onClick={() => openPage(page + 1)}>{page === story.pages.length - 1 ? 'Finish story ★' : 'Next page →'}</button>
         </div>
       </>}
     </article>
@@ -43,17 +45,18 @@ function StoryReader({ story, onBack }: { story: PracticeStory; onBack: () => vo
 }
 
 export function StoriesPage() {
-  const [sound, setSound] = useState('all')
-  const [selected, setSelected] = useState<PracticeStory | null>(null)
-  if (selected) return <StoryReader key={selected.id} story={selected} onBack={() => setSelected(null)} />
+  const route = useRoute()
+  const sound = route.filter || 'all'
+  const selected = stories.find(story => story.id === route.storyId)
+  if (selected) return <StoryReader key={selected.id} story={selected} onBack={() => goBack('/stories')} />
   const available = stories.filter(story => sound === 'all' || story.soundId === sound)
   return <section className="stories-library">
     <p className="eyebrow">A LITTLE STORY. A LOT TO SAY.</p><h1>Story time!</h1>
     <p>Read an adventure and practice letters and sounds along the way.</p>
     <div className="story-filters" role="group" aria-label="Filter stories by sound">
-      {[{ id: 'all', name: 'All stories' }, ...speechSounds].map(item => <button key={item.id} aria-pressed={sound === item.id} onClick={() => setSound(item.id)}>{item.name}</button>)}
+      {[{ id: 'all', name: 'All stories' }, ...speechSounds].map(item => <button key={item.id} aria-pressed={sound === item.id} onClick={() => navigate(item.id === 'all' ? '/stories' : `/stories?sound=${item.id}`)}>{item.name}</button>)}
     </div>
-    <div className="story-grid">{available.map(story => <button className="story-card" key={story.id} onClick={() => setSelected(story)}>
+    <div className="story-grid">{available.map(story => <button className="story-card" key={story.id} onClick={() => navigate(`/stories/${story.id}/1`)}>
       <span className="story-cover" aria-hidden="true">{story.emoji}</span><span className="eyebrow">{story.targetLetters.toUpperCase()} LETTER PRACTICE · {story.pages.length} PAGES</span>
       <h2>{story.title}</h2><p>{story.description}</p><span className="game-play">Read the story →</span>
     </button>)}</div>

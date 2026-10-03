@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:routing": "node scripts/routing.test.mjs",
+    "test:key-house": "node scripts/key-house.test.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",
