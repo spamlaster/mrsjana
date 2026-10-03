@@ -43,6 +43,8 @@ jobs:
           DEPLOY_USER: ${{ secrets.MRSJANA_DEPLOY_USER }}
         run: |
           set -euo pipefail
+          # Report unexpected failures without logging commands or secret values.
+          trap 'status=$?; printf "::error::Deployment command failed at script line %s (exit %s).\n" "$LINENO" "$status"; exit "$status"' ERR
           for name in SSH_PRIVATE_KEY SSH_KNOWN_HOSTS DEPLOY_HOST DEPLOY_USER; do
             if [[ -z "${!name}" ]]; then
               echo "::error::Required deployment setting $name is empty."
@@ -51,7 +53,10 @@ jobs:
           done
           [[ "$DEPLOY_HOST" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]*$ ]] || { echo "::error::Invalid deployment host."; exit 1; }
           [[ "$DEPLOY_USER" =~ ^[a-zA-Z_][a-zA-Z0-9_-]*$ ]] || { echo "::error::Invalid deployment user."; exit 1; }
-          test -s dist/index.html
+          if ! test -s dist/index.html; then
+            echo "::error::Build output dist/index.html is missing or empty."
+            exit 1
+          fi
 
           umask 077
           ssh_dir="$(mktemp -d "$RUNNER_TEMP/mrsjana-ssh.XXXXXX")"
@@ -70,6 +75,7 @@ jobs:
             echo "::error::MRSJANA_DEPLOY_KNOWN_HOSTS must contain a verified host key entry for MRSJANA_DEPLOY_HOST."
             exit 1
           fi
+          echo "Pinned SSH host entry found."
 
           ssh_command=(ssh -F /dev/null -i "$ssh_dir/key"
             -o IdentityAgent=none -o IdentitiesOnly=yes
@@ -79,10 +85,38 @@ jobs:
             -o GlobalKnownHostsFile=/dev/null -o ConnectTimeout=15
             -o ServerAliveInterval=15 -o ServerAliveCountMax=3)
 
-          # Fail before rsync if authentication or destination permissions are wrong.
-          "${ssh_command[@]}" "$DEPLOY_USER@$DEPLOY_HOST" \
-            'test -d /var/www/mrsjana/dist && test -w /var/www/mrsjana/dist && test -x /var/www/mrsjana/dist && command -v rsync >/dev/null'
+          echo "Testing SSH connectivity with the deployment key and pinned host keys..."
+          if ! "${ssh_command[@]}" "$DEPLOY_USER@$DEPLOY_HOST" \
+            'printf "%s\n" "SSH connectivity verified."'; then
+            echo "::error::SSH connectivity failed. See the SSH error above; no files were deployed."
+            exit 1
+          fi
 
+          # Remote test failures normally have no output. Explain each prerequisite.
+          if ! "${ssh_command[@]}" "$DEPLOY_USER@$DEPLOY_HOST" '
+            if ! test -d /var/www/mrsjana/dist; then
+              echo "::error::Deployment directory /var/www/mrsjana/dist does not exist." >&2
+              exit 1
+            fi
+            if ! test -x /var/www/mrsjana/dist; then
+              echo "::error::SSH user cannot traverse /var/www/mrsjana/dist." >&2
+              exit 1
+            fi
+            if ! test -w /var/www/mrsjana/dist; then
+              echo "::error::SSH user cannot write to /var/www/mrsjana/dist." >&2
+              exit 1
+            fi
+            if ! command -v rsync >/dev/null; then
+              echo "::error::rsync is missing from the remote SSH command PATH." >&2
+              exit 1
+            fi
+            printf "%s\n" "Remote deployment prerequisites verified."
+          '; then
+            echo "::error::Remote deployment preflight failed. See the diagnostic above; no files were deployed."
+            exit 1
+          fi
+
+          echo "Deploying dist/ to /var/www/mrsjana/dist/..."
           rsync -avz --delete --delay-updates \
             -e "${ssh_command[*]}" \
             dist/ \
