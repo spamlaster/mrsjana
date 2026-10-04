@@ -17,7 +17,6 @@ export function MemoryMatch({ words, onComplete }: GameProps) {
   })))
   const [flipped, setFlipped] = useState<string[]>([])
   const [matched, setMatched] = useState<string[]>([])
-  const [attempts, setAttempts] = useState(0)
   const [reps, setReps] = useState(0)
   const [uniqueWordsFound, setUniqueWordsFound] = useState(new Set<string>())
 
@@ -32,7 +31,6 @@ export function MemoryMatch({ words, onComplete }: GameProps) {
     setCards(newCards)
     setFlipped([])
     setMatched([])
-    setAttempts(0)
     setReps(0)
     setUniqueWordsFound(new Set())
   }
@@ -45,8 +43,6 @@ export function MemoryMatch({ words, onComplete }: GameProps) {
     setFlipped(newFlipped)
 
     if (newFlipped.length === 2) {
-      setAttempts(a => a + 1)
-
       const card1 = cards.find(c => c.id === newFlipped[0])
       const card2 = cards.find(c => c.id === newFlipped[1])
 
@@ -74,48 +70,50 @@ export function MemoryMatch({ words, onComplete }: GameProps) {
 
   return (
     <div className="memory-match">
-      <div className="game-stats">
-        <div className="stat">
-          <span className="stat-label">Matches Found</span>
-          <span className="stat-value">{matched.length / 2}</span>
+      <div className="progress">
+        <span className="progress-label">Matches</span>
+        <span className="progress-value">{matched.length / 2}/{cards.length / 2}</span>
+      </div>
+
+      <div className="game-layout">
+        <div className="cards-grid">
+          {cards.map(card => (
+            <button
+              key={card.id}
+              className={`memory-card ${flipped.includes(card.id) || matched.includes(card.id) ? 'flipped' : ''}`}
+              onClick={() => handleCardClick(card.id)}
+              disabled={matched.includes(card.id)}
+              aria-label={flipped.includes(card.id) || matched.includes(card.id) ? card.word.word : 'Flip a mystery card'}
+              aria-pressed={flipped.includes(card.id) || matched.includes(card.id)}
+            >
+              <div className="card-inner">
+                <div className="card-front" aria-hidden="true">?</div>
+                <div className="card-back" aria-hidden={!flipped.includes(card.id) && !matched.includes(card.id)}>
+                  <div className="word-content">
+                    <WordPicture word={card.word} />
+                    <div className="word-display">{card.word.word}</div>
+                  </div>
+                </div>
+              </div>
+            </button>
+          ))}
         </div>
-        <div className="stat">
-          <span className="stat-label">Attempts</span>
-          <span className="stat-value">{attempts}</span>
+
+        <div className="game-sidebar">
+          <RepetitionCounter
+            reps={reps}
+            onAdd={(amount) => setReps(r => r + amount)}
+            goal={30}
+          />
         </div>
       </div>
 
-      <RepetitionCounter
-        reps={reps}
-        onAdd={(amount) => setReps(r => r + amount)}
-        goal={30}
-      />
-
-      <div className="cards-grid">
-        {cards.map(card => (
-          <button
-            key={card.id}
-            className={`memory-card ${flipped.includes(card.id) || matched.includes(card.id) ? 'flipped' : ''}`}
-            onClick={() => handleCardClick(card.id)}
-            disabled={matched.includes(card.id)}
-            aria-label={flipped.includes(card.id) || matched.includes(card.id) ? card.word.word : 'Flip a mystery card'}
-            aria-pressed={flipped.includes(card.id) || matched.includes(card.id)}
-          >
-            <div className="card-inner">
-              <div className="card-front" aria-hidden="true">?</div>
-              <div className="card-back" aria-hidden={!flipped.includes(card.id) && !matched.includes(card.id)}>
-                <div className="word-content">
-                  <WordPicture word={card.word} />
-                  <div className="word-display">{card.word.word}</div>
-                </div>
-              </div>
-            </div>
-          </button>
-        ))}
+      <div className="game-hint">
+        <p>Flip cards to find matching pairs!</p>
       </div>
 
       <div className="game-actions">
-        <button className="replay-btn" onClick={initializeGame}>
+        <button className="reset-btn" onClick={initializeGame}>
           Play Again
         </button>
       </div>

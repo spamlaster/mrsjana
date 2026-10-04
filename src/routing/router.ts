@@ -3,7 +3,7 @@ import { games, getSpeechCategory, getSpeechSound } from '../data/speeches'
 import { stories } from '../data/stories'
 
 export interface Route {
-  screen: 'home' | 'sound-select' | 'category-select' | 'game-select' | 'playing' | 'complete' | 'stories'
+  screen: 'home' | 'sound-select' | 'category-select' | 'game-select' | 'playing' | 'complete' | 'stories' | 'coach' | 'review'
   soundId?: string
   categoryId?: string
   gameId?: string
@@ -17,6 +17,7 @@ export function parseRoute(hash: string): Route {
   const [path, query] = hash.replace(/^#/, '').split('?')
   const parts = (path || '/').split('/').filter(Boolean)
   const [section, soundId, categoryId, gameId, result] = parts
+  if (section === 'coach' || section === 'review') return { screen: section }
   if (section === 'stories') {
     const filter = new URLSearchParams(query).get('sound') || 'all'
     if (!soundId) return { screen: 'stories', filter: filter === 'all' || getSpeechSound(filter) ? filter : 'all' }

@@ -1,4 +1,6 @@
 import { getRoute, goBack, navigate, useRoute } from './routing/router'
+import { PracticePage } from './pages/PracticePage'
+import { ReviewPage } from './pages/ReviewPage'
 import { StoriesPage } from './pages/StoriesPage'
 import { HomePage } from './pages/HomePage'
 import { SoundSelector } from './components/SoundSelector'
@@ -88,7 +90,7 @@ function App() {
       {screen !== 'home' && (
         <nav className="app-nav" aria-label="Practice navigation">
           <div className="app-nav-actions"><button className="app-home" onClick={() => goBack('/')}>← Back</button><button className="app-home" onClick={handleHome}>Home</button></div>
-          {screen === 'stories' ? <span className="stories-nav-label">📚 Story time</span> : <ol className="practice-steps" aria-label="Practice steps">
+          {['stories', 'coach', 'review'].includes(screen) ? <span className="stories-nav-label">{screen === 'stories' ? '📚 Story time' : screen === 'coach' ? '🌼 Practice with Ms. Jana' : 'Practice review'}</span> : <ol className="practice-steps" aria-label="Practice steps">
             <li className={screen === 'sound-select' ? 'current' : ''} aria-current={screen === 'sound-select' ? 'step' : undefined}>1 · Sound</li>
             <li className={screen === 'category-select' ? 'current' : ''} aria-current={screen === 'category-select' ? 'step' : undefined}>2 · Words</li>
             <li className={['game-select', 'playing', 'complete'].includes(screen) ? 'current' : ''} aria-current={['game-select', 'playing', 'complete'].includes(screen) ? 'step' : undefined}>3 · Play!</li>
@@ -99,6 +101,8 @@ function App() {
         <HomePage sounds={speechSounds} onStartPractice={handleStartPractice} onOpenStories={() => navigate('/stories')} />
       )}
 
+      {screen === 'coach' && <div className="screen"><PracticePage /></div>}
+      {screen === 'review' && <div className="screen"><ReviewPage /></div>}
       {screen === 'stories' && <main className="screen"><StoriesPage /></main>}
 
       {screen === 'sound-select' && (
@@ -135,7 +139,6 @@ function App() {
 
       {screen === 'playing' && currentSound && currentCategory && currentGameDef && (
         <div className="screen">
-          <button className="back-to-games" onClick={() => goBack(categoryPath)}>← Back to games</button>
           <SessionHeader
             soundName={currentSound.name}
             categoryName={currentCategory.name}

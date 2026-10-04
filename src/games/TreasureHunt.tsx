@@ -75,64 +75,78 @@ export function TreasureHunt({ words, onComplete }: GameProps) {
     ? treasures.find(t => t.id === selectedId)
     : null
 
+  const unrevealed = treasures.find(t => !t.isRevealed && !t.earned)
+  const currentWord = unrevealed?.word || treasures[0]?.word
+
   return (
     <div className="treasure-hunt">
-      <div className="game-header">
-        <div className="coins-earned">
-          <span className="coins-icon">💰</span>
-          <span className="coins-value">{coinsEarned}/{GOAL}</span>
-        </div>
-        <div className="progress-text">Coins Earned</div>
+      <div className="progress">
+        <span className="progress-label">Coins</span>
+        <span className="progress-value">{coinsEarned}/{GOAL}</span>
       </div>
 
-      <RepetitionCounter
-        reps={reps}
-        onAdd={(amount) => setReps(r => r + amount)}
-        goal={30}
-      />
+      {!showSayPrompt && (
+        <div className="current-word-display">
+          <WordPicture word={currentWord} />
+          <span className="word">{currentWord.word}</span>
+        </div>
+      )}
 
       {showSayPrompt && revealedTreasure ? (
         <div className="reveal-panel">
           <div className="reveal-content">
-            <p className="say-prompt">Say this word:</p>
             <WordPicture word={revealedTreasure.word} />
             <div className="revealed-word">{revealedTreasure.word.word}</div>
-            <button className="said-it-btn" onClick={handleSaidIt}>
+            <button className="cta-button" onClick={handleSaidIt}>
               Said It! ✓
             </button>
           </div>
         </div>
       ) : (
-        <div className="treasures-grid">
-          {treasures.map(treasure => (
-            <button
-              key={treasure.id}
-              className={`treasure-box ${treasure.isRevealed ? 'opened' : ''} ${treasure.earned ? 'earned' : ''}`}
-              onClick={() => handleTreasureClick(treasure.id)}
-              disabled={treasure.isRevealed}
-              aria-label={treasure.isRevealed ? treasure.word.word : "Open a treasure chest"}
-            >
-              {treasure.earned ? (
-                <div className="earned-state">
-                  <span className="earned-icon">⭐</span>
-                </div>
-              ) : treasure.isRevealed ? (
-                <div className="open-state">
-                  <WordPicture word={treasure.word} />
-                  <div className="word-in-box">{treasure.word.word}</div>
-                </div>
-              ) : (
-                <div className="closed-state">
-                  <span className="box-icon">📦</span>
-                </div>
-              )}
-            </button>
-          ))}
+        <div className="game-layout">
+          <div className="treasures-grid">
+            {treasures.map(treasure => (
+              <button
+                key={treasure.id}
+                className={`treasure-box ${treasure.isRevealed ? 'opened' : ''} ${treasure.earned ? 'earned' : ''}`}
+                onClick={() => handleTreasureClick(treasure.id)}
+                disabled={treasure.isRevealed}
+                aria-label={treasure.isRevealed ? treasure.word.word : "Open a treasure chest"}
+              >
+                {treasure.earned ? (
+                  <div className="earned-state">
+                    <span className="earned-icon">⭐</span>
+                  </div>
+                ) : treasure.isRevealed ? (
+                  <div className="open-state">
+                    <WordPicture word={treasure.word} />
+                    <div className="word-in-box">{treasure.word.word}</div>
+                  </div>
+                ) : (
+                  <div className="closed-state">
+                    <span className="box-icon">📦</span>
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
+
+          <div className="game-sidebar">
+            <RepetitionCounter
+              reps={reps}
+              onAdd={(amount) => setReps(r => r + amount)}
+              goal={30}
+            />
+          </div>
         </div>
       )}
 
+      <div className="game-hint">
+        <p>Open treasure chests to find words!</p>
+      </div>
+
       <div className="game-actions">
-        <button className="restart-btn" onClick={initializeGame}>
+        <button className="reset-btn" onClick={initializeGame}>
           Start Over
         </button>
       </div>

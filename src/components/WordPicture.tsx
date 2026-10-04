@@ -50,8 +50,37 @@ const pictures: Record<string, ReactNode> = {
   truck: <><path d="M10 28h48v44H10z" fill="#8d78cd" /><path d="M58 43h21l12 14v15H58z" fill="#ffc957" /><path d="M64 49h12l8 10H64z" fill="#c5e5ef" /><circle cx="28" cy="75" r="11" fill="#343047" /><circle cx="76" cy="75" r="11" fill="#343047" /></>,
 }
 
+const emojiMap: Record<string, string> = {
+  zebra: '🦓', zero: '0️⃣', zoo: '🦁', zone: '🗺️', zipper: '🤐', zoom: '🔭', zap: '⚡', zest: '✨', zombie: '🧟', buzz: '🐝', fizz: '✨', fuzz: '☁️', jazz: '🎷', quiz: '❓', dizzy: '😵', dozen: '12️⃣', puzzle: '🧩', wizard: '🧙',
+  van: '🚐', vase: '🌺', vest: '🦺', vine: '🍇', violin: '🎻', volcano: '🌋', vote: '🗳️', visit: '👋', velvet: '🧵', video: '📹', seven: '7️⃣', even: '🆚', never: '🚫', river: '💧', level: '📊', heaven: '☁️', avenue: '🛣️', oven: '🔥', favor: '❤️', have: '👐', live: '🏠', love: '❤️', save: '💾', cave: '⛰️', brave: '💪', curve: '↪️', active: '⚡', develop: '🏗️', prove: '✅', serve: '🏐',
+  face: '😊', fan: '🌀', farm: '🌾', fast: '⚡', father: '👨', feet: '🦶', fish: '🐟', five: '5️⃣', fly: '🪰', fork: '🍴', fox: '🦊', fun: '🎉', after: '⏳', before: '⏮️', coffee: '☕', different: '❓', elephant: '🐘', life: '💚', office: '🏢', safety: '🛡️', soften: '☁️', waffle: '🧇', beef: '🍖', brief: '📝', chief: '👑', chef: '👨‍🍳', loaf: '🍞', roof: '🏠', safe: '🔒', self: '🪞', shelf: '📚', flame: '🔥', flash: '⚡', flat: '📏', float: '⛵', floor: '🏠', flower: '🌻', frame: '🖼️', fresh: '🍃',
+  jacket: '🧥', jam: '🍓', jar: '🫙', jelly: '🍮', jewel: '💎', job: '💼', joke: '😂', journey: '🚀', judge: '⚖️', jump: '🦘', adjust: '🔧', agent: '🕵️', angel: '😇', engine: '🚗', finger: '👆', ginger: '🫑', imagine: '💭', magic: '✨', page: '📄', project: '📋', badge: '🏅', cage: '🔗', edge: '🔪', garage: '🏠', huge: '📏', lodge: '🏠', orange: '🍊', stage: '🎭', bridge: '🌉', cabbage: '🥬', danger: '⚠️', digest: '📖', enjoy: '😊', gentle: '🤲', range: '📊', village: '🏘️',
+  paint: '🎨', pan: '🍳', park: '🎡', parrot: '🦜', pear: '🍐', pen: '✏️', penguin: '🐧', pig: '🐷', pink: '🌸', pizza: '🍕', plane: '✈️', play: '🎮', apple: '🍎', carpet: '🧵', happy: '😊', hoppy: '🦘', open: '🚪', paper: '📰', puppet: '🪀', super: '⭐', cap: '🧢', cup: '🥤', drip: '💧', gap: '〰️', grip: '✊', hop: '🦘', keep: '📌', stop: '🛑', trap: '🪤', place: '📍', plan: '📋', plate: '🍽️', please: '🙏', pray: '🙏', present: '🎁', pretend: '🎭', prince: '👑', prize: '🏆',
+  baby: '👶', back: '🔙', ball: '⚽', banana: '🍌', bat: '🦇', beach: '🏖️', bear: '🐻', bed: '🛏️', bee: '🐝', bike: '🚲', bird: '🐦', cabin: '🏠', cobweb: '🕷️', rabbit: '🐰', rubber: '🛞', probably: '🤔', robin: '🐦', absorb: '💧', cab: '🚕', club: '🏌️', crab: '🦀', crib: '🛏️', curb: '🛣️', grab: '✊', robe: '👗', tube: '🔬', black: '⬛', blanket: '🛏️', blue: '🔵', brick: '🧱', bride: '👰', bright: '☀️', bring: '🎁', brother: '👨', brown: '🟤',
+  table: '🪑', tail: '🐶', take: '✋', talk: '💬', teacher: '👩‍🏫', tea: '☕', ten: '🔟', tent: '⛺', tiger: '🐯', time: '⏰', tire: '🛞', toad: '🐸', better: '👍', bottle: '🍾', butter: '🧈', button: '🔘', cottage: '🏠', kitten: '🐱', letter: '✉️', little: '🤏', mitten: '🧤', water: '💧', beat: '💓', boot: '👢', boat: '⛵', cat: '🐱', dot: '⚪', eat: '🍽️', got: '✅', hat: '🎩', train: '🚂', tree: '🌳', trick: '🎭', trip: '✈️', true: '✅', trust: '🤝', twist: '🌪️', twelve: '🔢',
+  dad: '👨', daisy: '🌼', dance: '💃', dark: '🌑', day: '☀️', desk: '🪑', dial: '📞', dig: '🏗️', doll: '🪆', dog: '🐕', door: '🚪', dove: '🕊️', body: '👀', buddy: '👬', idea: '💡', lady: '👩', ladder: '🪜', muddy: '💩', puddle: '💧', teddy: '🧸', bid: '💰', board: '🎯', bread: '🍞', cold: '❄️', good: '👍', hand: '✋', head: '🧠', dragon: '🐉', drain: '💧', drama: '🎭', draw: '✏️', dream: '💭', dress: '👗', dried: '🏜️', drink: '🍹', drive: '🚗', drop: '💧',
+  kale: '🥬', kayak: '🛶', kept: '🤝', kettle: '🫖', kick: '⚽', kid: '👦', kill: '❌', king: '👑', kite: '🪁', ankle: '👣', bucket: '🪣', chicken: '🍗', cookie: '🍪', joker: '🃏', market: '🛒', pocket: '👖', rocket: '🚀', ticket: '🎫', book: '📖', break: '☕', cake: '🎂', check: '✅', duck: '🦆', like: '👍', milk: '🥛', ask: '❓', make: '✋', mask: '🎭', shake: '🤝', snake: '🐍', speak: '💬',
+  game: '🎮', garden: '🌻', gate: '🚪', gave: '🎁', gift: '🎁', girl: '👧', give: '✋', glass: '🥛', go: '🏃', goat: '🐐', gold: '💛', gone: '👋', anger: '😠', bigger: '📏', budget: '💰', eagle: '🦅', foggy: '🌫️', juggle: '🤹', magnet: '🧲', wagon: '🚜', bag: '👜', big: '📏', bug: '🐛', drug: '💊', egg: '🥚', flag: '🚩', fog: '🌫️', hug: '🤗', glove: '🧤', grace: '🙏', grade: '📊', grain: '🌾', grand: '🏰', grape: '🍇', grass: '🌱', gray: '🩶', green: '💚',
+  wait: '⏳', wake: '😴', walk: '🚶', wall: '🧱', want: '🙋', watch: '⌚', wave: '👋', way: '🛣️', we: '👥', well: '🌊', always: '⏰', away: '🏃', between: '〰️', beware: '⚠️', drawing: '🖍️', forward: '⏭️', growing: '📈', power: '⚡', sewing: '🧵', tower: '🗼', blew: '💨', bow: '🏹', brew: '☕', chew: '😁', cow: '🐄', few: '🤏', how: '❓', new: '✨', snow: '❄️', award: '🏆', aware: '👁️', anyway: '🤷', crown: '👑', down: '⬇️', know: '🧠', show: '🎪', slow: '🐢',
+  yard: '🏡', yarn: '🧵', year: '📅', yell: '📢', yellow: '💛', yes: '✅', yet: '⏰', you: '👆', young: '👶', your: '🫵', beyond: '➡️', canyon: '🏜️', crayon: '🖍️', layer: '📚', lawyer: '⚖️', player: '🎮', prayer: '🙏', royal: '👑', voyage: '⛵', boy: '👦', busy: '🏃', buy: '🛒', cry: '😭', dry: '🏜️', shy: '😳', beautiful: '✨', bicycle: '🚲', city: '🏙️', copy: '📋', family: '👨‍👩‍👧', funny: '😂', money: '💰', story: '📖',
+  mail: '📬', map: '🗺️', match: '🔥', maybe: '🤔', mom: '👩', moon: '🌙', mouse: '🐭', mouth: '👄', move: '📦', animal: '🦁', camera: '📷', camel: '🐪', coming: '👉', hammer: '🔨', home: '🏠', lemon: '🍋', name: '📝', summer: '☀️', arm: '💪', beam: '💡', boom: '💥', cream: '🍦', dam: '🪨', gem: '💎', gym: '🏋️', ham: '🍖', smart: '🧠', smell: '👃', smile: '😊', smith: '🔨', smoke: '💨', smooth: '☁️', snap: '🤏', swamp: '🌿', theme: '🎭',
+  nail: '🔨', napkin: '🧻', navy: '⚓', near: '📍', neck: '👕', need: '🙏', nest: '🏠', nine: '9️⃣', no: '❌', nose: '👃', note: '📝', begin: '🔜', belong: '🏠', candle: '🕯️', dinner: '🍽️', listen: '👂', bean: '🫘', been: '✅', born: '👶', brain: '🧠', chain: '⛓️', clean: '🧼', ant: '🐜', branch: '🌳', friend: '👫', plant: '🌱', print: '🖨️', sound: '🔊', thank: '🙏',
+  balloon: '🎈', below: '⬇️', color: '🎨', dollar: '💵', pillow: '🛏️', sad: '😢', soap: '🧼', sock: '🧦', seal: '🦭', sit: '🪑', six: '6️⃣', star: '⭐', answer: '💡', baseball: '⚾', basket: '🧺', easy: '😌', fossil: '🦴', insect: '🦗', music: '🎵', bus: '🚌', class: '🏫', cross: '❌', kiss: '💋', loss: '😞', miss: '😘', scale: '⚖️', scare: '😨', skate: '⛸️', skeleton: '💀', skirt: '👗', slide: '🛝', space: '🚀', square: '⬜',
+  lamp: '💡', lion: '🦁', lips: '👄', lock: '🔒', log: '🪵', lunch: '🍱', lollipop: '🍭', anything: '🌀', birthday: '🎂', bathing: '🛁', feather: '🪶', gather: '👥', leather: '🧥', mother: '👩', other: '🔄', weather: '⛅', bath: '🛁', both: '👯', cloth: '🧺', earth: '🌍', math: '🔢', month: '📅', path: '🛣️', teeth: '😁', tooth: '🦷', with: '👋', the: '🔤', that: '👉', them: '👥', then: '⏰', there: '📍', these: '👇', they: '👥', this: '👈', those: '👉', through: '➡️',
+  shade: '🌳', shadow: '👤', shape: '🔷', share: '🤝', sharp: '🔪', she: '👩', sheep: '🐑', shell: '🐚', shine: '✨', ship: '🚢', shoe: '👟', shop: '🛒', short: '🤏', shoulder: '💪', shout: '📢', shower: '🚿', shut: '🔐', shrimp: '🦐', shrink: '📉', shrug: '🤷',
+}
+
 export function WordPicture({ word }: { word: SpeechWord }) {
   const picture = pictures[word.word.toLowerCase()]
-  if (!picture) return null
-  return <svg className="word-picture" viewBox="0 0 100 100" role="img" aria-label={word.imageAlt} fill="none" stroke="#51475d" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">{picture}</svg>
+  const emoji = emojiMap[word.word.toLowerCase()]
+
+  if (picture) {
+    return <svg className="word-picture" viewBox="0 0 100 100" role="img" aria-label={word.imageAlt} fill="none" stroke="#51475d" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">{picture}</svg>
+  }
+
+  if (emoji) {
+    return <div className="word-emoji" role="img" aria-label={word.imageAlt}>{emoji}</div>
+  }
+
+  return null
 }

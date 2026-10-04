@@ -13,7 +13,7 @@ export function HomePage({ sounds, onStartPractice, onOpenStories }: HomePagePro
   return (
     <div className="home-page">
       <header className="home-nav">
-        <a className="brand" href="#/"><span aria-hidden="true">✳</span> Mrs. Jana<span className="brand-dot">.</span></a>
+        <a className="brand" href="#/"><span aria-hidden="true">✳</span> Ms. Jana<span className="brand-dot">.</span></a>
         <span className="nav-note">Little practice. Big adventures.</span>
         <button className="nav-link" onClick={() => onStartPractice('')}>Let’s play <span aria-hidden="true">↗</span></button>
       </header>
@@ -36,6 +36,7 @@ export function HomePage({ sounds, onStartPractice, onOpenStories }: HomePagePro
         </section>
         <div className="play-strip"><span>✦ A little learning</span><span>♡ A lot of cheering</span><span>★ A whole bunch of fun</span></div>
         <section className="sounds-section" id="sounds"><SoundSelector sounds={sounds} onSelect={onStartPractice} /></section>
+        <div className="practice-links"><a href="#/coach">🌼 Practice with Ms. Jana →</a><a href="#/review">Adult review →</a></div>
         <section className="home-stories">
           <span aria-hidden="true">📚</span><div><p className="eyebrow">READ · DISCOVER · SAY</p><h2>It’s story time!</h2><p>Little adventures with letters to spot and words to practice.</p></div>
           <button className="cta-button" onClick={onOpenStories}>Explore stories →</button>

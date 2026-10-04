@@ -44,7 +44,7 @@ assert.strictEqual(getRoute(), getRoute(), 'Snapshots must be stable between cha
 for (const [path, screen] of [
   ['#/sounds', 'sound-select'], ['#/sounds/r', 'category-select'],
   ['#/sounds/r/r-initial', 'game-select'], ['#/sounds/r/r-initial/memory-match', 'playing'], ['#/sounds/r/r-initial/key-house', 'playing'],
-  ['#/sounds/r/r-initial/memory-match/complete', 'complete'], ['#/stories', 'stories'],
+  ['#/sounds/r/r-initial/memory-match/complete', 'complete'], ['#/stories', 'stories'], ['#/coach', 'coach'], ['#/review', 'review'],
 ]) assert.equal(parseRoute(path).screen, screen)
 assert.equal(parseRoute('#/sounds/s').screen, 'sound-select')
 assert.equal(parseRoute('#/sounds/unknown').screen, 'sound-select')

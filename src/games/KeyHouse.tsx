@@ -38,8 +38,22 @@ export function KeyHouse({ words, onComplete }: GameProps) {
     : state.feedback === 'said' ? 'Great trying! Pick another key.' : 'Pick a key, then tap its matching door.'
 
   if (!doors.length) return <p>No practice words available. Choose another category.</p>
+
+  const currentDoor = doors.find(d => d.key.id === state.selectedKey) || doors[0]
+
   return <section className="key-house-game" aria-label="Key House game">
-    <div className="key-house-heading"><div><p className="eyebrow">MATCH · UNLOCK · SAY</p><h2>The little key house</h2></div><span className="house-score">🏠 {state.practiced.length} / {doors.length} doors</span></div>
+    <div className="progress">
+      <span className="progress-label">Doors</span>
+      <span className="progress-value">{state.practiced.length}/{doors.length}</span>
+    </div>
+
+    {state.selectedKey && (
+      <div className="current-word-display">
+        <WordPicture word={currentDoor.word} />
+        <span className="word">{currentDoor.word.word}</span>
+      </div>
+    )}
+
     <p className="house-instruction" role="status">{message}</p>
     <div className="house-scene">
       <div className="house-roof" aria-hidden="true"><span>★</span></div>
