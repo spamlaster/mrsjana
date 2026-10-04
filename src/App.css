@@ -41,14 +41,13 @@ button:focus-visible {
 /* A shared playroom style for setup and practice. */
 .screen { padding-top: 30px; }
 .app-nav { max-width: 1130px; width: 100%; margin: auto; padding: 22px 20px 0; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
-.app-home { color: #57418c; font-size: 20px; font-weight: 900; min-height: 44px; }
+.app-home { color: #7658c9; font-size: 15px; font-weight: 800; min-height: 44px; padding: 8px 16px; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; }.app-home:hover { background: #f0ebe3; color: #57418c; }
 .practice-steps { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; font-size: 12px; color: #776e85; }
-.practice-steps li { padding: 7px 12px; border-radius: 20px; background: #f0ebe3; }.practice-steps .current { background: #e6daf8; color: #57418c; font-weight: 800; }
+.practice-steps li { padding: 7px 12px; border-radius: 20px; background: #f0ebe3; }.practice-steps .current { background: #7658c9; color: white; font-weight: 800; }
 .category-selector, .game-selector { text-align: center; }.category-card { background: #ece3fa; color: #57418c; border: 2px solid #d5c7f1; border-radius: 24px; box-shadow: 0 5px 0 #d5c7f1; }.category-symbol { display: block; color: #9b78d2; font-size: 32px; margin-bottom: 10px; }.category-hint { display: block; font-size: 12px; font-weight: 500; margin-top: 8px; }
 .game-card { color: #343047; background: #ece3fa; border: 2px solid #d5c7f1; border-radius: 26px; box-shadow: 0 5px 0 #d5c7f1; }.game-card:nth-child(2) { background: #ffeadf; border-color: #f5ceba; box-shadow: 0 5px 0 #f5ceba; }.game-card:nth-child(3) { background: #e6eee2; border-color: #cbdcbc; box-shadow: 0 5px 0 #cbdcbc; }.game-icon { display: block; font-size: 52px; margin-bottom: 18px; }.game-description { color: #625a70; }.game-play { display: block; margin-top: 25px; font-size: 14px; font-weight: 800; }.session-header { background: #e9def8; color: #57418c; border: 2px solid #d5c7f1; border-radius: 20px; }.session-details { background: #f0eafa; }
 @media (max-width: 600px) { .app-nav { flex-direction: column; align-items: flex-start; }.practice-steps { gap: 5px; }.practice-steps li { padding: 6px 9px; }.screen { padding-top: 10px; } }
 .app-nav { position: sticky; top: 0; z-index: 10; background: #fffcf5; padding-bottom: 16px; border-bottom: 1px solid #e9e3d7; }
-.app-home { background: white; border: 2px solid #d5c7f1; padding: 8px 16px; border-radius: 16px; font-size: 15px; }
-.back-to-games { display: block; padding: 12px 18px; border-radius: 16px; margin-bottom: 18px; color: #57418c; background: #e9def8; font-weight: 800; }
+.back-to-games { display: block; padding: 12px 18px; border-radius: 16px; margin-bottom: 18px; color: white; background: #7658c9; font-weight: 800; border: none; cursor: pointer; transition: all 0.2s ease; }.back-to-games:hover { background: #57418c; }
 .stories-nav-label { color: #57418c; font-weight: 800; }
 .app-nav-actions { display: flex; gap: 10px; }

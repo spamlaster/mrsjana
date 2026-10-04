@@ -1,4 +1,4 @@
-import { goBack, navigate, useRoute } from '../routing/router'
+import { navigate, useRoute } from '../routing/router'
 import { speechSounds } from '../data/speeches'
 import { stories, type PracticeStory } from '../data/stories'
 import './StoriesPage.css'
@@ -10,7 +10,7 @@ function HighlightedText({ text, letters }: { text: string; letters: string }) {
     ? <mark key={index}>{part}</mark> : part)}</>
 }
 
-function StoryReader({ story, onBack }: { story: PracticeStory; onBack: () => void }) {
+function StoryReader({ story }: { story: PracticeStory }) {
   const route = useRoute()
   const page = (route.page || 1) - 1
   const finished = page === story.pages.length
@@ -18,7 +18,6 @@ function StoryReader({ story, onBack }: { story: PracticeStory; onBack: () => vo
   const current = story.pages[page]
   return (
     <article className="story-reader">
-      <button className="story-back" onClick={onBack}>← Back</button>
       <p className="eyebrow">{story.targetLetters.toUpperCase()} · READ & SAY</p>
       <h1>{story.title}</h1>
       {finished ? <div className="story-finished" aria-live="polite">
@@ -35,7 +34,7 @@ function StoryReader({ story, onBack }: { story: PracticeStory; onBack: () => vo
           </div>
         </div>
         <div className="story-controls">
-          <button className="story-back" disabled={page === 0} onClick={() => openPage(page - 1)}>← Previous</button>
+          <button className="story-prev" disabled={page === 0} onClick={() => openPage(page - 1)}>← Previous</button>
           <span aria-live="polite">Page {page + 1} of {story.pages.length}</span>
           <button className="cta-button" onClick={() => openPage(page + 1)}>{page === story.pages.length - 1 ? 'Finish story ★' : 'Next page →'}</button>
         </div>
@@ -48,7 +47,7 @@ export function StoriesPage() {
   const route = useRoute()
   const sound = route.filter || 'all'
   const selected = stories.find(story => story.id === route.storyId)
-  if (selected) return <StoryReader key={selected.id} story={selected} onBack={() => goBack('/stories')} />
+  if (selected) return <StoryReader key={selected.id} story={selected} />
   const available = stories.filter(story => sound === 'all' || story.soundId === sound)
   return <section className="stories-library">
     <p className="eyebrow">A LITTLE STORY. A LOT TO SAY.</p><h1>Story time!</h1>
