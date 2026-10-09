@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react'
 import { games, getSpeechCategory, getSpeechSound } from '../data/speeches'
 import { stories } from '../data/stories'
+import { trackPageView } from './analytics'
 
 export interface Route {
   screen: 'home' | 'sound-select' | 'category-select' | 'game-select' | 'playing' | 'complete' | 'stories' | 'coach' | 'review'
@@ -67,6 +68,7 @@ export function navigate(path: string, stats?: Route['stats']) {
   // Invalidate even when returning to a previously visited URL: old game callbacks must stay stale.
   cachedKey = ''
   emit()
+  trackPageView()
   window.scrollTo(0, 0)
 }
 
