@@ -16,6 +16,7 @@ export interface SpeechCategory {
 export interface SpeechSound {
   id: string
   name: string
+  emoji?: string
   categories: SpeechCategory[]
   description?: string
   comingSoon?: boolean
