@@ -1,15 +1,98 @@
-.progress { position: absolute; top: 100px; left: 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
-.progress-label { font-size: 10px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.5px; }
-.progress-value { font-size: 24px; font-weight: 700; color: #667eea; }
-.current-word-display { display: flex; align-items: center; justify-content: center; gap: 1.5rem; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 2rem; border-radius: 16px; margin-bottom: 1rem; }
-.current-word-display .word { font-size: 48px; font-weight: 700; text-transform: capitalize; }
-.current-word-display .word-picture, .current-word-display .word-emoji { width: 100px; height: 100px; }
-.current-word-display .word-emoji { font-size: 60px; }
-.key-house-game { max-width: 850px; margin: auto; padding: 10px 0 20px; }.key-house-heading { display: flex; justify-content: space-between; gap: 15px; align-items: center; }.key-house-heading .eyebrow { margin-bottom: 8px; }.key-house-heading h2 { font-size: clamp(24px, 4vw, 34px); }.house-score { background: #e6eee2; padding: 10px 16px; border-radius: 20px; font-weight: 800; white-space: nowrap; }.house-instruction { text-align: center; padding: 10px 12px; margin: 8px 0; background: #ece3fa; border-radius: 12px; color: #57418c; font-weight: 700; font-size: 14px; min-height: auto; }.house-scene { max-width: 600px; margin: auto; filter: drop-shadow(0 7px 0 #eadfcc); }.house-roof { height: 90px; background: #ca796b; clip-path: polygon(50% 0, 100% 100%, 0 100%); display: flex; justify-content: center; align-items: flex-end; padding-bottom: 10px; }.house-roof span { color: #ffe0a1; font-size: 35px; }.house-walls { background: #f7e7c8; padding: 22px; border: 4px solid #e7cfa4; border-top: 0; border-radius: 0 0 22px 22px; }.house-doors { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }.house-door { aspect-ratio: .84; position: relative; border-radius: 50px 50px 10px 10px; background: #fffaf0; border: 5px solid #cba779; perspective: 700px; }.house-door-face { position: absolute; inset: 0; background: var(--door-color); border-radius: 44px 44px 5px 5px; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; transform-origin: left; transition: transform .65s ease, opacity .65s ease; backface-visibility: hidden; box-shadow: inset -5px -5px 0 #00000012; }.door-window { border: 4px solid #ffffff70; border-radius: 50%; background: #fff2; width: 38px; height: 38px; color: white; font-size: 22px; }.house-lock-shape { width: 40px; height: 40px; }.door-knob { width: 13px; height: 13px; border-radius: 50%; background: #ffdf85; border: 2px solid #9c7449; position: absolute; right: 10px; bottom: 24px; }.house-door-surprise { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; opacity: 0; transition: opacity .5s ease; color: #343047; font-weight: 800; text-transform: capitalize; font-size: 15px; }.house-door-surprise .word-picture { width: 80%; height: auto; max-height: 100px; }.house-door.is-open .house-door-face { transform: rotateY(-105deg); opacity: 0; pointer-events: none; }.house-door.is-open .house-door-surprise { opacity: 1; }.house-door:disabled { opacity: 1; cursor: default; }.house-door:not(:disabled):hover { transform: translateY(-3px); }.door-done { color: #b8861c; }.house-key-tray { margin: 28px 0 0; padding: 22px; background: #e8eef5; border: 2px solid #d0dde9; border-radius: 26px; text-align: center; }.house-key-tray h3 { font-size: 22px; }.house-key-tray > p { color: var(--text-light); font-size: 14px; margin: 8px 0 18px; }.house-keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }.house-key { background: #fffcf5; border: 3px solid transparent; padding: 10px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; }.house-key-picture { width: 100%; max-width: 150px; height: 60px; }.house-key > span { font-size: 12px; font-weight: 700; text-transform: capitalize; color: #51475d; }.house-key.is-selected { border-color: #7154bd; box-shadow: 0 0 0 3px #7154bd33; transform: translateY(-3px); }.house-key:disabled { opacity: .35; }.house-word-reveal { display: flex; align-items: center; gap: 20px; background: #ece3fa; border: 2px solid #d5c7f1; border-radius: 24px; padding: 22px; margin-top: 28px; animation: houseReveal .4s ease; }.house-word-reveal > .word-picture { width: 100px; height: 100px; }.house-word-reveal h3 { font-size: 30px; text-transform: capitalize; margin: 4px 0; }.house-word-reveal p { font-size: 14px; }.house-word-reveal .cta-button { margin-left: auto; white-space: nowrap; }.house-finish { text-align: center; padding: 30px; }.house-finish > span { font-size: 50px; }.house-finish h3 { margin: 12px 0 20px; }.house-reset { display: block; margin: 24px auto 0; padding: 12px 20px; border-radius: 16px; background: #eee5db; color: #57418c; font-weight: 700; }
+/* Status bar: progress, instructions and the chosen word share one slim row so the house stays near the top. */
+.key-house-game { max-width: 1000px; margin: auto; padding: 0 0 20px; }
+.house-status { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; min-height: 56px; }
+.key-house-game .progress { position: static; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 12px; background: #fffcf5; border: 2px solid #e9e3d7; border-radius: 14px; }
+.key-house-game .progress-label { font-size: 10px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.5px; }
+.key-house-game .progress-value { font-size: 20px; font-weight: 700; color: #667eea; line-height: 1; }
+.house-instruction { flex: 1; text-align: center; padding: 10px 12px; margin: 0; background: #ece3fa; border-radius: 12px; color: #57418c; font-weight: 700; font-size: 15px; }
+.key-house-game .current-word-display { display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 6px 14px 6px 8px; border-radius: 14px; margin: 0; }
+.key-house-game .current-word-display .word { font-size: 22px; font-weight: 700; text-transform: capitalize; }
+.key-house-game .current-word-display .word-picture, .key-house-game .current-word-display .word-emoji { width: 44px; height: 44px; }
+.key-house-game .current-word-display .word-emoji { font-size: 30px; }
+
+/* The house and the keys sit side by side, so a key and its door are on screen together. */
+.house-play { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 20px; align-items: start; }
+.house-scene { width: 100%; max-width: 520px; margin: auto; filter: drop-shadow(0 7px 0 #eadfcc); }
+.house-roof { height: 60px; background: #ca796b; clip-path: polygon(50% 0, 100% 100%, 0 100%); display: flex; justify-content: center; align-items: flex-end; padding-bottom: 6px; }
+.house-roof span { color: #ffe0a1; font-size: 28px; }
+.house-walls { background: #f7e7c8; padding: 18px; border: 4px solid #e7cfa4; border-top: 0; border-radius: 0 0 22px 22px; }
+.house-doors { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.house-panel { position: sticky; top: 110px; }
+.house-key-tray { padding: 14px; background: #e8eef5; border: 2px solid #d0dde9; border-radius: 22px; text-align: center; }
+.house-key-tray h3 { font-size: 18px; margin-bottom: 10px; }
+.house-keys { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.house-key { background: #fffcf5; border: 3px solid transparent; padding: 8px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.house-key-picture { width: 100%; max-width: 120px; height: 48px; }
+.house-key > span { font-size: 12px; font-weight: 700; text-transform: capitalize; color: #51475d; }
+.house-key.is-selected { border-color: #7154bd; box-shadow: 0 0 0 3px #7154bd33; transform: translateY(-3px); }
+.house-key:disabled { opacity: .35; }
+.house-word-reveal { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; background: #ece3fa; border: 2px solid #d5c7f1; border-radius: 22px; padding: 18px; animation: houseReveal .4s ease; }
+.house-word-reveal > .word-picture { width: 100px; height: 100px; }
+.house-word-reveal h3 { font-size: 28px; text-transform: capitalize; margin: 4px 0; }
+.house-word-reveal p { font-size: 14px; }
+.house-word-reveal .cta-button { white-space: nowrap; }
+.house-finish { text-align: center; padding: 20px; background: #fffcf5; border-radius: 22px; }
+.house-finish > span { font-size: 50px; }
+.house-finish h3 { margin: 12px 0 20px; }
+
+/* Tips and reset live below the game. */
+.house-footer { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px 16px; margin-top: 20px; text-align: center; }
+.house-footer p { color: var(--text-light); font-size: 14px; }
+.house-reset { padding: 10px 18px; border-radius: 16px; background: #eee5db; color: #57418c; font-weight: 700; }
+
+/* Door details */
+.house-door { aspect-ratio: .84; position: relative; border-radius: 50px 50px 10px 10px; background: #fffaf0; border: 5px solid #cba779; perspective: 700px; }
+.house-door-face { position: absolute; inset: 0; background: var(--door-color); border-radius: 44px 44px 5px 5px; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; transform-origin: left; transition: transform .65s ease, opacity .65s ease; backface-visibility: hidden; box-shadow: inset -5px -5px 0 #00000012; }
+.door-window { border: 4px solid #ffffff70; border-radius: 50%; background: #fff2; width: 38px; height: 38px; color: white; font-size: 22px; }
+.house-lock-shape { width: 40px; height: 40px; }
+.door-knob { width: 13px; height: 13px; border-radius: 50%; background: #ffdf85; border: 2px solid #9c7449; position: absolute; right: 10px; bottom: 24px; }
+.house-door-surprise { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; opacity: 0; transition: opacity .5s ease; color: #343047; font-weight: 800; text-transform: capitalize; font-size: 15px; }
+.house-door-surprise .word-picture { width: 80%; height: auto; max-height: 100px; }
+.house-door.is-open .house-door-face { transform: rotateY(-105deg); opacity: 0; pointer-events: none; }
+.house-door.is-open .house-door-surprise { opacity: 1; }
+.house-door:disabled { opacity: 1; cursor: default; }
+.house-door:not(:disabled):hover { transform: translateY(-3px); }
+.door-done { color: #b8861c; }
+.house-door { transition: transform .15s ease, box-shadow .15s ease; }
+.house-door.is-drop-target { transform: scale(1.05); box-shadow: 0 0 0 5px #7154bd66; }
+.house-door.is-shaking { animation: doorShake .5s ease; border-color: #df5c62; }
+.house-key { touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+.house-key.is-dragging { opacity: .35; }
+.house-key-ghost { position: fixed; z-index: 50; width: 120px; pointer-events: none; transform: translate(-30px, -50%) rotate(-12deg); filter: drop-shadow(0 6px 6px #34304740); cursor: grabbing; }
+.house-key-ghost .house-key-picture { width: 120px; height: 48px; }
+@keyframes doorShake { 0%, 100% { transform: translateX(0); } 15% { transform: translateX(-9px) rotate(-2deg); } 35% { transform: translateX(9px) rotate(2deg); } 55% { transform: translateX(-6px) rotate(-1deg); } 75% { transform: translateX(6px) rotate(1deg); } }
 @keyframes houseReveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@media (max-width: 600px) { .current-word-display { flex-direction: column; gap: 1rem; padding: 1.5rem; }
-.current-word-display .word { font-size: 36px; }
-.current-word-display .word-picture, .current-word-display .word-emoji { width: 80px; height: 80px; }
-.current-word-display .word-emoji { font-size: 48px; }
-.progress { position: static; margin-bottom: 1rem; }
-.key-house-heading { flex-wrap: wrap; }.house-roof { height: 65px; }.house-walls { padding: 12px; }.house-doors { gap: 10px; }.house-door { border-width: 3px; }.door-window { width: 26px; height: 26px; font-size: 15px; border-width: 2px; }.house-lock-shape { width: 30px; height: 30px; }.door-knob { right: 5px; bottom: 12px; width: 10px; height: 10px; }.house-door-surprise { font-size: 12px; }.house-key-tray { padding: 14px; }.house-keys { grid-template-columns: repeat(2, 1fr); }.house-word-reveal { flex-wrap: wrap; gap: 12px; justify-content: center; text-align: center; }.house-word-reveal .cta-button { width: 100%; margin: 0; } }
+
+@media (max-width: 760px) {
+  .house-status { flex-wrap: wrap; gap: 8px; }
+  .house-instruction { font-size: 14px; padding: 8px 10px; }
+  .key-house-game .current-word-display { order: 3; width: 100%; flex-direction: row; justify-content: center; gap: 8px; padding: 4px 12px; }
+  .key-house-game .current-word-display .word { font-size: 20px; }
+  .key-house-game .current-word-display .word-picture, .key-house-game .current-word-display .word-emoji { width: 36px; height: 36px; }
+  .house-play { grid-template-columns: 1fr; gap: 12px; }
+  .house-roof { height: 45px; }
+  .house-roof span { font-size: 22px; }
+  .house-walls { padding: 12px; }
+  .house-doors { gap: 10px; }
+  .house-door { border-width: 3px; }
+  .door-window { width: 26px; height: 26px; font-size: 15px; border-width: 2px; }
+  .house-lock-shape { width: 30px; height: 30px; }
+  .door-knob { right: 5px; bottom: 12px; width: 10px; height: 10px; }
+  .house-door-surprise { font-size: 12px; }
+  /* On phones the keys (and the word reveal) stay pinned to the bottom of the screen. */
+  .house-panel { position: sticky; top: auto; bottom: 0; z-index: 5; margin: 0 -1rem; padding: 8px 1rem calc(8px + env(safe-area-inset-bottom)); background: #fffcf5; border-top: 1px solid #e9e3d7; box-shadow: 0 -6px 16px #3430470f; }
+  .house-key-tray { padding: 0; background: none; border: 0; }
+  .house-key-tray h3 { font-size: 13px; margin-bottom: 6px; color: #51475d; }
+  .house-keys { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+  .house-key { padding: 4px 2px; border-radius: 12px; border-width: 2px; background: #e8eef5; }
+  .house-key-picture { height: 30px; }
+  .house-key > span { display: none; }
+  .house-word-reveal { flex-direction: row; flex-wrap: wrap; justify-content: center; padding: 10px; gap: 8px 12px; }
+  .house-word-reveal > .word-picture { width: 56px; height: 56px; }
+  .house-word-reveal h3 { font-size: 22px; }
+  .house-word-reveal p { font-size: 12px; }
+  .house-word-reveal .cta-button { width: 100%; margin: 0; }
+  .house-finish { padding: 10px; }
+  .house-finish > span { font-size: 32px; }
+  .house-finish h3 { margin: 4px 0 10px; }
+}

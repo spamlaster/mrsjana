@@ -12,6 +12,15 @@
   font-weight: 600;
 }
 
+.session-header.compact {
+  padding: 0.4rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.session-header.compact .breadcrumb {
+  font-size: 14px;
+}
+
 @media (max-width: 768px) {
   .breadcrumb {
     font-size: 14px;
