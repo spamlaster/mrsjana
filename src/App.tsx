@@ -143,6 +143,7 @@ function App() {
             soundName={currentSound.name}
             categoryName={currentCategory.name}
             gameName={currentGameDef.name}
+            compact={selectedGame === 'key-house'}
           />
           {renderGame()}
         </div>
