@@ -4,6 +4,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'r',
     name: 'R',
+    emoji: '🐰',
     description: 'The /r/ sound',
     categories: [
       {
@@ -81,6 +82,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 's',
     name: 'S',
+    emoji: '☀️',
     description: 'The /s/ sound',
     categories: [
       {
@@ -158,6 +160,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'l',
     name: 'L',
+    emoji: '🦁',
     description: 'The /l/ sound',
     categories: [
       {
@@ -235,6 +238,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'th',
     name: 'TH',
+    emoji: '👍',
     description: 'The /th/ sound',
     categories: [
       {
@@ -312,6 +316,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'sh',
     name: 'SH',
+    emoji: '🦈',
     description: 'The /sh/ sound',
     categories: [
       {
@@ -389,6 +394,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'ch',
     name: 'CH',
+    emoji: '🧀',
     description: 'The /ch/ sound',
     categories: [
       {
@@ -466,6 +472,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'z',
     name: 'Z',
+    emoji: '🦓',
     description: 'The /z/ sound',
     categories: [
       { id: 'z-initial', name: 'Initial Z', soundId: 'z', words: [
@@ -521,6 +528,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'v',
     name: 'V',
+    emoji: '🎻',
     description: 'The /v/ sound',
     categories: [
       { id: 'v-initial', name: 'Initial V', soundId: 'v', words: [
@@ -576,6 +584,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'f',
     name: 'F',
+    emoji: '🐟',
     description: 'The /f/ sound',
     categories: [
       { id: 'f-initial', name: 'Initial F', soundId: 'f', words: [
@@ -633,6 +642,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'j',
     name: 'J',
+    emoji: '🧃',
     description: 'The /j/ sound',
     categories: [
       { id: 'j-initial', name: 'Initial J', soundId: 'j', words: [
@@ -688,6 +698,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'p',
     name: 'P',
+    emoji: '🐷',
     description: 'The /p/ sound',
     categories: [
       { id: 'p-initial', name: 'Initial P', soundId: 'p', words: [
@@ -745,6 +756,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'b',
     name: 'B',
+    emoji: '🎈',
     description: 'The /b/ sound',
     categories: [
       { id: 'b-initial', name: 'Initial B', soundId: 'b', words: [
@@ -802,6 +814,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 't',
     name: 'T',
+    emoji: '🐯',
     description: 'The /t/ sound',
     categories: [
       { id: 't-initial', name: 'Initial T', soundId: 't', words: [
@@ -859,6 +872,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'd',
     name: 'D',
+    emoji: '🐶',
     description: 'The /d/ sound',
     categories: [
       { id: 'd-initial', name: 'Initial D', soundId: 'd', words: [
@@ -916,6 +930,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'k',
     name: 'K',
+    emoji: '🪁',
     description: 'The /k/ sound',
     categories: [
       { id: 'k-initial', name: 'Initial K', soundId: 'k', words: [
@@ -971,6 +986,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'g',
     name: 'G',
+    emoji: '🦍',
     description: 'The /g/ sound',
     categories: [
       { id: 'g-initial', name: 'Initial G', soundId: 'g', words: [
@@ -1028,6 +1044,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'w',
     name: 'W',
+    emoji: '🐋',
     description: 'The /w/ sound',
     categories: [
       { id: 'w-initial', name: 'Initial W', soundId: 'w', words: [
@@ -1085,6 +1102,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'y',
     name: 'Y',
+    emoji: '🪀',
     description: 'The /y/ sound',
     categories: [
       { id: 'y-initial', name: 'Initial Y', soundId: 'y', words: [
@@ -1140,6 +1158,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'm',
     name: 'M',
+    emoji: '🐵',
     description: 'The /m/ sound',
     categories: [
       { id: 'm-initial', name: 'Initial M', soundId: 'm', words: [
@@ -1197,6 +1216,7 @@ export const speechSounds: SpeechSound[] = [
   {
     id: 'n',
     name: 'N',
+    emoji: '👃',
     description: 'The /n/ sound',
     categories: [
       { id: 'n-initial', name: 'Initial N', soundId: 'n', words: [

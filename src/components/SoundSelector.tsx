@@ -20,7 +20,7 @@ export function SoundSelector({ sounds, onSelect }: SoundSelectorProps) {
             onClick={() => !sound.comingSoon && onSelect(sound.id)}
             disabled={sound.comingSoon}
           >
-            <span className="sound-symbol" aria-hidden="true">{sound.comingSoon ? "✧" : "🚀"}</span>
+            <span className="sound-symbol" aria-hidden="true">{sound.comingSoon ? "✧" : sound.emoji ?? "🚀"}</span>
             <div className="sound-name">{sound.name}</div>
             {!sound.comingSoon && <span className="sound-ready">Let’s go →</span>}
             {sound.comingSoon && <div className="coming-soon-badge">Coming Soon</div>}

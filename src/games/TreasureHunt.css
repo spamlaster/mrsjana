@@ -225,7 +225,7 @@
   }
 }
 
-.cta-button {
+.reveal-panel .cta-button {
   padding: 1rem 2rem;
   border: 2px solid white;
   border-radius: 10px;
@@ -238,12 +238,12 @@
   font-family: inherit;
 }
 
-.cta-button:hover {
+.reveal-panel .cta-button:hover {
   background: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
 }
 
-.cta-button:active {
+.reveal-panel .cta-button:active {
   transform: translateY(0);
 }
 
