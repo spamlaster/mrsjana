@@ -13,6 +13,7 @@ import { SpeechPop } from './games/SpeechPop'
 import { KeyHouse } from './games/KeyHouse'
 import { TreasureHunt } from './games/TreasureHunt'
 import { StarSeekers } from './games/StarSeekers'
+import { PeekAPicture } from './games/PeekAPicture'
 import {
   speechSounds,
   games,
@@ -83,6 +84,8 @@ function App() {
         )
       case 'star-seekers':
         return <StarSeekers words={currentCategory.words} onComplete={completeCurrentGame} />
+      case 'peek-a-picture':
+        return <PeekAPicture words={currentCategory.words} onComplete={completeCurrentGame} />
       default:
         return null
     }

@@ -1248,6 +1248,11 @@ export const games = [
     name: 'Star Seekers',
     description: 'Flip cards and say the words to find the 4 hidden stars',
   },
+  {
+    id: 'peek-a-picture',
+    name: 'Peek-a-Picture',
+    description: 'Say each word to clear the cards and reveal a secret picture',
+  },
 ]
 
 export function getSpeechSound(soundId: string): SpeechSound | undefined {
