@@ -3,10 +3,12 @@ import { speechSounds } from '../data/speeches'
 import { WordPicture } from '../components/WordPicture'
 import { MsJana } from '../components/MsJana'
 import { newStudent, parseAssessment, readRecords, teacherAttempt, writeRecords, type Attempt } from '../practice/store'
-import { englishVoices, say } from '../practice/speech'
+import { englishVoices, sayWord, stopSpeaking } from '../practice/speech'
+import { studentTracking } from '../practice/features'
 import './PracticePage.css'
 
-const endpoint = import.meta.env.VITE_SPEECH_ASSESSMENT_ENDPOINT as string | undefined
+// Automated scoring saves results to a student profile, so it's off while tracking is hidden.
+const endpoint = studentTracking ? import.meta.env.VITE_SPEECH_ASSESSMENT_ENDPOINT as string | undefined : undefined
 
 export function PracticePage() {
   const [records, setRecords] = useState(readRecords)
@@ -20,6 +22,8 @@ export function PracticePage() {
   const [voiceURI, setVoiceURI] = useState('')
   const [speed, setSpeed] = useState(1)
   const [level, setLevel] = useState(0)
+  const [recording, setRecording] = useState<string | null>(null)
+  const playback = useRef<HTMLAudioElement | null>(null)
   const audioContext = useRef<AudioContext | null>(null)
   const frame = useRef<number | null>(null)
   const heardSound = useRef(false)
@@ -29,6 +33,7 @@ export function PracticePage() {
     window.speechSynthesis?.addEventListener('voiceschanged', refresh)
     return () => window.speechSynthesis?.removeEventListener('voiceschanged', refresh)
   }, [])
+  useEffect(() => () => { if (recording) URL.revokeObjectURL(recording) }, [recording])
   const run = useRef(0)
   const recorder = useRef<MediaRecorder | null>(null)
   const stream = useRef<MediaStream | null>(null)
@@ -56,8 +61,23 @@ export function PracticePage() {
     stream.current?.getTracks().forEach(track => track.stop())
     if (frame.current !== null) cancelAnimationFrame(frame.current)
     void audioContext.current?.close()
-    window.speechSynthesis?.cancel()
+    stopSpeaking()
+    playback.current?.pause()
   }, [])
+
+  function clearRecording() {
+    playback.current?.pause()
+    playback.current = null
+    setRecording(null)
+  }
+  function hearMyself() {
+    if (!recording) return
+    stopSpeaking()
+    playback.current?.pause()
+    const audio = new Audio(recording)
+    playback.current = audio
+    audio.play().catch(() => setStatus('Your recording couldn’t play. Tap Try again to record a new one.'))
+  }
 
   function save(attempt: Attempt) {
     const next = { ...readRecords(), attempts: [...readRecords().attempts, attempt] }
@@ -68,7 +88,8 @@ export function PracticePage() {
     if ((endpoint && !student) || phase !== 'idle') return
     if (!navigator.mediaDevices?.getUserMedia || (endpoint && !window.MediaRecorder)) { setStatus('Microphone practice isn’t supported here. You can still listen and practice.'); return }
     const token = ++run.current
-    window.speechSynthesis?.cancel()
+    stopSpeaking()
+    clearRecording()
     setPhase('permission')
     try {
       const input = await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -84,6 +105,14 @@ export function PracticePage() {
         context.createMediaStreamSource(input).connect(analyser)
         const samples = new Uint8Array(analyser.fftSize)
         heardSound.current = false
+        const clips: Blob[] = []
+        const capture = window.MediaRecorder ? new MediaRecorder(input) : null
+        recorder.current = capture
+        if (capture) {
+          capture.ondataavailable = event => { if (event.data.size) clips.push(event.data) }
+          capture.onstop = () => { if (token === run.current && clips.length) setRecording(URL.createObjectURL(new Blob(clips, { type: capture.mimeType }))) }
+          capture.start()
+        }
         const meter = () => {
           if (token !== run.current) return
           analyser.getByteTimeDomainData(samples)
@@ -94,10 +123,13 @@ export function PracticePage() {
         }
         finishTest.current = () => {
           if (token !== run.current) return
+          if (capture?.state === 'recording') capture.stop()
           release()
           setLevel(0)
           setPhase('idle')
-          setStatus(heardSound.current ? 'Your microphone picked up sound! This was a microphone test, not a pronunciation score. Nothing was saved.' : 'No clear sound was detected. Check your microphone and try again. No score was assigned.')
+          setStatus(!heardSound.current ? 'No clear sound was detected. Check your microphone and try again. No score was assigned.'
+            : capture ? 'Great trying! Tap Hear myself to listen to your recording, or Try again to record a new one.'
+            : 'Your microphone picked up sound! This was a microphone test, not a pronunciation score. Nothing was saved.')
         }
         setPhase('listening')
         setStatus('Say ' + word.word + '. Watch the microphone meter, then tap Done.')
@@ -113,6 +145,8 @@ export function PracticePage() {
       capture.onstop = async () => {
         release()
         if (token !== run.current) { chunks.length = 0; return }
+        const audio = new Blob(chunks, { type: capture.mimeType })
+        setRecording(URL.createObjectURL(audio))
         setPhase('scoring')
         setStatus('Checking your attempt…')
         const controller = new AbortController()
@@ -120,7 +154,7 @@ export function PracticePage() {
         const timeout = setTimeout(() => controller.abort(), 20000)
         try {
           const body = new FormData()
-          body.append('audio', new Blob(chunks, { type: capture.mimeType }), 'attempt')
+          body.append('audio', audio, 'attempt')
           body.append('word', word.word)
           body.append('sound', word.sound)
           chunks.length = 0
@@ -130,7 +164,7 @@ export function PracticePage() {
           if (token !== run.current) return
           save({ ...teacherAttempt(student!.id, word.word, word.sound, word.category, 'unassessed'), source: 'automated', score: result.score, provider: result.provider })
           if (result.score === null) setStatus('This attempt couldn’t be assessed clearly. No score was assigned. Try listening again.')
-          say('Thank you for trying! ' + word.word, voiceURI, speed)
+          sayWord(word.word, voiceURI, speed)
         } catch { if (token === run.current) setStatus('We couldn’t assess this attempt. No score was saved. Please try again.') }
         finally { chunks.length = 0; clearTimeout(timeout); if (token === run.current) setPhase('idle') }
       }
@@ -142,25 +176,28 @@ export function PracticePage() {
   }
   return <main className="practice-page">
     <p className="eyebrow">LISTEN · TRY · GROW</p><h1>Practice with Ms. Jana</h1>
-    <p className="practice-note">A spoken practice guide using your device’s voice. Ms. Jana’s own voice can be added later.</p>
-    <div className="practice-setup"><label>Student profile<select value={studentId} disabled={phase !== 'idle'} onChange={event => setStudentId(event.target.value)}><option value="">Choose a student</option>{records.students.map((item, i) => <option value={item.id} key={item.id}>{item.name} · Profile {i + 1}</option>)}</select></label>
-      <form onSubmit={event => { event.preventDefault(); if (!name.trim()) return; const profile = newStudent(name); const next = { ...readRecords(), students: [...readRecords().students, profile] }; try { writeRecords(next); setRecords(next); setStudentId(profile.id); setName('') } catch { setStatus('Couldn’t save the profile on this device.') } }}><label>New student’s display name<input value={name} maxLength={60} disabled={phase !== 'idle'} onChange={event => setName(event.target.value)} required /></label><button className="story-back" disabled={phase !== 'idle'}>Create profile</button></form>
-      <label>Practice words<select value={categoryId} disabled={phase !== 'idle'} onChange={event => { setCategoryId(event.target.value); setIndex(0) }}>{categories.map(item => <option value={item.id} key={item.id}>{item.name}</option>)}</select></label>
+    <p className="practice-note">A spoken practice guide. Words are read by a calm, natural AI voice.</p>
+    <div className="practice-setup">{studentTracking && <><label>Student profile<select value={studentId} disabled={phase !== 'idle'} onChange={event => setStudentId(event.target.value)}><option value="">Choose a student</option>{records.students.map((item, i) => <option value={item.id} key={item.id}>{item.name} · Profile {i + 1}</option>)}</select></label>
+      <form onSubmit={event => { event.preventDefault(); if (!name.trim()) return; const profile = newStudent(name); const next = { ...readRecords(), students: [...readRecords().students, profile] }; try { writeRecords(next); setRecords(next); setStudentId(profile.id); setName('') } catch { setStatus('Couldn’t save the profile on this device.') } }}><label>New student’s display name<input value={name} maxLength={60} disabled={phase !== 'idle'} onChange={event => setName(event.target.value)} required /></label><button className="story-back" disabled={phase !== 'idle'}>Create profile</button></form></>}
+      <label>Practice words<select value={categoryId} disabled={phase !== 'idle'} onChange={event => { setCategoryId(event.target.value); setIndex(0); clearRecording() }}>{categories.map(item => <option value={item.id} key={item.id}>{item.name}</option>)}</select></label>
     </div>
-    <details className="voice-settings"><summary>Voice & playback settings</summary><p>Preview a voice before using it as a speech model. Available voices vary by device; this is not Ms. Jana’s own voice.</p>
-      <label>Voice<select value={voiceURI} disabled={phase !== 'idle'} onChange={event => setVoiceURI(event.target.value)}><option value="">Best available English voice</option>{voices.map(voice => <option key={voice.voiceURI} value={voice.voiceURI}>{voice.name} · {voice.lang}</option>)}</select></label>
-      <label>Playback speed<select value={speed} disabled={phase !== 'idle'} onChange={event => setSpeed(Number(event.target.value))}><option value={1}>Natural speed</option><option value={.9}>Slightly slower</option></select></label>
-      <button className="story-back" disabled={phase !== 'idle'} onClick={() => say('Hello! Let’s practice together. Rabbit.', voiceURI, speed)}>Preview voice</button>
+    <details className="voice-settings"><summary>Voice & playback settings</summary><p>Words play from natural-sounding AI-generated recordings (not Ms. Jana’s own voice). You can choose one of your device’s voices instead; available voices vary by device.</p>
+      <label>Voice<select value={voiceURI} disabled={phase !== 'idle'} onChange={event => setVoiceURI(event.target.value)}><option value="">Natural recorded voice (recommended)</option>{voices.map(voice => <option key={voice.voiceURI} value={voice.voiceURI}>{voice.name} · {voice.lang}</option>)}</select></label>
+      <label>Playback speed<select value={speed} disabled={phase !== 'idle'} onChange={event => setSpeed(Number(event.target.value))}><option value={1}>Natural speed</option><option value={.9}>Slightly slower</option><option value={.7}>Slower</option><option value={.55}>Very slow</option></select></label>
+      <button className="story-back" disabled={phase !== 'idle'} onClick={() => sayWord(word.word, voiceURI, speed)}>Preview voice</button>
     </details>
     <div className="coach-card"><MsJana className="coach-avatar" /><p role="status">{status}</p><WordPicture word={word} /><h2>{word.word}</h2>
-      <div className="coach-actions"><button className="cta-button" disabled={phase !== 'idle'} onClick={() => { if (!say(word.word, voiceURI, speed)) setStatus('Spoken guidance isn’t available in this browser.') }}>🔊 Listen with me</button>
-      {phase === 'listening' ? <button className="cta-button" onClick={() => { if (!endpoint) finishTest.current?.(); else if (recorder.current?.state === 'recording') recorder.current.stop() }}>Done speaking ✓</button> : <button className="story-back" disabled={(!!endpoint && !student) || phase !== 'idle'} onClick={listen}>🎤 {phase === 'scoring' ? 'Checking…' : phase === 'permission' ? 'Opening microphone…' : 'My turn'}</button>}
-      <button className="story-back" disabled={phase !== 'idle'} onClick={() => { window.speechSynthesis?.cancel(); setIndex(i => i + 1); setStatus('Here’s another word. Listen, then try!') }}>Next word →</button></div>
+      <div className="coach-actions"><button className="cta-button" disabled={phase !== 'idle'} onClick={() => { playback.current?.pause(); if (!sayWord(word.word, voiceURI, speed)) setStatus('Spoken guidance isn’t available in this browser.') }}>🔊 Listen with me</button>
+      {phase === 'listening' ? <button className="cta-button" onClick={() => { if (!endpoint) finishTest.current?.(); else if (recorder.current?.state === 'recording') recorder.current.stop() }}>Done speaking ✓</button> : recording && phase === 'idle' ? <>
+        <button className="cta-button turn-button" onClick={hearMyself}>▶️ Hear myself</button>
+        <button className="story-back" disabled={!!endpoint && !student} onClick={listen}>🔁 Try again</button>
+      </> : <button className="cta-button turn-button" disabled={(!!endpoint && !student) || phase !== 'idle'} onClick={listen}>🎤 {phase === 'scoring' ? 'Checking…' : phase === 'permission' ? 'Opening microphone…' : 'My turn'}</button>}
+      <button className="story-back" disabled={phase !== 'idle'} onClick={() => { stopSpeaking(); clearRecording(); setIndex(i => i + 1); setStatus('Here’s another word. Listen, then try!') }}>Next word →</button></div>
       {!endpoint && phase === 'listening' && <meter className="microphone-meter" min={0} max={100} value={level} aria-label="Microphone sound level" />}
-      {!endpoint && <p className="practice-note">My turn tests your microphone locally. No audio is saved or sent, and no pronunciation score is assigned yet.</p>}
-      {endpoint && <p className="practice-note">Microphone audio is sent for assessment, then released from this app’s memory. This app saves results, not recordings.</p>}
+      {!endpoint && <p className="practice-note">My turn records you so you can hear yourself. The recording stays on this screen until you move on. It isn’t saved or sent, and no pronunciation score is assigned yet.</p>}
+      {endpoint && <p className="practice-note">Microphone audio is sent for assessment and kept on this screen so you can hear yourself until you move on. This app saves results, not recordings.</p>}
     </div>
-    <section className="practice-observation"><h2>Adult observation</h2><p>An adult who heard the attempt can save a rating. These are kept separate from automated estimates.</p><div className="coach-actions">{([['independent', 'Correct independently'], ['helped', 'Correct with help'], ['practicing', 'Still practicing'], ['unassessed', 'Not assessed']] as const).map(([outcome, label]) => <button className="story-back" key={outcome} disabled={!student || phase !== 'idle'} onClick={() => save(teacherAttempt(student!.id, word.word, word.sound, word.category, outcome))}>{label}</button>)}</div></section>
-    <p className="practice-note">Prototype: profiles and results stay in this browser. Anyone using this device can review them; there is no teacher login or cross-device syncing yet. Clearing browser data removes them.</p>
+    {studentTracking && <><section className="practice-observation"><h2>Adult observation</h2><p>An adult who heard the attempt can save a rating. These are kept separate from automated estimates.</p><div className="coach-actions">{([['independent', 'Correct independently'], ['helped', 'Correct with help'], ['practicing', 'Still practicing'], ['unassessed', 'Not assessed']] as const).map(([outcome, label]) => <button className="story-back" key={outcome} disabled={!student || phase !== 'idle'} onClick={() => save(teacherAttempt(student!.id, word.word, word.sound, word.category, outcome))}>{label}</button>)}</div></section>
+    <p className="practice-note">Prototype: profiles and results stay in this browser. Anyone using this device can review them; there is no teacher login or cross-device syncing yet. Clearing browser data removes them.</p></>}
   </main>
 }
