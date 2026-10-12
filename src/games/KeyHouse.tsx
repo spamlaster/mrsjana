@@ -1,6 +1,7 @@
 import { useReducer, useRef, useState, type CSSProperties, type PointerEvent } from 'react'
 import type { GameProps } from '../types'
 import { WordPicture } from '../components/WordPicture'
+import { sayPhrase, sayWord } from '../practice/speech'
 import { houseReducer, initialHouseState, makeHouseDoors, type HouseKey } from './keyHouseState'
 import './KeyHouse.css'
 
@@ -47,7 +48,9 @@ export function KeyHouse({ words, onComplete }: GameProps) {
     return door && !door.disabled ? door.dataset.door ?? null : null
   }
   const tryDoor = (keyId: string, doorId: string) => {
-    if (keyId !== doorId) setShaking(doorId)
+    // Doors that are open or blocked are disabled, so a match here always unlocks: say the word inside.
+    if (keyId === doorId) sayWord(doors.find(door => door.key.id === doorId)!.word.word)
+    else { setShaking(doorId); sayPhrase('try-again') }
     dispatch({ type: 'select', id: keyId })
     dispatch({ type: 'unlock', id: doorId })
   }

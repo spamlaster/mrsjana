@@ -5,7 +5,7 @@ import { trackPageView } from './analytics'
 import { studentTracking } from '../practice/features'
 
 export interface Route {
-  screen: 'home' | 'sound-select' | 'category-select' | 'game-select' | 'playing' | 'complete' | 'stories' | 'coach' | 'review'
+  screen: 'home' | 'sound-select' | 'category-select' | 'game-select' | 'playing' | 'complete' | 'stories' | 'coach' | 'review' | 'grown-ups'
   soundId?: string
   categoryId?: string
   gameId?: string
@@ -20,7 +20,7 @@ export function parseRoute(hash: string): Route {
   const parts = (path || '/').split('/').filter(Boolean)
   const [section, soundId, categoryId, gameId, result] = parts
   if (section === 'review' && !studentTracking) return { screen: 'home' }
-  if (section === 'coach' || section === 'review') return { screen: section }
+  if (section === 'coach' || section === 'review' || section === 'grown-ups') return { screen: section }
   if (section === 'stories') {
     const filter = new URLSearchParams(query).get('sound') || 'all'
     if (!soundId) return { screen: 'stories', filter: filter === 'all' || getSpeechSound(filter) ? filter : 'all' }

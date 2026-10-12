@@ -15,7 +15,8 @@
       gtag('js', new Date());
 
       // Page views are sent from src/routing/analytics.ts so hash-route changes are tracked too.
-      gtag('config', 'G-SKPWTNCKMS', { send_page_view: false });
+      // This site is for children: keep Google Analytics to internal measurement only (no ad signals or personalization).
+      gtag('config', 'G-SKPWTNCKMS', { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false });
     </script>
   </head>
   <body>

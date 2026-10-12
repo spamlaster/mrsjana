@@ -1,0 +1,10 @@
+.grown-ups-page { max-width: 720px; margin: auto; padding: 20px 0 40px; }
+.grown-ups-page h1 { font-size: clamp(30px, 5vw, 42px); letter-spacing: -1px; margin: 6px 0 12px; }
+.grown-ups-intro { color: var(--text-light); font-size: 17px; margin-bottom: 26px; }
+.grown-ups-page section { background: #f6f1fd; border: 2px solid #e6dcf6; border-radius: 22px; padding: 22px 26px; margin-bottom: 16px; }
+.grown-ups-page section:first-of-type { background: #ffeacd; border-color: #efd5ad; }
+.grown-ups-page h2 { font-size: 20px; margin-bottom: 8px; }
+.grown-ups-page section p + p { margin-top: 10px; }
+.grown-ups-page section p { line-height: 1.6; }
+.grown-ups-updated { color: var(--text-light); font-size: 13px; margin-top: 22px; }
+@media (max-width: 600px) { .grown-ups-page section { padding: 18px; } }

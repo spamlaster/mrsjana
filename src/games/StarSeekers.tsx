@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { SpeechWord, GameProps } from '../types'
 import { WordPicture } from '../components/WordPicture'
 import { RepetitionCounter } from '../components/RepetitionCounter'
+import { sayPhrase, sayWord } from '../practice/speech'
 import './StarSeekers.css'
 
 interface Card {
@@ -13,6 +14,8 @@ interface Card {
 // 5 x 4 board: 16 picture words + 4 hidden stars
 const BOARD_SIZE = 20
 const STAR_COUNT = 4
+// One saying per star, in the order they are found.
+const STAR_PHRASES = ['star-1', 'star-2', 'star-3', 'star-4'] as const
 
 function shuffle<T>(items: T[]): T[] {
   const result = [...items]
@@ -68,7 +71,10 @@ export function StarSeekers({ words, onComplete }: GameProps) {
   }
 
   const handleCardClick = (cardId: string) => {
-    if (won) return
+    const card = cards.find(c => c.id === cardId)
+    if (won || !card || card.isFlipped) return
+    if (card.word) sayWord(card.word.word)
+    else sayPhrase(STAR_PHRASES[starsFound % STAR_PHRASES.length])
     setCards(prev => prev.map(c => (c.id === cardId ? { ...c, isFlipped: true } : c)))
     setLastFlippedId(cardId)
   }

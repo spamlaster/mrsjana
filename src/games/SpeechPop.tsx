@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { SpeechWord, GameProps } from '../types'
 import { WordPicture } from '../components/WordPicture'
 import { RepetitionCounter } from '../components/RepetitionCounter'
+import { sayPhrase, sayWord } from '../practice/speech'
 import './SpeechPop.css'
 
 interface Bubble {
@@ -34,11 +35,13 @@ export function SpeechPop({ words, onComplete }: GameProps) {
   const handleBubbleClick = (bubbleId: string, bubbleWord: SpeechWord) => {
     if (bubbleWord.word !== currentWord.word) {
       setFeedback(`Oops! That wasn't correct. Try again!`)
+      sayPhrase('oops-try-again')
       setTimeout(() => setFeedback(''), 2000)
       return
     }
 
     setFeedback('')
+    sayWord(bubbleWord.word)
     setBubbles(prev =>
       prev.map(b =>
         b.id === bubbleId ? { ...b, isPopping: true } : b

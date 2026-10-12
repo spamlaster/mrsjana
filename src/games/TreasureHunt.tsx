@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { SpeechWord, GameProps } from '../types'
 import { WordPicture } from '../components/WordPicture'
 import { RepetitionCounter } from '../components/RepetitionCounter'
+import { sayWord } from '../practice/speech'
 import './TreasureHunt.css'
 
 interface Treasure {
@@ -49,7 +50,9 @@ export function TreasureHunt({ words, onComplete }: GameProps) {
   }
 
   const handleTreasureClick = (treasureId: string) => {
-    if (treasures.find(t => t.id === treasureId)?.isRevealed) return
+    const treasure = treasures.find(t => t.id === treasureId)
+    if (!treasure || treasure.isRevealed) return
+    sayWord(treasure.word.word)
 
     setSelectedId(treasureId)
     setTreasures(prev =>

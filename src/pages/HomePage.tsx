@@ -1,7 +1,9 @@
 import { MsJana } from '../components/MsJana'
 import { SoundSelector } from '../components/SoundSelector'
+import { SiteFooter } from '../components/SiteFooter'
 import type { SpeechSound } from '../types'
 import { studentTracking } from '../practice/features'
+import practiceWithMsJana from '../assets/practice-with-ms-jana.jpg'
 import './HomePage.css'
 import './StoriesPage.css'
 
@@ -38,7 +40,16 @@ export function HomePage({ sounds, onStartPractice, onOpenStories }: HomePagePro
         </section>
         <div className="play-strip"><span>✦ A little learning</span><span>♡ A lot of cheering</span><span>★ A whole bunch of fun</span></div>
         <section className="sounds-section" id="sounds"><SoundSelector sounds={sounds} onSelect={onStartPractice} /></section>
-        <div className="practice-links"><a className="coach-link" href="#/coach"><MsJana size="sm" /> Practice with Ms. Jana →</a>{studentTracking && <a href="#/review">Adult review →</a>}</div>
+        <section className="coach-feature">
+          <img src={practiceWithMsJana} alt="Ms. Jana smiling, with the words Practice with Ms. Jana" />
+          <div>
+            <p className="eyebrow">SAY IT TOGETHER</p>
+            <h2>Practice with Ms. Jana</h2>
+            <p>Listen, look, and say your words with a friendly coach cheering you on.</p>
+            <a className="cta-button" href="#/coach">Start practicing →</a>
+            {studentTracking && <a className="review-link" href="#/review">Adult review →</a>}
+          </div>
+        </section>
         <section className="home-stories">
           <span aria-hidden="true">📚</span><div><p className="eyebrow">READ · DISCOVER · SAY</p><h2>It’s story time!</h2><p>Little adventures with letters to spot and words to practice.</p></div>
           <button className="cta-button" onClick={onOpenStories}>Explore stories →</button>
@@ -53,7 +64,7 @@ export function HomePage({ sounds, onStartPractice, onOpenStories }: HomePagePro
           </div>
         </section>
       </main>
-      <footer className="home-footer">Made for little voices with big things to say. <span aria-hidden="true">♡</span></footer>
+      <SiteFooter />
     </div>
   )
 }

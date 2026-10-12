@@ -1,4 +1,7 @@
+import { useEffect, useState } from 'react'
 import { navigate, useRoute } from '../routing/router'
+import { MsJana } from '../components/MsJana'
+import { readStoryPage, sayPhrase, stopSpeaking } from '../practice/speech'
 import { speechSounds } from '../data/speeches'
 import { stories, type PracticeStory } from '../data/stories'
 import './StoriesPage.css'
@@ -8,6 +11,25 @@ function HighlightedText({ text, letters }: { text: string; letters: string }) {
   const parts = text.split(new RegExp(`(${letters.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'))
   return <>{parts.map((part, index) => part.toLowerCase() === letters.toLowerCase()
     ? <mark key={index}>{part}</mark> : part)}</>
+}
+
+const YOUR_TURN = ['your-turn-1', 'your-turn-2', 'your-turn-3'] as const
+
+// Ms. Jana reads the page aloud, then invites the student to read it. Keyed by page, so turning the page stops her.
+function ListenToMsJana({ storyId, pageNumber, text }: { storyId: string; pageNumber: number; text: string }) {
+  const [status, setStatus] = useState<'idle' | 'reading' | 'your-turn'>('idle')
+  useEffect(() => stopSpeaking, [])
+  const listen = () => {
+    if (status === 'reading') { stopSpeaking(); setStatus('idle'); return }
+    setStatus('reading')
+    readStoryPage(storyId, pageNumber, text, () => { setStatus('your-turn'); sayPhrase(YOUR_TURN[(pageNumber - 1) % YOUR_TURN.length]) })
+  }
+  return <div className="story-listen">
+    <button className="cta-button" aria-pressed={status === 'reading'} onClick={listen}>
+      <MsJana size="sm" />{status === 'reading' ? 'Ms. Jana is reading… ⏹ Stop' : status === 'your-turn' ? '🔊 Listen again' : '🔊 Listen to Ms. Jana read'}
+    </button>
+    {status === 'your-turn' && <p role="status">Your turn! Read it aloud. 🌟</p>}
+  </div>
 }
 
 function StoryReader({ story }: { story: PracticeStory }) {
@@ -29,6 +51,7 @@ function StoryReader({ story }: { story: PracticeStory }) {
         <div className="story-page" key={page}>
           <span className="story-picture" aria-hidden="true">{current.emoji}</span>
           <p className="story-text"><HighlightedText text={current.text} letters={story.targetLetters} /></p>
+          <ListenToMsJana storyId={story.id} pageNumber={page + 1} text={current.text} />
           <div className="story-practice"><h2>Pause & say</h2><p>Try these words aloud. Take your time!</p>
             <ul>{current.practiceWords.map(word => <li key={word}><HighlightedText text={word} letters={story.targetLetters} /></li>)}</ul>
           </div>

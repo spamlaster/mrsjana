@@ -1,0 +1,5 @@
+.site-footer { padding: 25px 0; margin-top: 20px; border-top: 1px solid #e9e3d7; text-align: center; color: var(--text-light); font-size: 12px; }
+.site-footer span { color: #c66557; }
+.site-footer .disclaimer { max-width: 640px; margin: 14px auto 0; font-size: 11px; line-height: 1.6; }
+.site-footer .footer-links { margin-top: 12px; }
+.site-footer a { color: #57418c; font-weight: 800; }

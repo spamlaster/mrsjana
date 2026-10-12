@@ -3,6 +3,8 @@ import { PracticePage } from './pages/PracticePage'
 import { ReviewPage } from './pages/ReviewPage'
 import { StoriesPage } from './pages/StoriesPage'
 import { HomePage } from './pages/HomePage'
+import { GrownUpsPage } from './pages/GrownUpsPage'
+import { SiteFooter } from './components/SiteFooter'
 import { SoundSelector } from './components/SoundSelector'
 import { CategorySelector } from './components/CategorySelector'
 import { GameSelector } from './components/GameSelector'
@@ -96,7 +98,7 @@ function App() {
       {screen !== 'home' && (
         <nav className="app-nav" aria-label="Practice navigation">
           <div className="app-nav-actions"><button className="app-home" onClick={() => goBack('/')}>← Back</button><button className="app-home" onClick={handleHome}>Home</button></div>
-          {['stories', 'coach', 'review'].includes(screen) ? <span className="stories-nav-label">{screen === 'stories' ? '📚 Story time' : screen === 'coach' ? '🌼 Practice with Ms. Jana' : 'Practice review'}</span> : <ol className="practice-steps" aria-label="Practice steps">
+          {['stories', 'coach', 'review', 'grown-ups'].includes(screen) ? <span className="stories-nav-label">{screen === 'stories' ? '📚 Story time' : screen === 'coach' ? '🌼 Practice with Ms. Jana' : screen === 'grown-ups' ? 'Notes for grown-ups' : 'Practice review'}</span> : <ol className="practice-steps" aria-label="Practice steps">
             <li className={screen === 'sound-select' ? 'current' : ''} aria-current={screen === 'sound-select' ? 'step' : undefined}>1 · Sound</li>
             <li className={screen === 'category-select' ? 'current' : ''} aria-current={screen === 'category-select' ? 'step' : undefined}>2 · Words</li>
             <li className={['game-select', 'playing', 'complete'].includes(screen) ? 'current' : ''} aria-current={['game-select', 'playing', 'complete'].includes(screen) ? 'step' : undefined}>3 · Play!</li>
@@ -110,6 +112,7 @@ function App() {
       {screen === 'coach' && <div className="screen"><PracticePage /></div>}
       {screen === 'review' && <div className="screen"><ReviewPage /></div>}
       {screen === 'stories' && <main className="screen"><StoriesPage /></main>}
+      {screen === 'grown-ups' && <main className="screen"><GrownUpsPage /></main>}
 
       {screen === 'sound-select' && (
         <div className="screen">
@@ -170,6 +173,7 @@ function App() {
           />
         </div>
       )}
+      {screen !== 'home' && screen !== 'playing' && <SiteFooter />}
     </div>
   )
 }

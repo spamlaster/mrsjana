@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { SpeechWord, GameProps } from '../types'
 import { WordPicture } from '../components/WordPicture'
 import { RepetitionCounter } from '../components/RepetitionCounter'
+import { sayWord } from '../practice/speech'
 import './MemoryMatch.css'
 
 interface Card {
@@ -41,6 +42,7 @@ export function MemoryMatch({ words, onComplete }: GameProps) {
   const handleCardClick = (cardId: string) => {
     if (flipped.includes(cardId) || matched.includes(cardId)) return
     if (flipped.length >= 2) return
+    sayWord(cards.find(c => c.id === cardId)!.word.word)
 
     const newFlipped = [...flipped, cardId]
     setFlipped(newFlipped)
