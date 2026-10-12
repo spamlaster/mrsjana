@@ -1241,7 +1241,7 @@ export const games = [
   {
     id: 'treasure-hunt',
     name: 'Treasure Hunt',
-    description: 'Open treasure chests to find words to practice',
+    description: 'Say the word in each chest and follow the hot and cold clues to the hidden gold',
   },
   {
     id: 'star-seekers',

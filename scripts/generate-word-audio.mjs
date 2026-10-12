@@ -19,6 +19,7 @@ const outDir = 'public/audio/words'
 // Spoken feedback in the games. Keys are file names in public/audio/phrases, played with sayPhrase().
 const encourage = 'You are a warm, friendly speech teacher gently encouraging a young child who just made a mistake in a game. Say the phrase once, kindly and cheerfully, so it never sounds like a scolding. Say only the phrase.'
 const celebrate = 'You are a warm, friendly speech teacher celebrating with a young child who just found a surprise in a game. Say the phrase once, sounding genuinely thrilled, bright and full of wonder. Say only the phrase.'
+const hint = 'You are a warm, friendly speech teacher giving a young child a playful clue in a treasure hunt game. Say the phrase once, with curious, playful excitement. Say only the phrase.'
 const invite = 'You are a warm, friendly speech teacher who just read a page aloud to a young child learning to read. Invite the child to read it themselves. Say the phrase once, warmly and confidently, so the child feels excited to try. Say only the phrase.'
 const phrases = {
   'try-again': ['Try again!', encourage],
@@ -28,6 +29,10 @@ const phrases = {
   'star-2': ['Yay! Another sparkly star!', celebrate],
   'star-3': ['Amazing! You found another star!', celebrate],
   'star-4': ['Hooray! You found all the stars!', celebrate],
+  // Treasure Hunt clues, said after each chest's word.
+  'treasure-warm': ['Getting warmer! The gold is right next to this chest!', hint],
+  'treasure-cold': ['Brrr, cold! The gold is not next to this chest.', hint],
+  'treasure-found': ['Hooray! You found the treasure!', celebrate],
   // Said after Ms. Jana reads a story page, rotating from page to page.
   'your-turn-1': ['Your turn! Give it a try.', invite],
   'your-turn-2': ['Now you read it. You can do it!', invite],
