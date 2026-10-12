@@ -9,10 +9,14 @@ function moduleUrl(source) {
 const speechUrl = moduleUrl(fs.readFileSync('src/data/speeches.ts', 'utf8'))
 const storiesUrl = moduleUrl(fs.readFileSync('src/data/stories.ts', 'utf8'))
 const reactUrl = moduleUrl('export function useSyncExternalStore() {}')
+const analyticsUrl = moduleUrl('export function trackPageView() {}')
+const featuresUrl = moduleUrl(fs.readFileSync('src/practice/features.ts', 'utf8'))
 const routerSource = fs.readFileSync('src/routing/router.ts', 'utf8')
   .replace("'react'", JSON.stringify(reactUrl))
   .replace("'../data/speeches'", JSON.stringify(speechUrl))
   .replace("'../data/stories'", JSON.stringify(storiesUrl))
+  .replace("'./analytics'", JSON.stringify(analyticsUrl))
+  .replace("'../practice/features'", JSON.stringify(featuresUrl))
 
 const entries = [{ hash: '', state: null }]
 let position = 0
@@ -43,16 +47,17 @@ assert.equal(getRoute().screen, 'home')
 assert.strictEqual(getRoute(), getRoute(), 'Snapshots must be stable between changes')
 for (const [path, screen] of [
   ['#/sounds', 'sound-select'], ['#/sounds/r', 'category-select'],
-  ['#/sounds/r/r-initial', 'game-select'], ['#/sounds/r/r-initial/memory-match', 'playing'], ['#/sounds/r/r-initial/key-house', 'playing'],
-  ['#/sounds/r/r-initial/memory-match/complete', 'complete'], ['#/stories', 'stories'], ['#/coach', 'coach'], ['#/review', 'review'],
+  ['#/sounds/r/r-initial', 'game-select'], ['#/sounds/r/r-initial/memory-match', 'playing'], ['#/sounds/r/r-initial/key-house', 'playing'], ['#/sounds/r/r-initial/star-seekers', 'playing'],
+  ['#/sounds/r/r-initial/memory-match/complete', 'complete'], ['#/stories', 'stories'], ['#/coach', 'coach'],
 ]) assert.equal(parseRoute(path).screen, screen)
-assert.equal(parseRoute('#/sounds/s').screen, 'sound-select')
+assert.equal(parseRoute('#/review').screen, 'home', 'Adult review is hidden while student tracking is off')
+assert.equal(parseRoute('#/sounds/s').screen, 'category-select')
 assert.equal(parseRoute('#/sounds/unknown').screen, 'sound-select')
 assert.equal(parseRoute('#/sounds/r/unknown').screen, 'category-select')
 assert.equal(parseRoute('#/sounds/r/r-initial/unknown').screen, 'game-select')
 assert.equal(parseRoute('#/stories/unknown').screen, 'stories')
-assert.equal(parseRoute('#/stories/rabbit-rainbow/999').page, 1)
-assert.equal(parseRoute('#/stories/rabbit-rainbow/4').page, 4)
+assert.equal(parseRoute('#/stories/ruby-rainbow/999').page, 1)
+assert.equal(parseRoute('#/stories/ruby-rainbow/4').page, 4)
 assert.equal(parseRoute('#/stories?sound=s').filter, 's')
 
 navigate('/sounds/r')
@@ -72,13 +77,13 @@ assert.notStrictEqual(getRoute(), previousGame, 'An old completion callback must
 browser.history.forward()
 assert.deepEqual(getRoute().stats, stats)
 navigate('/stories?sound=r')
-navigate('/stories/rabbit-rainbow/1')
-navigate('/stories/rabbit-rainbow/2')
+navigate('/stories/ruby-rainbow/1')
+navigate('/stories/ruby-rainbow/2')
 goBack('/stories')
 assert.equal(getRoute().page, 1)
 goBack('/stories')
 assert.equal(getRoute().filter, 'r')
 browser.history.forward()
-assert.equal(getRoute().storyId, 'rabbit-rainbow')
+assert.equal(getRoute().storyId, 'ruby-rainbow')
 assert(fallbackScrolls > 0)
 console.log('Routing checks passed: direct links, invalid routes, Back/Forward, story pages, filters, and results.')

@@ -2,6 +2,7 @@ import { useSyncExternalStore } from 'react'
 import { games, getSpeechCategory, getSpeechSound } from '../data/speeches'
 import { stories } from '../data/stories'
 import { trackPageView } from './analytics'
+import { studentTracking } from '../practice/features'
 
 export interface Route {
   screen: 'home' | 'sound-select' | 'category-select' | 'game-select' | 'playing' | 'complete' | 'stories' | 'coach' | 'review'
@@ -18,6 +19,7 @@ export function parseRoute(hash: string): Route {
   const [path, query] = hash.replace(/^#/, '').split('?')
   const parts = (path || '/').split('/').filter(Boolean)
   const [section, soundId, categoryId, gameId, result] = parts
+  if (section === 'review' && !studentTracking) return { screen: 'home' }
   if (section === 'coach' || section === 'review') return { screen: section }
   if (section === 'stories') {
     const filter = new URLSearchParams(query).get('sound') || 'all'
