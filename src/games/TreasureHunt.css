@@ -6,56 +6,56 @@
   gap: 0.75rem;
 }
 
-.progress {
-  position: absolute;
-  top: 100px;
-  left: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.progress-label {
-  font-size: 10px;
-  font-weight: 600;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.progress-value {
-  font-size: 24px;
-  font-weight: 700;
-  color: #667eea;
-}
-
-.current-word-display {
+.hunt-banner {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
-  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  color: #51475d;
+  padding: 1rem 1.5rem;
   border-radius: 12px;
-  margin-bottom: 0.75rem;
+  text-align: left;
+  transition: background 0.4s ease;
 }
 
-.current-word-display .word {
-  font-size: 40px;
-  font-weight: 700;
-  text-transform: capitalize;
+.hunt-banner.clue-warm {
+  background: linear-gradient(135deg, #ff9a5a 0%, #f5576c 100%);
+  color: white;
 }
 
-.current-word-display .word-picture,
-.current-word-display .word-emoji {
-  width: 80px;
-  height: 80px;
+.hunt-banner.clue-cold {
+  background: linear-gradient(135deg, #a1c4fd 0%, #8fd3f4 100%);
 }
 
-.current-word-display .word-emoji {
-  font-size: 50px;
+.hunt-banner.clue-gold {
+  background: linear-gradient(135deg, #ffe08a 0%, #ffc957 100%);
+  animation: earnedPulse 0.6s ease;
+}
+
+.banner-emoji {
+  font-size: 44px;
+  line-height: 1;
+}
+
+.banner-icon {
+  width: 64px;
+  height: 64px;
+}
+
+.banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.banner-text strong {
+  font-size: 22px;
+}
+
+.banner-text span {
+  font-size: 15px;
+  opacity: 0.85;
 }
 
 .game-layout {
@@ -71,9 +71,11 @@
 
 .treasures-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   flex: 1;
+  max-width: 480px;
+  margin: 0 auto;
 }
 
 .treasure-box {
@@ -94,7 +96,7 @@
 
 .closed-state,
 .open-state,
-.earned-state {
+.gold-state {
   width: 100%;
   height: 100%;
   display: flex;
@@ -131,21 +133,38 @@
   color: white;
 }
 
-.word-in-box {
-  font-size: 18px;
-  font-weight: 700;
-  text-transform: capitalize;
-  text-align: center;
-  padding: 0.5rem;
+.open-state {
+  position: relative;
 }
 
-.treasure-box.earned .open-state {
-  display: none;
+.treasure-box.clue-cold .open-state {
+  background: linear-gradient(135deg, #c3d7f5 0%, #b8e3f2 100%);
+  opacity: 0.75;
 }
 
-.treasure-box.earned .earned-state {
-  background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+.treasure-box.clue-warm .open-state {
+  background: linear-gradient(135deg, #ff9a5a 0%, #f5576c 100%);
+  box-shadow: 0 0 0 3px #ffc957;
+}
+
+.clue-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.treasure-box.clue-gold .gold-state {
+  background: radial-gradient(circle, #fff4c2 0%, #ffc957 100%);
+  box-shadow: 0 0 25px rgba(255, 201, 87, 0.8);
   animation: earnedPulse 0.6s ease;
+}
+
+.gold-icon {
+  width: 80%;
+  height: 80%;
+  animation: earnedSpin 0.8s ease;
 }
 
 @keyframes earnedPulse {
@@ -158,11 +177,6 @@
   100% {
     transform: scale(1);
   }
-}
-
-.earned-icon {
-  font-size: 44px;
-  animation: earnedSpin 0.8s ease;
 }
 
 @keyframes earnedSpin {
@@ -287,26 +301,6 @@
     width: 100%;
   }
 
-  .current-word-display {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1.5rem;
-  }
-
-  .current-word-display .word {
-    font-size: 36px;
-  }
-
-  .current-word-display .word-picture,
-  .current-word-display .word-emoji {
-    width: 80px;
-    height: 80px;
-  }
-
-  .current-word-display .word-emoji {
-    font-size: 48px;
-  }
-
   .treasures-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
@@ -316,17 +310,12 @@
     font-size: 32px;
   }
 
+  .banner-text strong {
+    font-size: 18px;
+  }
+
   .box-icon {
     width: 52px;
     height: 52px;
-  }
-
-  .word-in-box {
-    font-size: 14px;
-  }
-
-  .progress {
-    position: static;
-    margin-bottom: 1rem;
   }
 }
