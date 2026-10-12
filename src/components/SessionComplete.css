@@ -166,3 +166,6 @@
     grid-column: 1;
   }
 }
+
+.celebration-jana { display: block; margin: 8px auto 12px; }
+.celebration-note { font-weight: 700; color: #57418c; margin-top: 6px; }

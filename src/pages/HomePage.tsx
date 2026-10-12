@@ -1,3 +1,4 @@
+import { MsJana } from '../components/MsJana'
 import { SoundSelector } from '../components/SoundSelector'
 import type { SpeechSound } from '../types'
 import './HomePage.css'
@@ -29,14 +30,14 @@ export function HomePage({ sounds, onStartPractice, onOpenStories }: HomePagePro
           <div className="hero-art" aria-hidden="true">
             <span className="art-star star-one">✦</span><span className="art-star star-two">✧</span>
             <div className="speech-bubble">You’ve got this!</div>
-            <div className="mascot"><div className="mascot-eyes"><i /><i /></div><div className="mascot-cheeks"><i /><i /></div><div className="mascot-smile" /></div>
+            <MsJana size="lg" className="mascot" />
             <div className="art-sticker sticker-rocket">🚀</div><div className="art-sticker sticker-rainbow">🌈</div>
             <span className="art-caption">READY, SET, SAY!</span>
           </div>
         </section>
         <div className="play-strip"><span>✦ A little learning</span><span>♡ A lot of cheering</span><span>★ A whole bunch of fun</span></div>
         <section className="sounds-section" id="sounds"><SoundSelector sounds={sounds} onSelect={onStartPractice} /></section>
-        <div className="practice-links"><a href="#/coach">🌼 Practice with Ms. Jana →</a><a href="#/review">Adult review →</a></div>
+        <div className="practice-links"><a className="coach-link" href="#/coach"><MsJana size="sm" /> Practice with Ms. Jana →</a><a href="#/review">Adult review →</a></div>
         <section className="home-stories">
           <span aria-hidden="true">📚</span><div><p className="eyebrow">READ · DISCOVER · SAY</p><h2>It’s story time!</h2><p>Little adventures with letters to spot and words to practice.</p></div>
           <button className="cta-button" onClick={onOpenStories}>Explore stories →</button>
