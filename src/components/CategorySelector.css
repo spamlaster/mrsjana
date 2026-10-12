@@ -96,3 +96,162 @@
     position: static;
   }
 }
+
+.category-art {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  margin: -1rem auto 1.5rem;
+  border-radius: 24px;
+}
+
+.category-guide {
+  max-width: 800px;
+  margin: 0 auto 1.75rem;
+  text-align: left;
+}
+
+.category-guide-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto;
+  padding: 10px 18px;
+  border: 2px solid #d5c7f1;
+  border-radius: 999px;
+  background: white;
+  color: #57418c;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.category-guide-toggle:hover {
+  background: #f6f1fd;
+}
+
+.category-guide-caret {
+  font-size: 10px;
+}
+
+.category-guide-body {
+  margin-top: 14px;
+  padding: 20px 22px;
+  border-radius: 20px;
+  background: #f6f1fd;
+  border: 2px solid #e5dbf6;
+  color: var(--text);
+  font-size: 15px;
+}
+
+.category-guide-body ul {
+  margin: 12px 0;
+  padding-left: 20px;
+}
+
+.category-guide-body li {
+  margin-bottom: 8px;
+}
+
+.category-guide-examples {
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.category-guide-tip {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.category-item {
+  position: relative;
+}
+
+.category-item .category-card {
+  width: 100%;
+  height: 100%;
+}
+
+.category-item.is-open .category-card {
+  height: auto;
+}
+
+.category-info-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #9b78d2;
+  border-radius: 50%;
+  background: white;
+  color: #57418c;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  font-style: italic;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-info-btn:hover,
+.category-info-btn[aria-expanded="true"] {
+  background: #9b78d2;
+  color: white;
+  font-style: normal;
+}
+
+.category-info {
+  margin-top: 10px;
+  padding: 16px;
+  border-radius: 18px;
+  background: white;
+  border: 2px solid #d5c7f1;
+  text-align: left;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.category-info p {
+  margin: 0 0 10px;
+}
+
+.category-info-kid {
+  font-size: 16px;
+  font-weight: 600;
+  color: #57418c;
+}
+
+.category-info-word {
+  display: inline-block;
+  margin: 2px 4px 2px 0;
+  padding: 2px 10px;
+  border-radius: 10px;
+  background: #ece3fa;
+  font-weight: 700;
+}
+
+.category-info-grownup {
+  color: var(--text-light);
+}
+
+.category-info-go {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 12px;
+  background: #7658c9;
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.category-info-go:hover {
+  background: #57418c;
+}
