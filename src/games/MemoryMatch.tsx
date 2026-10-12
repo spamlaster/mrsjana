@@ -11,24 +11,27 @@ interface Card {
   isMatched: boolean
 }
 
-export function MemoryMatch({ words, onComplete }: GameProps) {
-  const [cards, setCards] = useState<Card[]>(() => [...words, ...words].sort(() => Math.random() - 0.5).map((word, idx) => ({
+// 6 x 4 grid = 12 pairs
+const PAIRS = 12
+
+function dealCards(words: SpeechWord[]): Card[] {
+  const shuffled = [...words].sort(() => Math.random() - 0.5)
+  // Categories with fewer than 12 words repeat some words to fill the grid
+  const picked = Array.from({ length: PAIRS }, (_, i) => shuffled[i % shuffled.length])
+  return [...picked, ...picked].sort(() => Math.random() - 0.5).map((word, idx) => ({
     id: `${word.id}-${idx}`, word, isFlipped: false, isMatched: false,
-  })))
+  }))
+}
+
+export function MemoryMatch({ words, onComplete }: GameProps) {
+  const [cards, setCards] = useState<Card[]>(() => dealCards(words))
   const [flipped, setFlipped] = useState<string[]>([])
   const [matched, setMatched] = useState<string[]>([])
   const [reps, setReps] = useState(0)
   const [uniqueWordsFound, setUniqueWordsFound] = useState(new Set<string>())
 
   const initializeGame = () => {
-    const doubled = [...words, ...words].sort(() => Math.random() - 0.5)
-    const newCards: Card[] = doubled.map((word, idx) => ({
-      id: `${word.id}-${idx}`,
-      word,
-      isFlipped: false,
-      isMatched: false,
-    }))
-    setCards(newCards)
+    setCards(dealCards(words))
     setFlipped([])
     setMatched([])
     setReps(0)
@@ -49,12 +52,13 @@ export function MemoryMatch({ words, onComplete }: GameProps) {
       if (card1 && card2 && card1.word.word === card2.word.word) {
         const newMatched = [...matched, ...newFlipped]
         setMatched(newMatched)
-        setUniqueWordsFound(prev => new Set([...prev, card1.word.word]))
+        const newUniqueWords = new Set([...uniqueWordsFound, card1.word.word])
+        setUniqueWordsFound(newUniqueWords)
 
         if (newMatched.length === cards.length) {
           setTimeout(() => {
             onComplete({
-              wordsPracticed: uniqueWordsFound.size + 1,
+              wordsPracticed: newUniqueWords.size,
               speechReps: reps,
               gameName: 'Memory Match',
             })

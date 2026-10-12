@@ -1,3 +1,4 @@
+import { MsJana } from './MsJana'
 import './SessionComplete.css'
 
 interface SessionCompleteProps {
@@ -27,7 +28,9 @@ export function SessionComplete({
     <div className="session-complete">
       <div className="celebration">
         <div className="emoji-burst">🎉</div>
+        <MsJana className="celebration-jana" />
         <h1>Great Job!</h1>
+        <p className="celebration-note">Ms. Jana is so proud of you!</p>
       </div>
 
       <div className="session-details">

@@ -1,0 +1,4 @@
+.ms-jana { display: inline-block; border-radius: 50%; object-fit: cover; background: #ece6fb; border: 4px solid white; box-shadow: 0 5px 0 #d9ccef; vertical-align: middle; }
+.ms-jana-sm { width: 36px; height: 36px; border-width: 2px; box-shadow: 0 2px 0 #d9ccef; }
+.ms-jana-md { width: 96px; height: 96px; }
+.ms-jana-lg { width: 210px; height: 210px; border-width: 6px; box-shadow: 8px 12px 0 #d9ccef; }

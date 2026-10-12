@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { speechSounds } from '../data/speeches'
 import { WordPicture } from '../components/WordPicture'
+import { MsJana } from '../components/MsJana'
 import { newStudent, parseAssessment, readRecords, teacherAttempt, writeRecords, type Attempt } from '../practice/store'
 import { englishVoices, say } from '../practice/speech'
 import './PracticePage.css'
@@ -151,7 +152,7 @@ export function PracticePage() {
       <label>Playback speed<select value={speed} disabled={phase !== 'idle'} onChange={event => setSpeed(Number(event.target.value))}><option value={1}>Natural speed</option><option value={.9}>Slightly slower</option></select></label>
       <button className="story-back" disabled={phase !== 'idle'} onClick={() => say('Hello! Let’s practice together. Rabbit.', voiceURI, speed)}>Preview voice</button>
     </details>
-    <div className="coach-card"><span className="coach-avatar" aria-hidden="true">🌼</span><p role="status">{status}</p><WordPicture word={word} /><h2>{word.word}</h2>
+    <div className="coach-card"><MsJana className="coach-avatar" /><p role="status">{status}</p><WordPicture word={word} /><h2>{word.word}</h2>
       <div className="coach-actions"><button className="cta-button" disabled={phase !== 'idle'} onClick={() => { if (!say(word.word, voiceURI, speed)) setStatus('Spoken guidance isn’t available in this browser.') }}>🔊 Listen with me</button>
       {phase === 'listening' ? <button className="cta-button" onClick={() => { if (!endpoint) finishTest.current?.(); else if (recorder.current?.state === 'recording') recorder.current.stop() }}>Done speaking ✓</button> : <button className="story-back" disabled={(!!endpoint && !student) || phase !== 'idle'} onClick={listen}>🎤 {phase === 'scoring' ? 'Checking…' : phase === 'permission' ? 'Opening microphone…' : 'My turn'}</button>}
       <button className="story-back" disabled={phase !== 'idle'} onClick={() => { window.speechSynthesis?.cancel(); setIndex(i => i + 1); setStatus('Here’s another word. Listen, then try!') }}>Next word →</button></div>
