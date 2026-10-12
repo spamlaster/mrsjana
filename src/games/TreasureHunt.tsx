@@ -13,6 +13,20 @@ interface Treasure {
 
 const GOAL = 8
 
+function TreasureChest() {
+  return (
+    <svg className="box-icon" viewBox="0 0 100 100" aria-hidden="true" fill="none" stroke="#51475d" strokeWidth="2.5" strokeLinejoin="round">
+      <path d="M14 46h72v38H14z" fill="#b98961" />
+      <path d="M14 46V36q0-20 36-20t36 20v10z" fill="#c99a6b" />
+      <path d="M28 18v66m44-66v66" stroke="#e8b43b" strokeWidth="7" />
+      <path d="M14 46h72" stroke="#e8b43b" strokeWidth="5" />
+      <rect x="42" y="40" width="16" height="20" rx="3" fill="#ffc957" />
+      <circle cx="50" cy="49" r="3" fill="#51475d" stroke="none" />
+      <path d="M50 51v5" />
+    </svg>
+  )
+}
+
 export function TreasureHunt({ words, onComplete }: GameProps) {
   const [treasures, setTreasures] = useState<Treasure[]>(() => words.map(word => ({ id: word.id, word, isRevealed: false, earned: false })))
   const [coinsEarned, setCoinsEarned] = useState(0)
@@ -124,7 +138,7 @@ export function TreasureHunt({ words, onComplete }: GameProps) {
                   </div>
                 ) : (
                   <div className="closed-state">
-                    <span className="box-icon">📦</span>
+                    <TreasureChest />
                   </div>
                 )}
               </button>

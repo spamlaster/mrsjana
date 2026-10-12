@@ -13,7 +13,7 @@ export function SoundSelector({ sounds, onSelect }: SoundSelectorProps) {
       <h2>Which sound shall we explore?</h2>
       <p className="selector-subtitle">Pick a sound, choose a game, and give it a go!</p>
       <div className="sound-grid">
-        {sounds.map(sound => (
+        {[...sounds].sort((a, b) => a.name.localeCompare(b.name)).map(sound => (
           <button
             key={sound.id}
             className={`sound-card ${sound.comingSoon ? 'coming-soon' : ''}`}

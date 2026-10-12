@@ -109,7 +109,8 @@
 }
 
 .box-icon {
-  font-size: 48px;
+  width: 64px;
+  height: 64px;
 }
 
 .treasure-box:not(:disabled):hover .closed-state {
@@ -316,7 +317,8 @@
   }
 
   .box-icon {
-    font-size: 36px;
+    width: 52px;
+    height: 52px;
   }
 
   .word-in-box {
