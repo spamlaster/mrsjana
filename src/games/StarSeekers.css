@@ -1,0 +1,298 @@
+.star-seekers {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ss-layout {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.ss-board {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.75rem;
+}
+
+.ss-card {
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  perspective: 1000px;
+  font-family: inherit;
+  transition: transform 0.2s ease;
+}
+
+.ss-card:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.ss-card:not(:disabled):hover {
+  transform: translateY(-4px) rotate(-1.5deg);
+}
+
+.ss-card:not(:disabled):active {
+  transform: scale(0.96);
+}
+
+.ss-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.ss-card.flipped .ss-card-inner {
+  transform: rotateY(180deg);
+}
+
+.ss-card-front,
+.ss-card-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  backface-visibility: hidden;
+  overflow: hidden;
+}
+
+.ss-card-front {
+  background:
+    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.35) 0 2px, transparent 3px),
+    radial-gradient(circle at 75% 70%, rgba(255, 255, 255, 0.3) 0 2px, transparent 3px),
+    radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.25) 0 1.5px, transparent 2.5px),
+    linear-gradient(135deg, #3b3a78 0%, #6a4fb3 100%);
+  box-shadow: 0 4px 12px rgba(59, 58, 120, 0.3), inset 0 -4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.ss-sparkle {
+  font-size: 34px;
+  color: #ffe08a;
+  text-shadow: 0 0 10px rgba(255, 224, 138, 0.7);
+}
+
+.ss-card:not(:disabled):hover .ss-sparkle {
+  animation: ssTwinkle 0.8s ease infinite alternate;
+}
+
+@keyframes ssTwinkle {
+  from { transform: scale(1) rotate(0); }
+  to { transform: scale(1.2) rotate(20deg); }
+}
+
+.ss-card-back {
+  transform: rotateY(180deg);
+  background: #eee5fa;
+  color: #343047;
+  padding: 4px;
+}
+
+.ss-card.is-star .ss-card-back {
+  background: radial-gradient(circle, #fff6d6 0%, #ffd86b 100%);
+  box-shadow: 0 0 18px rgba(255, 201, 87, 0.7);
+}
+
+.ss-card-back .word-picture,
+.ss-card-back .word-emoji {
+  width: 62%;
+  height: auto;
+  max-height: 72px;
+  aspect-ratio: 1;
+}
+
+.ss-card-back .word-emoji {
+  font-size: clamp(24px, 4vw, 42px);
+}
+
+.ss-word {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: capitalize;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.ss-found-star {
+  width: 75%;
+  height: 75%;
+}
+
+.ss-card.is-star.flipped .ss-found-star {
+  animation: ssStarPop 0.7s 0.35s ease both;
+}
+
+@keyframes ssStarPop {
+  0% { transform: scale(0.3) rotate(-90deg); }
+  70% { transform: scale(1.15) rotate(10deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+.ss-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ss-star-tracker {
+  background: #fffcf5;
+  border: 2px solid #efe6d2;
+  border-radius: 16px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.ss-tracker-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #8a7fa0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ss-tracker-stars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 0.6rem 0 0.3rem;
+}
+
+.ss-tracker-star {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.ss-tracker-star.filled {
+  animation: ssStarPop 0.6s ease both;
+  filter: drop-shadow(0 2px 6px rgba(255, 201, 87, 0.6));
+}
+
+.ss-tracker-count {
+  font-size: 20px;
+  font-weight: 800;
+  color: #6a4fb3;
+}
+
+.ss-say-it {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: #eee5fa;
+  border-radius: 14px;
+  padding: 0.75rem;
+  color: #51475d;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ss-say-it strong {
+  font-size: 26px;
+  color: #343047;
+  text-transform: capitalize;
+}
+
+.ss-win {
+  text-align: center;
+  background: linear-gradient(135deg, #3b3a78 0%, #6a4fb3 100%);
+  color: white;
+  border-radius: 16px;
+  padding: 1.25rem;
+  animation: ssWinIn 0.5s ease;
+}
+
+.ss-win h3 {
+  margin: 0.25rem 0 0.75rem;
+  font-size: 26px;
+}
+
+.ss-win-stars {
+  font-size: 34px;
+  letter-spacing: 6px;
+}
+
+.ss-win .cta-button {
+  padding: 0.85rem 1.75rem;
+  border: 2px solid white;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.ss-win .cta-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes ssWinIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ss-card-inner { transition: none; }
+  .ss-found-star, .ss-tracker-star.filled, .ss-sparkle, .ss-win { animation: none !important; }
+}
+
+@media (max-width: 768px) {
+  .ss-layout {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  /* Star tracker sits above the board; reps go below it */
+  .ss-sidebar {
+    display: contents;
+  }
+
+  .ss-star-tracker {
+    order: -1;
+  }
+
+  .ss-star-tracker {
+    padding: 0.6rem;
+  }
+
+  .ss-tracker-stars {
+    max-width: 240px;
+    margin-inline: auto;
+  }
+
+  .ss-board {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+
+  .ss-word {
+    font-size: 12px;
+  }
+
+  .ss-sparkle {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 600px) {
+  .star-seekers {
+    padding: 8px;
+  }
+}
