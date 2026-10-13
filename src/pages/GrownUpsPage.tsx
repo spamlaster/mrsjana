@@ -14,7 +14,7 @@ export function GrownUpsPage() {
 
       <section>
         <h2>About Ms. Jana</h2>
-        <p>Ms. Jana is a licensed speech-language pathologist in the state of Utah with a big heart for helping kids find their voices. Nothing makes her happier than seeing a child’s face light up when a tricky sound finally clicks, and she believes every child deserves to feel proud of how they speak.</p>
+        <p>Ms. Jana is a speech-language pathologist with a big heart for helping kids find their voices. Nothing makes her happier than seeing a child’s face light up when a tricky sound finally clicks, and she believes every child deserves to feel proud of how they speak.</p>
         <p>She knows that real progress happens with lots of practice between sessions, and that practice works best when it feels like play. So she created this site on her own time, as a personal project, to make speech practice fun and easy for families everywhere.</p>
         <p>This site is independent. It is not affiliated with, sponsored by, or endorsed by any school, school district, or employer, and its content reflects Ms. Jana’s own views. No speech-language services are provided through this site, and it is not a way to request an evaluation, therapy, or clinical advice.</p>
         <p>If your child receives speech services at school, this site is optional extra practice. It does not replace, change, or report to those services. Please contact your child’s school team about their speech goals and progress.</p>
