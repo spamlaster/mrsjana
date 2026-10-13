@@ -12,12 +12,12 @@ interface Card {
   isMatched: boolean
 }
 
-// 6 x 4 grid = 12 pairs
-const PAIRS = 12
+// 4 x 3 grid = 6 pairs
+const PAIRS = 6
 
 function dealCards(words: SpeechWord[]): Card[] {
   const shuffled = [...words].sort(() => Math.random() - 0.5)
-  // Categories with fewer than 12 words repeat some words to fill the grid
+  // Categories with fewer than 6 words repeat some words to fill the grid
   const picked = Array.from({ length: PAIRS }, (_, i) => shuffled[i % shuffled.length])
   return [...picked, ...picked].sort(() => Math.random() - 0.5).map((word, idx) => ({
     id: `${word.id}-${idx}`, word, isFlipped: false, isMatched: false,
