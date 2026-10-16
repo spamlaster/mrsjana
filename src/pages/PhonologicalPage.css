@@ -1,0 +1,6 @@
+.phonological-page { max-width: 1080px; margin: auto; padding: 4px 0 48px; }
+.phonological-hero { text-align: center; margin: 4px auto 18px; max-width: 720px; }
+.phonological-hero h1 { font-size: clamp(30px, 5vw, 44px); letter-spacing: -1px; margin: 6px 0 12px; }
+.phonological-intro { color: var(--text-light); font-size: 17px; }
+.phonological-nav-compact { padding: 12px 0; }
+@media (max-width: 700px) { .phonological-nav-compact .section-nav { display: none; } }

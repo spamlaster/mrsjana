@@ -3,9 +3,11 @@ import { games, getSpeechCategory, getSpeechSound } from '../data/speeches'
 import { stories } from '../data/stories'
 import { trackPageView } from './analytics'
 import { studentTracking } from '../practice/features'
+import { parseCenterRoute, type CenterRoute } from '../minimal-pairs/route'
+import type { SessionResult } from '../minimal-pairs/session/result'
 
 export interface Route {
-  screen: 'home' | 'sound-select' | 'category-select' | 'game-select' | 'playing' | 'complete' | 'stories' | 'coach' | 'review' | 'grown-ups'
+  screen: 'home' | 'sound-select' | 'category-select' | 'game-select' | 'playing' | 'complete' | 'stories' | 'coach' | 'review' | 'grown-ups' | 'phonological'
   soundId?: string
   categoryId?: string
   gameId?: string
@@ -13,6 +15,8 @@ export interface Route {
   page?: number
   filter?: string
   stats?: { wordsPracticed: number; speechReps: number }
+  center?: CenterRoute // the Minimal Pairs Therapy Center, under #/phonological
+  centerResult?: SessionResult // a finished minimal pairs session, from history.state
 }
 
 export function parseRoute(hash: string): Route {
@@ -21,6 +25,7 @@ export function parseRoute(hash: string): Route {
   const [section, soundId, categoryId, gameId, result] = parts
   if (section === 'review' && !studentTracking) return { screen: 'home' }
   if (section === 'coach' || section === 'review' || section === 'grown-ups') return { screen: section }
+  if (section === 'phonological') return { screen: section, center: parseCenterRoute(parts.slice(1), query) }
   if (section === 'stories') {
     const filter = new URLSearchParams(query).get('sound') || 'all'
     if (!soundId) return { screen: 'stories', filter: filter === 'all' || getSpeechSound(filter) ? filter : 'all' }
@@ -47,7 +52,7 @@ export function getRoute(): Route {
   const key = `${window.location.hash}:${JSON.stringify(window.history.state)}`
   if (key !== cachedKey || !cachedRoute) {
     cachedKey = key
-    cachedRoute = { ...parseRoute(window.location.hash), stats: window.history.state?.practiceStats }
+    cachedRoute = { ...parseRoute(window.location.hash), stats: window.history.state?.practiceStats, centerResult: window.history.state?.centerResult }
   }
   return cachedRoute
 }
@@ -63,10 +68,10 @@ function subscribe(listener: () => void) {
   }
 }
 
-export function navigate(path: string, stats?: Route['stats']) {
+export function navigate(path: string, stats?: Route['stats'], centerResult?: SessionResult) {
   const url = `#${path}`
-  if (window.location.hash === url && !stats) return
-  window.history.pushState({ practiceIndex: (window.history.state?.practiceIndex || 0) + 1, practiceStats: stats }, '', url)
+  if (window.location.hash === url && !stats && !centerResult) return
+  window.history.pushState({ practiceIndex: (window.history.state?.practiceIndex || 0) + 1, practiceStats: stats, centerResult }, '', url)
   // Invalidate even when returning to a previously visited URL: old game callbacks must stay stale.
   cachedKey = ''
   emit()

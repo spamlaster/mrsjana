@@ -1,0 +1,7 @@
+.section-nav ul { display: flex; gap: 4px; padding: 4px; list-style: none; background: white; border: 2px solid #e9e3d7; border-radius: 30px; }
+.section-nav a { display: inline-flex; align-items: center; min-height: 40px; padding: 8px 16px; border-radius: 24px; color: #57418c; font-size: 14px; font-weight: 800; text-decoration: none; white-space: nowrap; transition: all 0.2s ease; }
+.section-nav a:hover { background: #f0ebe3; }
+.section-nav a.current { background: #7658c9; color: white; }
+.section-nav a:focus-visible { outline: 3px solid #667eea; outline-offset: 2px; }
+/* On narrow screens the tabs drop below the logo and Let's play. */
+@media (max-width: 700px) { .home-nav { flex-wrap: wrap; }.section-nav { order: 1; width: 100%; }.section-nav ul { justify-content: center; }.section-nav li { flex: 1; }.section-nav a { width: 100%; justify-content: center; padding: 8px 10px; font-size: 13px; } }

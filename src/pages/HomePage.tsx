@@ -1,6 +1,7 @@
 import { MsJana } from '../components/MsJana'
 import { SoundSelector } from '../components/SoundSelector'
 import { SiteFooter } from '../components/SiteFooter'
+import { SectionNav } from '../components/SectionNav'
 import type { SpeechSound } from '../types'
 import { studentTracking } from '../practice/features'
 import practiceWithMsJana from '../assets/practice-with-ms-jana.jpg'
@@ -17,15 +18,15 @@ export function HomePage({ sounds, onStartPractice, onOpenStories }: HomePagePro
   return (
     <div className="home-page">
       <header className="home-nav">
-        <a className="brand" href="#/"><span aria-hidden="true">✳</span> Ms. Jana<span className="brand-dot">.</span></a>
-        <span className="nav-note">Little practice. Big adventures.</span>
+        <a className="brand" href="#/"><span aria-hidden="true">✳</span> Ms. Jana</a>
+        <SectionNav current="articulation" />
         <button className="nav-link" onClick={() => onStartPractice('')}>Let’s play <span aria-hidden="true">↗</span></button>
       </header>
       <main>
         <section className="hero-section">
           <div className="hero-content">
             <p className="eyebrow"><span aria-hidden="true">✦</span> THE SPEECH & PLAY CLUB</p>
-            <h1 className="site-title">Small sounds.<br /><span>BIG adventures!</span></h1>
+            <h1 className="site-title">Small sounds<br /><span>BIG adventures!</span></h1>
             <p className="description">Pop a balloon. Find a treasure. Make a match.<br />Let’s turn speech practice into playtime!</p>
             <button className="cta-button" onClick={() => document.getElementById('sounds')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })}>Let’s play! <span aria-hidden="true">→</span></button>
             <p className="hero-note">Go at your own pace. Every try counts.</p>
