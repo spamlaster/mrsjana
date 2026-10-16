@@ -1,8 +1,7 @@
-.home-page { max-width: 1180px; margin: auto; padding: 0 32px; }
+.home-page { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 32px; }
 .home-nav { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 28px 0; }
 .brand { text-decoration: none; font-size: 26px; font-weight: 900; color: var(--text); letter-spacing: -1px; }
 .brand > span:first-child { color: #7760cf; font-size: 36px; vertical-align: middle; margin-right: 8px; }
-.brand-dot { color: #ef795f; }
 .nav-note { font-size: 13px; color: var(--text-light); }
 .nav-link { color: var(--text); text-decoration: none; font-weight: 800; background: white; border: 2px solid #e9e3d7; border-radius: 30px; padding: 10px 20px; }
 .hero-section { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: center; padding: 45px 0 55px; }

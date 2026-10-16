@@ -10,7 +10,11 @@
     "preview": "vite preview",
     "test:routing": "node scripts/routing.test.mjs",
     "test:key-house": "node scripts/key-house.test.mjs",
-    "voice": "node --env-file-if-exists=.env.local scripts/generate-word-audio.mjs"
+    "test:minimal-pairs": "node scripts/minimal-pairs.test.mjs && node scripts/minimal-pairs-session.test.mjs && node scripts/minimal-pairs-ui.test.mjs && node scripts/minimal-pairs-audio.test.mjs && node scripts/minimal-pairs-images.test.mjs",
+    "voice": "node --env-file-if-exists=.env.local scripts/generate-word-audio.mjs",
+    "voice:minimal-pairs": "node --env-file-if-exists=.env.local scripts/minimal-pairs-audio.mjs",
+    "voice:minimal-pairs:dry-run": "node scripts/minimal-pairs-audio.mjs --dry-run",
+    "images:minimal-pairs": "node scripts/minimal-pairs-images.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",

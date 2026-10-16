@@ -1,0 +1,126 @@
+/* Minimal pairs games. Visuals follow the shared session: animations key off each mark, and Undo simply re-renders. */
+.mp-game { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; min-height: 260px; padding: 16px 20px; border-radius: 28px; background: #f7f3ec; border: 2px solid #e9e3d7; text-align: center; }
+.mp-game-cheer { font-size: 20px; font-weight: 900; color: #57418c; animation: mp-pop-in .35s ease-out; }
+@keyframes mp-pop-in { from { transform: scale(.85); opacity: 0; } }
+@keyframes mp-wobble { 25% { transform: rotate(-4deg) scale(1.03); } 75% { transform: rotate(4deg) scale(1.03); } }
+@keyframes mp-float { 50% { transform: translateY(-8px); } }
+
+/* Say the Word */
+.say-the-word { background: #fff6dc; border-color: #f2d98f; }
+.stw-stars { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; list-style: none; max-width: 520px; }
+.stw-star { font-size: 40px; line-height: 1; color: #e3dccd; }
+.stw-star.lit { color: #ffbf2f; text-shadow: 0 3px 0 #e39b14; }
+.stw-star.next { color: #d9cdee; animation: mp-float 1.6s ease-in-out infinite; }
+.stw-star.new { animation: mp-star-in .5s ease-out; }
+@keyframes mp-star-in { from { transform: scale(2) rotate(-40deg); opacity: 0; } }
+
+/* Bubble Pop: scene styles below. */
+.bp-stage { display: flex; flex-direction: column; align-items: center; gap: 10px; justify-content: center; }
+.bp-bubble { display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.bp-bubble:disabled { opacity: 1; cursor: default; }
+.bp-bubble .mp-picture { background: rgba(255, 255, 255, .55); border-radius: 50%; }
+
+/* Feed the Monster */
+.feed-the-monster { background: #f1ebfc; border-color: #d5c7f1; }
+.ftm-stage { display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; }
+.ftm-monster { width: 190px; height: 190px; animation: mp-float 3s ease-in-out infinite; }
+.ftm-monster.chewing { animation: mp-chew .35s ease-in-out 3; }
+.ftm-fill { transition: y .6s ease, height .6s ease; }
+@keyframes mp-chew { 50% { transform: scaleY(.94) scaleX(1.04); } }
+.ftm-snack { padding: 10px; border-radius: 50%; background: white; border: 4px solid #ffc957; box-shadow: 0 6px 0 #e39b14; animation: mp-pop-in .4s ease-out, mp-wobble 1.6s ease-in-out .6s infinite; }
+.ftm-snack:disabled { opacity: 1; cursor: default; }
+.ftm-snack.eaten { animation: mp-eaten .55s ease-in forwards; }
+.ftm-plate .mp-picture { border-radius: 50%; }
+@keyframes mp-eaten { to { transform: translateX(-160px) scale(.1) rotate(-200deg); opacity: 0; } }
+.ftm-count { font-weight: 800; color: #6b6178; }
+
+/* Spin & Say */
+.spin-and-say { background: #fff1e8; border-color: #f5ceba; }
+.sas-row { display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; }
+.sas-side { display: flex; align-items: center; justify-content: center; min-width: 170px; min-height: 170px; }
+.sas-wheel-wrap { position: relative; width: min(240px, 64vw); aspect-ratio: 1; }
+.sas-wheel { width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 8px 0 #f0c3aa; transition: transform 2.8s cubic-bezier(.17, .67, .2, 1); }
+.sas-pointer { position: absolute; top: -18px; left: 50%; z-index: 1; transform: translateX(-50%); font-size: 30px; color: #e2774f; text-shadow: 0 2px 0 #fff; }
+.sas-spin { padding: 14px 32px; min-height: 56px; border-radius: 20px; background: #e2774f; color: white; font-size: 22px; font-weight: 900; box-shadow: 0 6px 0 #a94f2e; }
+.sas-spin:hover:not(:disabled) { transform: translateY(-2px); }
+.sas-reveal { animation: mp-star-in .5s ease-out; }
+
+/* Treasure Reveal */
+.treasure-reveal { background: #e8f5f0; border-color: #bfe0d2; }
+.tr-board { position: relative; width: min(100%, 520px); aspect-ratio: 25 / 16; border-radius: 22px; overflow: hidden; border: 4px solid #c99a5b; box-shadow: 0 6px 0 #a37b54; }
+.tr-scene { display: block; width: 100%; height: 100%; }
+.tr-tiles { position: absolute; inset: 0; display: grid; }
+.tr-tile { display: flex; align-items: center; justify-content: center; background: #b98961; border: 2px solid #9c6f45; color: #f5dfbd; font-size: clamp(16px, 3vw, 26px); font-weight: 900; transition: opacity .5s ease, transform .5s ease; }
+.tr-tile:nth-child(even) { background: #c49468; }
+.tr-tile.lifted { opacity: 0; transform: scale(.4) rotate(14deg); }
+.tr-board.found { animation: mp-wobble .6s ease-in-out 2; }
+
+/* Sound Train */
+.sound-train { background: linear-gradient(#dff1fb 60%, #e6eee2 60%); border-color: #cbdcbc; }
+.st-track-wrap { position: relative; width: 100%; height: 150px; overflow: hidden; }
+.st-track { position: absolute; left: 56px; right: 40px; bottom: 26px; height: 8px; border-radius: 4px; background: repeating-linear-gradient(90deg, #8b6b4a 0 6px, #b59473 6px 16px); }
+.st-stop { position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 50%; transform: translate(-50%, -50%); background: #fff; border: 2px solid #b59473; }
+.st-stop.passed { background: #ffc957; border-color: #e39b14; }
+.st-station { position: absolute; right: -34px; bottom: -6px; font-size: 32px; }
+.st-train { position: absolute; bottom: 30px; left: calc(56px + (100% - 96px) * var(--progress, 0)); display: flex; align-items: flex-end; gap: 4px; transform: translateX(calc(-100% + 30px)); transition: left .7s ease; }
+.st-engine { width: 72px; height: 54px; }
+.st-car { display: flex; align-items: center; justify-content: center; width: 58px; height: 50px; border-radius: 10px 10px 6px 6px; border-bottom: 6px solid #343047; }
+.st-car .mp-picture { width: 42px; height: 42px; font-size: 28px; background: rgba(255, 255, 255, .8); }
+.st-car .mp-placeholder-text { display: none; }
+.st-car.new { animation: mp-bubble-in .5s ease-out; }
+.st-more { align-self: center; padding: 4px 8px; border-radius: 10px; background: white; font-size: 13px; font-weight: 900; color: #57418c; }
+
+/* Listening */
+.listening { background: #e3f0fa; border-color: #bcd9ee; }
+.ld-progress .stw-star { font-size: 26px; }
+.ld-listen { padding: 14px 30px; min-height: 60px; border-radius: 22px; background: #2f7fc1; color: white; font-size: 24px; font-weight: 900; box-shadow: 0 6px 0 #1f5a8a; }
+.ld-listen:hover:not(:disabled) { transform: translateY(-2px); }
+.ld-choices { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; }
+.ld-choice { padding: 10px; border-radius: 30px; background: white; border: 4px solid #bcd9ee; box-shadow: 0 6px 0 #bcd9ee; }
+.ld-choice:hover:not(:disabled) { transform: translateY(-3px); border-color: #7658c9; }
+.ld-choice:disabled { opacity: .55; }
+.ld-choice.is-shaking { animation: ld-shake .5s ease; border-color: #df5c62; }
+@keyframes ld-shake { 0%, 100% { transform: translateX(0); } 15% { transform: translateX(-9px) rotate(-2deg); } 35% { transform: translateX(9px) rotate(2deg); } 55% { transform: translateX(-6px) rotate(-1deg); } 75% { transform: translateX(6px) rotate(1deg); } }
+.ld-feedback { font-size: 18px; font-weight: 800; padding: 6px 14px; border-radius: 14px; animation: mp-pop-in .35s ease-out; }
+.ld-feedback.right { background: #d9f1dd; color: #2f6b3a; }
+.ld-feedback.gentle { background: #fff0ce; color: #6b4f0e; }
+
+@media (max-width: 600px) {
+  .mp-game { padding: 14px 10px; min-height: 220px; }
+  .bp-bubble { width: 180px; height: 180px; }
+  .bp-bubble .mp-picture-lg, .ftm-plate .mp-picture-lg, .sas-reveal .mp-picture-lg, .ld-choice .mp-picture-lg { width: 120px; height: 120px; font-size: 78px; }
+  .ftm-monster { width: 160px; height: 160px; }
+  .stw-star { font-size: 30px; }
+  .st-car { width: 46px; height: 42px; }
+  .st-car .mp-picture { width: 32px; height: 32px; font-size: 22px; }
+  .st-engine { width: 58px; height: 44px; }
+}
+
+/* Bubble Pop's quiet underwater scene. Decorative motion never moves the tap target away. */
+.bubble-pop { position: relative; isolation: isolate; overflow: hidden; min-height: 460px; background: linear-gradient(#75d4e2, #258fb7 65%, #216b91); border-color: #6cc9da; }
+.bp-ocean { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.bp-rays { position: absolute; inset: 0; background: repeating-conic-gradient(from -25deg at 50% -20%, transparent 0deg 12deg, #ffffff16 12deg 22deg, transparent 22deg 40deg); }
+.bp-seafloor { position: absolute; bottom: 0; width: 100%; height: 120px; }
+.bp-tiny-bubble { position: absolute; bottom: -30px; width: 14px; height: 14px; border: 1px solid #ffffff80; border-radius: 50%; background: #ffffff12; animation: bp-drift 12s linear infinite; }
+@keyframes bp-drift { to { transform: translateY(-550px); opacity: 0; } }
+.bubble-pop .bp-stage { min-height: 310px; z-index: 1; }
+.bubble-pop .bp-bubble { position: relative; width: 220px; height: 220px; background: radial-gradient(circle at 28% 22%, #ffffffe6, #e3fbff66 30%, #b7ebf344 65%, #ffffffaa); border: 3px solid #ffffffbb; box-shadow: inset -10px -14px 26px #d3f6ff55, inset 6px 6px 14px #fff9, 0 12px 28px #15577733; animation: bp-rise .8s ease-out; }
+@keyframes bp-rise { from { transform: translateY(170px) scale(.8); opacity: 0; } }
+.bubble-pop .bp-bubble:focus-visible { outline: 4px solid #fff; outline-offset: 6px; }
+.bubble-pop .bp-bubble.popped { background: transparent; border-color: transparent; box-shadow: none; animation: none; }
+.bp-splash { position: absolute; inset: 0; }
+.bp-splash i { position: absolute; left: calc(50% - 9px); top: calc(50% - 9px); width: 18px; height: 18px; border: 2px solid #fff; border-radius: 50%; animation: bp-splash .6s ease-out forwards; }
+@keyframes bp-splash { from { transform: translateY(-35px) scale(1); } to { transform: translateY(-130px) scale(.4); opacity: 0; } }
+.bubble-pop .mp-game-cheer { color: #fff; text-shadow: 0 2px 4px #185777; font-size: 23px; }
+.bp-progress { width: min(200px, 65%); height: 8px; background: #124f7266; border-radius: 20px; overflow: hidden; z-index: 1; }
+.bp-progress span { display: block; height: 100%; background: #d5fbff; border-radius: inherit; transition: width .3s; }
+.bp-count { color: white; font-size: 14px; z-index: 1; }
+.bp-ocean-finish { color: white; font-size: 25px; font-weight: 800; }
+.bp-ocean-finish > span { display: block; font-size: 90px; }
+.bp-adult-option { align-self: center; display: flex; align-items: center; gap: 10px; padding: 12px; font-size: 14px; }
+.bp-adult-option input { width: 20px; height: 20px; }
+@media (max-width: 600px) { .bubble-pop { min-height: 410px; } .bubble-pop .bp-bubble { width: 190px; height: 190px; } }
+@media (prefers-reduced-motion: reduce) {
+  .bubble-pop *, .bubble-pop *::before, .bubble-pop *::after { animation: none !important; transition: none !important; }
+  .bp-splash i { transform: translateY(-85px); }
+}

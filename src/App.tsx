@@ -4,6 +4,7 @@ import { ReviewPage } from './pages/ReviewPage'
 import { StoriesPage } from './pages/StoriesPage'
 import { HomePage } from './pages/HomePage'
 import { GrownUpsPage } from './pages/GrownUpsPage'
+import { PhonologicalPage } from './pages/PhonologicalPage'
 import { SiteFooter } from './components/SiteFooter'
 import { SoundSelector } from './components/SoundSelector'
 import { CategorySelector } from './components/CategorySelector'
@@ -95,7 +96,7 @@ function App() {
 
   return (
     <div className="app-container" key={`${screen}-${selectedSound}-${selectedCategory}-${selectedGame}`}>
-      {screen !== 'home' && (
+      {screen !== 'home' && screen !== 'phonological' && (
         <nav className="app-nav" aria-label="Practice navigation">
           <div className="app-nav-actions"><button className="app-home" onClick={() => goBack('/')}>← Back</button><button className="app-home" onClick={handleHome}>Home</button></div>
           {['stories', 'coach', 'review', 'grown-ups'].includes(screen) ? <span className="stories-nav-label">{screen === 'stories' ? '📚 Story time' : screen === 'coach' ? '🌼 Practice with Ms. Jana' : screen === 'grown-ups' ? 'Notes for grown-ups' : 'Practice review'}</span> : <ol className="practice-steps" aria-label="Practice steps">
@@ -113,6 +114,7 @@ function App() {
       {screen === 'review' && <div className="screen"><ReviewPage /></div>}
       {screen === 'stories' && <main className="screen"><StoriesPage /></main>}
       {screen === 'grown-ups' && <main className="screen"><GrownUpsPage /></main>}
+      {screen === 'phonological' && route.center && <PhonologicalPage center={route.center} result={route.centerResult} />}
 
       {screen === 'sound-select' && (
         <div className="screen">
