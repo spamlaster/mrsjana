@@ -8,14 +8,16 @@ import { isTrialCount, type TrialCount } from './session/trialSession'
 // Routes under #/phonological. Every segment is checked against the content, and an invalid one
 // falls back to the nearest valid screen above it, like the articulation routes in routing/router.ts.
 //
-//   #/phonological                                         choose a process
+// The quick picker supplies process, sound, position, and pair together. Partial
+// legacy paths still open the combined picker with their filters selected.
+//   #/phonological                                         choose practice words
 //   #/phonological/review                                  review status (preview mode only)
 //   #/phonological/review/recordings                       recordings checklist (preview mode only)
 //   #/phonological/fronting                                choose a target sound
 //   #/phonological/fronting/k                              choose beginning or end of word
 //   #/phonological/fronting/k/initial                      choose a pair
 //   #/phonological/fronting/k/initial/key-tea              choose an activity
-//   #/phonological/fronting/k/initial/key-tea/bubble-pop   choose 10 or 20 turns
+//   #/phonological/fronting/k/initial/key-tea/bubble-pop   legacy game link (opens game picker)
 //   #/phonological/fronting/k/initial/key-tea/bubble-pop?trials=20         play
 //   #/phonological/fronting/k/initial/key-tea/bubble-pop/complete          session summary
 
@@ -52,11 +54,12 @@ export function parseCenterRoute(parts: string[], query = '', options: CenterRou
   if (!pair || !pairsFor(process.id, sound, at.position, lib, preview).includes(pair)) return { view: 'pairs', ...at }
   const withPair = { ...at, pairId: pair.id }
   const activity = activityId ? getActivity(activityId) : undefined
-  if (!activity || (activity.kind === 'listening' && !listeningReady(pair))) return { view: 'activities', ...withPair }
+  const requestedTrials = Number(new URLSearchParams(query).get('trials'))
+  const savedTrials = isTrialCount(requestedTrials) ? { trials: requestedTrials } : {}
+  if (!activity || (activity.kind === 'listening' && !listeningReady(pair))) return { view: 'activities', ...withPair, ...savedTrials }
   const withActivity = { ...withPair, activityId: activity.id }
-  if (result === 'complete') return { view: 'complete', ...withActivity }
-  const trials = Number(new URLSearchParams(query).get('trials'))
-  return isTrialCount(trials) ? { view: 'playing', ...withActivity, trials } : { view: 'setup', ...withActivity }
+  if (result === 'complete') return { view: 'complete', ...withActivity, ...savedTrials }
+  return isTrialCount(requestedTrials) ? { view: 'playing', ...withActivity, trials: requestedTrials } : { view: 'setup', ...withActivity }
 }
 
 // The path for a route, without the leading #. Stops at the first missing segment.
@@ -66,6 +69,7 @@ export function centerPath(route: Omit<CenterRoute, 'view'> & { view?: CenterVie
   const segments = [route.processId, route.sound, route.position, route.pairId, route.activityId]
   const end = segments.findIndex(segment => !segment)
   const path = ['/phonological', ...segments.slice(0, end === -1 ? segments.length : end)].join('/')
-  if (route.view === 'complete') return `${path}/complete`
-  return route.view === 'playing' && route.trials ? `${path}?trials=${route.trials}` : path
+  const query = route.trials ? `?trials=${route.trials}` : ''
+  if (route.view === 'complete') return `${path}/complete${query}`
+  return route.view === 'playing' || !route.activityId ? `${path}${query}` : path
 }

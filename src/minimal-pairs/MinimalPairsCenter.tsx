@@ -1,13 +1,13 @@
 import { navigate } from '../routing/router'
 import { getActivity } from './activities/catalog'
 import { AudioCheck } from './components/AudioCheck'
-import { ActivityPicker, PairPicker, PositionPicker, ProcessPicker, SoundPicker } from './components/CenterPickers'
+import { PracticePicker } from './components/PracticePicker'
+import { ActivityPicker } from './components/CenterPickers'
 import { ListeningSession } from './components/ListeningSession'
 import { PlaySession } from './components/PlaySession'
 import { ReviewStatus } from './components/ReviewStatus'
-import { SessionSetup } from './components/SessionSetup'
 import { SessionSummary } from './components/SessionSummary'
-import { positionLabels, soundLabel } from './content/labels'
+import { soundLabel } from './content/labels'
 import { getPair, getProcess, getWord, isPlayable, rolesFor } from './content/selectors'
 import { previewMode } from './preview'
 import { centerPath, type CenterRoute, type CenterView } from './route'
@@ -22,24 +22,16 @@ interface MinimalPairsCenterProps {
 }
 
 const steps: { label: string; views: CenterView[] }[] = [
-  { label: 'Pattern', views: ['processes'] },
-  { label: 'Sound', views: ['sounds'] },
-  { label: 'Where', views: ['positions'] },
-  { label: 'Words', views: ['pairs'] },
-  { label: 'Game', views: ['activities'] },
-  { label: 'Turns', views: ['setup'] },
+  { label: 'Words', views: ['processes', 'sounds', 'positions', 'pairs'] },
+  { label: 'Game', views: ['activities', 'setup'] },
   { label: 'Play!', views: ['playing', 'complete'] },
 ]
 
 // Trail of choices so far; each one goes back to that step.
 function Breadcrumbs({ route }: { route: CenterRoute }) {
   const pair = route.pairId ? getPair(route.pairId) : undefined
-  const crumbs: { label: string; path: string }[] = [{ label: 'All patterns', path: '/phonological' }]
-  if (route.processId) crumbs.push({ label: getProcess(route.processId)?.name ?? route.processId, path: centerPath({ processId: route.processId }) })
-  if (route.sound) crumbs.push({ label: soundLabel(route.sound), path: centerPath({ processId: route.processId, sound: route.sound }) })
-  if (route.position) crumbs.push({ label: positionLabels[route.position].short, path: centerPath({ processId: route.processId, sound: route.sound, position: route.position }) })
-  if (pair) crumbs.push({ label: pair.words.map(id => getWord(id)?.text).join(' / '), path: centerPath({ ...route, activityId: undefined }) })
-  if (route.activityId) crumbs.push({ label: getActivity(route.activityId)?.name ?? '', path: centerPath({ ...route, view: 'setup' }) })
+  const crumbs: { label: string; path: string }[] = [{ label: 'Practice words', path: '/phonological' }]
+  if (pair) crumbs.push({ label: `${getProcess(route.processId ?? '')?.name ?? ''} · ${soundLabel(route.sound ?? '')} · ${pair.words.map(id => getWord(id)?.text).join(' / ')}`, path: centerPath({ ...route, activityId: undefined }) })
   if (crumbs.length < 2) return null
   return (
     <nav className="mp-crumbs" aria-label="Your choices">
@@ -68,19 +60,15 @@ export function MinimalPairsCenter({ route, result, preview = previewMode }: Min
   const screen = () => {
     if (view === 'review') return <ReviewStatus />
     if (view === 'recordings') return <AudioCheck />
-    if (view === 'processes' || !processId) return <ProcessPicker preview={preview} />
-    if (view === 'sounds' || !sound) return <SoundPicker processId={processId} preview={preview} />
-    if (view === 'positions' || !position) return <PositionPicker processId={processId} sound={sound} preview={preview} />
-    if (view === 'pairs' || !pair || !roles) return <PairPicker processId={processId} sound={sound} position={position} preview={preview} />
-    if (view === 'activities' || !activity) return <ActivityPicker processId={processId} sound={sound} position={position} pair={pair} preview={preview} />
+    if (['processes', 'sounds', 'positions', 'pairs'].includes(view) || !processId || !sound || !position || !pair || !roles) return <PracticePicker key={centerPath(route)} route={route} preview={preview} />
+    if (view === 'activities' || view === 'setup' || !activity || (!route.trials && view !== 'complete')) return <ActivityPicker key={centerPath(route)} processId={processId} sound={sound} position={position} pair={pair} preview={preview} initialTrials={route.trials} />
     if (view === 'complete') return <SessionSummary route={route} result={result} />
-    if (view === 'setup' || !route.trials) return <SessionSetup route={route} activity={activity} roles={roles} />
     const full = { ...route, processId, sound, position, pairId: pair.id, activityId: activity.id }
     // Keyed by the address so starting again from a link always starts a fresh session.
     const key = centerPath(full)
     return activity.kind === 'listening'
-      ? <ListeningSession key={key} route={full} pair={pair} roles={roles} activity={activity} trials={route.trials} />
-      : <PlaySession key={key} route={full} pair={pair} roles={roles} activity={activity} trials={route.trials} preview={preview} />
+      ? <ListeningSession key={key} route={full} pair={pair} roles={roles} activity={activity} trials={route.trials ?? 10} />
+      : <PlaySession key={key} route={full} pair={pair} roles={roles} activity={activity} trials={route.trials ?? 10} preview={preview} />
   }
 
   // While playing, keep the child's screen calm: one slim bar instead of the banner, steps, and trail.

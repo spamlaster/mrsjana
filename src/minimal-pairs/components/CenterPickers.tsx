@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { trialCounts, type TrialCount } from '../session/trialSession'
 import { navigate } from '../../routing/router'
 import { activityCatalog } from '../activities/catalog'
 import { audioFile, hasRecording, isAudioReviewed } from '../content/audio'
@@ -18,7 +20,7 @@ function StatusBadge({ pair }: { pair: MinimalPair }) {
 }
 
 // Two pictures and words; the target first.
-function PairFaces({ pair, processId, sound, size = 'sm' }: { pair: MinimalPair; processId: ProcessId; sound: string; size?: 'sm' | 'md' }) {
+export function PairFaces({ pair, processId, sound, size = 'sm' }: { pair: MinimalPair; processId: ProcessId; sound: string; size?: 'sm' | 'md' }) {
   const roles = rolesFor(pair, processId, sound)
   if (!roles) return null
   return (
@@ -140,17 +142,28 @@ function listeningNeeds(pair: MinimalPair): string[] {
   })
 }
 
-export function ActivityPicker({ processId, sound, position, pair, preview }: { processId: ProcessId; sound: string; position: Position; pair: MinimalPair; preview: boolean }) {
+export function ActivityPicker({ processId, sound, position, pair, preview, initialTrials = 10 }: { processId: ProcessId; sound: string; position: Position; pair: MinimalPair; preview: boolean; initialTrials?: TrialCount }) {
+  const [trials, setTrials] = useState<TrialCount>(initialTrials)
+  const [shareLink, setShareLink] = useState('')
   const listeningReady = pairListeningReady(pair)
   const needs = listeningNeeds(pair)
   return (
     <section className="mp-picker">
-      <p className="eyebrow">STEP 5 · CHOOSE A GAME</p>
+      <p className="eyebrow">STEP 2 · CHOOSE A GAME</p>
       <div className="mp-pair-hero">
         <PairFaces pair={pair} processId={processId} sound={sound} size="md" />
         {preview && <StatusBadge pair={pair} />}
       </div>
       <h2>What should we play?</h2>
+      <p className="mp-picker-hint">Pick a game to start. Your practice words are ready!</p>
+      <fieldset className="mp-length"><legend>How many turns?</legend>{trialCounts.map(value => (
+        <button key={value} type="button" aria-pressed={trials === value} onClick={() => setTrials(value)}>{value} turns</button>
+      ))}</fieldset>
+      <div className="mp-share"><button className="mp-button mp-button-soft mp-button-small" onClick={() => {
+        const url = new URL(window.location.href)
+        url.hash = centerPath({ processId, sound, position, pairId: pair.id })
+        setShareLink(url.href)
+      }}>Get practice link for a student</button>{shareLink && <label>Copy this link to open these words and choose a game:<input aria-label="Student practice link" readOnly value={shareLink} onFocus={event => event.currentTarget.select()} /></label>}</div>
       <div className="mp-card-grid mp-activity-grid">
         {activityCatalog.map((activity, i) => {
           const unavailable = activity.kind === 'listening' && !listeningReady
@@ -158,12 +171,13 @@ export function ActivityPicker({ processId, sound, position, pair, preview }: { 
             <button
               key={activity.id}
               className={`mp-card mp-activity-card mp-tone-${i % 5}${activity.kind === 'listening' ? ' mp-activity-optional' : ''}`}
-              onClick={() => navigate(centerPath({ processId, sound, position, pairId: pair.id, activityId: activity.id }))}
+              onClick={() => navigate(centerPath({ processId, sound, position, pairId: pair.id, activityId: activity.id, view: 'playing', trials }))}
               disabled={unavailable}
             >
               <span className="mp-card-icon" aria-hidden="true">{activity.icon}</span>
               <span className="mp-card-title">{activity.name}{activity.kind === 'listening' && <span className="mp-optional">Optional</span>}</span>
               <span className="mp-card-note">{activity.description}</span>
+              <span className="mp-card-tagline">{activity.kind === 'listening' ? 'Play on your own · tap a picture' : activity.id === 'bubble-pop' ? 'Play on your own · say and pop' : 'Play with a grown-up · scoring each turn'}</span>
               {unavailable
                 ? <span className="mp-card-foot mp-card-needs">Not ready yet. Needs {needs.join(', ')}.</span>
                 : <span className="mp-card-foot">Let’s play →</span>}
