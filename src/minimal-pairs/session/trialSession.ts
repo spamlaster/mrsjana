@@ -5,6 +5,7 @@ export type Mark = 'correct' | 'incorrect' | 'cued'
 export type Role = 'target' | 'contrast'
 export type TrialCount = 10 | 20
 export const trialCounts: TrialCount[] = [10, 20]
+export const defaultTrialCount: TrialCount = 20
 export const isTrialCount = (value: number): value is TrialCount => value === 10 || value === 20
 
 export interface Trial {

@@ -117,14 +117,12 @@
 .mp-play-listening > .mp-scoring-note { text-align: center; color: #a2492f; }
 
 /* Setup */
-.mp-setup-icon { display: block; font-size: 64px; }
-.mp-setup-words { display: flex; justify-content: center; gap: 24px; margin: 6px 0 22px; }
-.mp-setup-choices { display: flex; justify-content: center; flex-wrap: wrap; gap: 18px; }
-.mp-turns { display: flex; flex-direction: column; align-items: center; min-width: 180px; padding: 18px 26px; border-radius: 26px; background: #7658c9; color: white; font-weight: 800; box-shadow: 0 6px 0 #513691; }
-.mp-turns:nth-child(2) { background: #e2774f; box-shadow: 0 6px 0 #a94f2e; }
-.mp-turns:hover { transform: translateY(-3px); }
-.mp-turns-number { font-size: 48px; font-weight: 900; line-height: 1.1; }
-.mp-setup-note { margin-top: 18px; color: var(--text-light); font-size: 14px; }
+.mp-play-options { display: flex; justify-content: center; align-items: stretch; flex-wrap: wrap; gap: 10px; }
+.mp-turns-option, .mp-adult-option { display: flex; align-items: center; gap: 10px; padding: 8px 14px; min-height: 48px; border-radius: 14px; background: white; border: 2px solid #d5c7f1; box-shadow: 0 3px 0 #d5c7f1; font-size: 15px; font-weight: 700; color: var(--mp-ink); cursor: pointer; }
+.mp-turns-option.checked { background: #f1ebfc; border-color: #7658c9; }
+.mp-turns-option > span { display: flex; flex-direction: column; text-align: left; line-height: 1.25; }
+.mp-turns-option small { font-size: 12px; font-weight: 600; color: var(--text-light); }
+.mp-turns-option input, .mp-adult-option input { width: 20px; height: 20px; flex-shrink: 0; accent-color: #7658c9; }
 
 /* Summary */
 .mp-summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 300px)); justify-content: center; gap: 18px; margin: 10px 0 18px; }
@@ -220,7 +218,5 @@
   .mp-prompt .mp-picture-lg { width: 96px; height: 96px; font-size: 62px; }
   .mp-prompt-word { font-size: 30px; }
   .mp-summary-grid { grid-template-columns: 1fr; }
-  .mp-setup-words { gap: 14px; }
-  .mp-turns { min-width: 140px; padding: 14px 18px; }
 }
 .mp-review-table .mp-button-small, .mp-review-table .mp-status { white-space: nowrap; }

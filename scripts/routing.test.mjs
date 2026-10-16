@@ -109,13 +109,16 @@ for (const [path, view] of [
   ['fronting/k/initial/key-tea', 'activities'], ['backing/t/initial/key-tea', 'activities'],
   ['stopping/ch', 'sounds'], ['deaffrication/ch/final/catch-cat', 'activities'], ['stopping/th/initial/thin-pin', 'activities'],
   ['cluster-reduction/st/final', 'positions'], ['cluster-reduction/st/initial/stop-top', 'activities'],
-  ['fronting/k/initial/key-tea/unknown', 'activities'], ['fronting/k/initial/key-tea/bubble-pop', 'setup'],
-  ['fronting/k/initial/key-tea/bubble-pop?trials=15', 'setup'], ['fronting/k/initial/key-tea/bubble-pop?trials=20', 'playing'],
+  ['fronting/k/initial/key-tea/unknown', 'activities'], ['fronting/k/initial/key-tea/bubble-pop', 'playing'],
+  ['fronting/k/initial/key-tea/bubble-pop?trials=15', 'playing'], ['fronting/k/initial/key-tea/bubble-pop?trials=20', 'playing'],
   ['fronting/k/initial/key-tea/sound-train/complete', 'complete'], ['review/recordings', 'recordings'],
 ]) assert.equal(center(path).view, view, `#/phonological/${path} → ${view}`)
 assert.equal(center('fronting/k/initial/key-tea/spin-and-say?trials=20').trials, 20)
+assert.equal(center('fronting/k/initial/key-tea/spin-and-say').trials, 20, 'Games default to 20 turns')
+assert.equal(center('fronting/k/initial/key-tea/spin-and-say?trials=15').trials, 20, 'An unknown turn count falls back to 20')
+assert.equal(center('fronting/k/initial/key-tea/spin-and-say?trials=10').trials, 10)
 assert.equal(center('fronting/k/initial/key-tea/listening', { listeningReady: () => false }).view, 'activities', 'Listening stays closed until the pair is ready')
-assert.equal(center('fronting/k/initial/key-tea/listening', { listeningReady: () => true }).view, 'setup', 'Listening opens once the pair is ready')
+assert.equal(center('fronting/k/initial/key-tea/listening', { listeningReady: () => true }).view, 'playing', 'Listening opens once the pair is ready')
 for (const path of ['fronting', 'fronting/k', 'fronting/k/initial/key-tea', 'fronting/k/initial/key-tea/feed-the-monster', 'fronting/k/initial/key-tea/feed-the-monster?trials=10', 'fronting/k/initial/key-tea/feed-the-monster/complete', 'review']) {
   assert.equal(centerPath(center(path)), `/phonological/${path}`, `centerPath round-trips ${path}`)
 }

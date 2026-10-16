@@ -35,7 +35,7 @@ export function SessionSummary({ route, result }: SessionSummaryProps) {
   const [copied, setCopied] = useState<'idle' | 'done' | 'failed'>('idle')
   const matches = result && result.pairId === route.pairId && result.activityId === route.activityId
   const activity = route.activityId ? getActivity(route.activityId) : undefined
-  const again = () => navigate(centerPath({ ...route, view: 'setup' }))
+  const again = () => navigate(centerPath({ ...route, view: 'playing', trials: matches ? result.total : undefined }))
   const otherGame = () => navigate(centerPath({ ...route, activityId: undefined, view: 'activities' }))
   const otherPair = () => navigate(centerPath({ ...route, pairId: undefined, activityId: undefined, view: 'pairs' }))
   const actions = (

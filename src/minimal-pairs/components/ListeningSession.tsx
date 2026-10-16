@@ -11,6 +11,7 @@ import { today, type SessionResult } from '../session/result'
 import type { TrialCount } from '../session/trialSession'
 import { sayPhrase } from '../../practice/speech'
 import { pairWords, playById, toActivityWord } from './activityWords'
+import { TurnsOption } from './TurnsOption'
 
 interface ListeningSessionProps {
   route: CenterRoute & Required<Pick<CenterRoute, 'processId' | 'sound' | 'position' | 'pairId' | 'activityId'>>
@@ -80,6 +81,7 @@ export function ListeningSession({ route, pair, roles, activity, trials }: Liste
   return (
     <div className="mp-play mp-play-listening">
       <p className="mp-play-howto"><span aria-hidden="true">{activity.icon}</span> {activity.howTo}</p>
+      {state.current === 0 && !trial?.answer && <div className="mp-play-options" aria-label="Grown-up options" role="group"><TurnsOption route={route} trials={trials} noun={activity.turnNoun} /></div>}
       <ListeningDiscrimination
         words={words}
         total={trials}

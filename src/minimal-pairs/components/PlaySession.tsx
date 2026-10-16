@@ -12,6 +12,7 @@ import { buildTrials, currentTrial, isComplete, sessionReducer, startSession, su
 import { pairWords, playById, toActivityWord } from './activityWords'
 import { AdultScoringBar } from './AdultScoringBar'
 import { TrialPrompt } from './TrialPrompt'
+import { TurnsOption } from './TurnsOption'
 
 interface PlaySessionProps {
   route: CenterRoute & Required<Pick<CenterRoute, 'processId' | 'sound' | 'position' | 'pairId' | 'activityId'>>
@@ -26,7 +27,8 @@ interface PlaySessionProps {
 // Games request practice completion; this shell owns advancement, marks, undo, and summaries.
 export function PlaySession({ route, pair, roles, activity, trials, preview }: PlaySessionProps) {
   const [adultScoring, setAdultScoring] = useState(false)
-  const practice = activity.id === 'bubble-pop' && !adultScoring
+  const [started, setStarted] = useState(false)
+  const practice = !!activity.practiceByDefault && !adultScoring
   const Game = productionGames[activity.id]
   const [state, dispatch] = useReducer(sessionReducer, undefined, () => startSession(buildTrials(roles.target.id, roles.contrast.id, trials)))
   const [revealedAt, setRevealedAt] = useState(-1)
@@ -35,6 +37,7 @@ export function PlaySession({ route, pair, roles, activity, trials, preview }: P
   const trial = currentTrial(state)
   const current = trial ? { word: wordById(trial.wordId) } : null
   const done = state.trials.slice(0, state.current).map(item => wordById(item.wordId))
+  const sequence = state.trials.map(item => wordById(item.wordId))
   const revealed = !activity.revealsWord || revealedAt === state.markId
   const finished = isComplete(state)
 
@@ -42,7 +45,10 @@ export function PlaySession({ route, pair, roles, activity, trials, preview }: P
   const advance = useCallback(() => dispatch({ type: 'advance' }), [])
   const undo = useCallback(() => dispatch({ type: 'undo' }), [])
   const onReveal = useCallback(() => setRevealedAt(state.markId), [state.markId])
-  const restart = () => dispatch({ type: 'restart', trials: buildTrials(roles.target.id, roles.contrast.id, trials) })
+  const onStart = useCallback(() => setStarted(true), [])
+  // A new round remounts the game, so timed games (Bubble Pop, Say the Word) start fresh.
+  const [round, setRound] = useState(0)
+  const restart = () => { setRound(value => value + 1); dispatch({ type: 'restart', trials: buildTrials(roles.target.id, roles.contrast.id, trials) }) }
   const finish = () => {
     const result: SessionResult = {
       kind: practice ? 'practice' : 'production', activityId: activity.id, activityName: activity.name,
@@ -62,9 +68,15 @@ export function PlaySession({ route, pair, roles, activity, trials, preview }: P
   return (
     <div className={`mp-play mp-play-${activity.id}`}>
       <p className="mp-play-howto"><span aria-hidden="true">{activity.icon}</span> {activity.howTo}</p>
-      <div className={`mp-play-main${activity.pictureInGame ? ' mp-play-main-compact' : ''}`}>
-        <TrialPrompt word={current?.word ?? null} showPicture={!activity.pictureInGame} hidden={!revealed} onListen={word => playById(word.id)} />
-        <Game key={practice ? "practice" : "scored"} onComplete={practice ? advance : undefined} total={trials} completed={state.current} current={current} done={done} words={words} markId={state.markId} lastAction={state.lastAction} revealed={revealed} onReveal={onReveal} />
+      {state.current === 0 && !started && (
+        <div className="mp-play-options" aria-label="Grown-up options" role="group">
+          <TurnsOption route={route} trials={trials} noun={activity.turnNoun} />
+          {activity.practiceByDefault && <label className="mp-adult-option"><input type="checkbox" checked={adultScoring} onChange={event => setAdultScoring(event.target.checked)} /> Grown-up scoring</label>}
+        </div>
+      )}
+      <div className={`mp-play-main${activity.pictureInGame || activity.promptInGame ? ' mp-play-main-compact' : ''}`}>
+        {!activity.promptInGame && <TrialPrompt word={current?.word ?? null} showPicture={!activity.pictureInGame} hidden={!revealed} onListen={word => playById(word.id)} />}
+        <Game key={`${practice ? 'practice' : 'scored'}-${round}`} onComplete={practice ? advance : undefined} onStart={onStart} total={trials} completed={state.current} current={current} done={done} sequence={sequence} words={words} markId={state.markId} lastAction={state.lastAction} revealed={revealed} onReveal={onReveal} />
       </div>
       {finished && (
         <div className="mp-finish" role="status">
@@ -74,9 +86,6 @@ export function PlaySession({ route, pair, roles, activity, trials, preview }: P
             <button className="mp-button mp-button-soft" onClick={restart}>Play again</button>
           </div>
         </div>
-      )}
-      {activity.id === 'bubble-pop' && state.current === 0 && (
-        <label className="bp-adult-option"><input type="checkbox" checked={adultScoring} onChange={event => setAdultScoring(event.target.checked)} /> Grown-up scoring</label>
       )}
       {!practice && <AdultScoringBar completed={state.current} total={trials} finished={finished} onMark={mark} onUndo={undo} notes={notes} />}
     </div>

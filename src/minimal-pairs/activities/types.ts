@@ -16,10 +16,12 @@ export interface ActivityProps {
   completed: number // trials scored so far
   current: { word: ActivityWord } | null // null once every trial is scored
   done: ActivityWord[] // the words of the scored trials, in order
+  sequence: ActivityWord[] // every trial's word, in order (Bubble Pop sends up bubbles ahead of scoring)
   words: ActivityWord[] // both words of the pair, in a fixed order that says nothing about roles
   markId: number // changes on every mark, undo, or restart; use it to trigger animation
   lastAction: 'start' | 'mark' | 'undo'
   revealed: boolean // for games that reveal the word (Spin & Say); always true for the others
   onComplete?: () => void // unscored practice: advance after the child’s interaction
+  onStart?: () => void // a game that waits for Start (Say the Word practice) reports it, so the shell can hide setup options
   onReveal: () => void
 }

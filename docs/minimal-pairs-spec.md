@@ -86,7 +86,7 @@ src/minimal-pairs/
     activities.css
   components/
     CenterPickers.tsx         process, sound, position, pair, activity
-    SessionSetup.tsx          10 or 20 trials
+    TurnsOption.tsx           20 trials by default, or 10
     PlaySession.tsx           shell for every production game: trials, prompt, scoring bar
     ListeningSession.tsx      shell for Listening Discrimination
     TrialPrompt.tsx           picture, word, and listen button for the current trial
@@ -260,12 +260,12 @@ Hash routes nested under the existing `#/phonological` page, validated against t
 #/phonological/fronting/k                             choose beginning or end of word
 #/phonological/fronting/k/initial                     choose a pair
 #/phonological/fronting/k/initial/key-tea             choose an activity
-#/phonological/fronting/k/initial/key-tea/bubble-pop  choose 10 or 20 turns
-#/phonological/fronting/k/initial/key-tea/bubble-pop?trials=20
+#/phonological/fronting/k/initial/key-tea/bubble-pop  play 20 turns
+#/phonological/fronting/k/initial/key-tea/bubble-pop?trials=10
 #/phonological/fronting/k/initial/key-tea/bubble-pop/complete
 ```
 
-`trials` accepts only `10` or `20`; without a valid value the route shows the turn picker. A sound with only one position (every s-blend) links straight to its pairs. The session summary travels in `history.state`, like existing game results, and is lost on refresh by design. A "copy summary" button can let the adult take notes without the app storing anything.
+Games default to 20 turns. Before the first turn, a "Fewer turns: 5 of each word" checkbox above the game ("Fewer bubbles" in Bubble Pop) switches to `?trials=10` and starts a fresh session. `trials` accepts only `10` or `20`; any other value plays 20. A sound with only one position (every s-blend) links straight to its pairs. The session summary travels in `history.state`, like existing game results, and is lost on refresh by design. A "copy summary" button can let the adult take notes without the app storing anything.
 
 ## Audio and pictures
 

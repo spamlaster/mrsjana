@@ -22,7 +22,7 @@ A session goes like this:
 3. Choose where the sound is: the beginning or the end of the word.
 4. Choose a word pair (for example *key / tea*).
 5. Choose a game.
-6. Choose 10 or 20 turns. Each word comes up exactly half the time, in a shuffled order, and never more than three times in a row.
+6. Play. Games are 20 turns (10 of each word) by default; tick "Fewer turns: 5 of each word" above the game before starting for 10 (Bubble Pop says "Fewer bubbles"). Each word comes up exactly half the time, in a shuffled order, and never more than three times in a row.
 7. Play. After each try, the grown-up taps **Correct**, **Incorrect**, or **Cued**. **Undo** takes back the last tap. The game rewards every turn whatever the score, so the child is never penalized by the game.
 8. See the summary: results for each word, cued responses counted separately, and a button to copy the summary into your own notes.
 
@@ -204,8 +204,8 @@ back, bad, beef, beep, beet, beg, bid, big, bite, buck, bud, but, came, cash, ca
 | Game | What happens |
 |---|---|
 | **Listening Game** (optional, listed first) | The child taps the speaker and hears one of the two words, then taps the matching picture. The pictures unlock only after the word has played. Taps are scored automatically and reported separately from speech results. It is never required before the other games. It is switched off until both words in the pair have a picture and a recording Jana has checked, so **it cannot be tried yet**. |
-| **Say the Word** | A big picture and the word. Each turn lights a star. |
-| **Bubble Pop** | The word floats in a big bubble. The child says it and can pop the bubble. A row of small bubbles shows progress. |
+| **Say the Word** | Both pictures side by side, with an arrow pointing to the word to say. After **Start** it runs by itself, so a child can play alone: a new word every 3 seconds by default (2, 4, or 5 to choose), and the arrow disappears for the last second so a repeated word points again. Each turn lights a star. Grown-up scoring is optional; with it on, the arrow waits for a score. |
+| **Bubble Pop** | A bright coral reef, with small pictures of both words in the top corner. After **Start**, a bubble rises from a random spot on the sea floor every 3 seconds by default (2, 4, or 5 to choose) and takes half a second longer than that to reach the top, so several can be on screen at once. The child says each word and pops its bubble, trying to beat it to the top; a bubble that gets there hovers until popped. Grown-up scoring is optional; with it on, the bubble whose turn it is glows and a score pops it. |
 | **Feed the Monster** | Munch, a friendly purple monster, waits with an open mouth. The child says the word, then taps the snack to feed Munch, and Munch's tummy fills up with each turn. In 20 turns, each word comes up 10 times. |
 | **Spin & Say** | A wheel shows both words. The child spins it, and it always lands on the word for that turn; the word and picture appear only then. |
 | **Treasure Reveal** | Tiles cover a treasure island, and each turn lifts one. When the last tile goes, the treasure chest opens. |
@@ -220,13 +220,13 @@ The site manager starts preview mode on a computer with the project (`npm run de
 For each game:
 
 1. On the first screen, choose a pattern. Then choose a sound, beginning or end of the word, and a word pair. *key / tea* is a good first pair, because both words have pictures.
-2. Choose the game, then **10 turns**.
+2. Choose the game, then tick **Fewer turns: 5 of each word**.
 3. Play a few turns, tapping **Correct**, **Incorrect**, and **Cued** at least once each. Check that the game moves forward every time.
 4. Tap **Undo** and check that the game goes back one step: one fewer star, bubble, tile, or train car.
 5. On a computer, try the keys: **1** Correct, **2** Incorrect, **3** Cued, **Backspace** Undo.
 6. Finish all turns, tap **See how it went**, and check the counts for each word. Cued is shown on its own.
 7. Tap **Copy summary for my notes** and paste it somewhere to check the text.
-8. Try one session of **20 turns**, and try the same pair under **Backing** to confirm the other word becomes the target.
+8. Try one session of the default **20 turns**, and try the same pair under **Backing** to confirm the other word becomes the target.
 9. Try a phone or tablet. Everything should fit, with the scoring buttons along the bottom.
 
 Things to look at along the way:
@@ -248,7 +248,7 @@ Things to look at along the way:
 ## 10. Decisions checklist
 
 ### Overall
-- ☐ The flow (pattern → sound → position → pair → game → turns → play → summary) works for Jana.
+- ☐ The flow (pattern → sound → position → pair → game → play → summary) works for Jana.
 - ☐ The Correct / Incorrect / Cued / Undo scoring works as she wants. Cued is kept separate in the summary.
 - ☐ The wording on the screens and in the copied summary is right.
 - ☐ Each of the seven games is suitable: Listening Game, Say the Word, Bubble Pop, Feed the Monster, Spin & Say, Treasure Reveal, Sound Train.

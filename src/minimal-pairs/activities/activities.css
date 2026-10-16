@@ -13,12 +13,27 @@
 .stw-star.next { color: #d9cdee; animation: mp-float 1.6s ease-in-out infinite; }
 .stw-star.new { animation: mp-star-in .5s ease-out; }
 @keyframes mp-star-in { from { transform: scale(2) rotate(-40deg); opacity: 0; } }
+.stw-pair { display: flex; justify-content: center; align-items: flex-end; gap: clamp(20px, 8vw, 72px); flex-wrap: wrap; }
+.stw-word { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 0 10px 12px; border-radius: 28px; transition: background .2s; }
+.stw-word.pointed { background: #ffe7a6; }
+.stw-word .mp-picture { box-shadow: 0 5px 0 #f2d98f; }
+.stw-word-text { font-size: clamp(28px, 4.4vw, 40px); font-weight: 900; color: #343047; letter-spacing: -.5px; }
+/* The slot keeps its height when the arrow is gone, so the pictures never jump. */
+.stw-arrow-slot { display: flex; align-items: flex-end; justify-content: center; height: 76px; }
+.stw-arrow { width: 56px; height: 66px; fill: #e2774f; stroke: #a94f2e; stroke-width: 3; stroke-linejoin: round; animation: stw-arrow-in .35s ease-out, stw-bob .9s ease-in-out .35s infinite; }
+@keyframes stw-arrow-in { from { transform: translateY(-24px); opacity: 0; } }
+@keyframes stw-bob { 50% { transform: translateY(6px); } }
+@media (prefers-reduced-motion: reduce) { .stw-arrow { animation: none; } }
 
-/* Bubble Pop: scene styles below. */
-.bp-stage { display: flex; flex-direction: column; align-items: center; gap: 10px; justify-content: center; }
-.bp-bubble { display: flex; align-items: center; justify-content: center; border-radius: 50%; }
-.bp-bubble:disabled { opacity: 1; cursor: default; }
-.bp-bubble .mp-picture { background: rgba(255, 255, 255, .55); border-radius: 50%; }
+/* Start, Pause, and seconds per turn (Say the Word, Bubble Pop) */
+.mp-pace-controls { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px 18px; margin-top: 4px; }
+.mp-pace-start { padding: 12px 34px; font-size: 20px; }
+.mp-pace { display: flex; align-items: center; gap: 6px; border: 0; padding: 0; margin: 0; }
+.mp-pace legend { float: left; margin-right: 6px; font-size: 14px; font-weight: 700; color: #6b6178; }
+.mp-pace label { position: relative; padding: 6px 12px; min-height: 36px; display: inline-flex; align-items: center; border-radius: 12px; background: white; border: 2px solid #f2d98f; font-size: 14px; font-weight: 800; color: #7a5a12; cursor: pointer; }
+.mp-pace label.selected { background: #ffbf2f; border-color: #e39b14; color: #343047; }
+.mp-pace label:has(input:focus-visible) { outline: 3px solid #7658c9; outline-offset: 2px; }
+.mp-pace input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 
 /* Feed the Monster */
 .feed-the-monster { background: #f1ebfc; border-color: #d5c7f1; }
@@ -87,8 +102,10 @@
 
 @media (max-width: 600px) {
   .mp-game { padding: 14px 10px; min-height: 220px; }
-  .bp-bubble { width: 180px; height: 180px; }
-  .bp-bubble .mp-picture-lg, .ftm-plate .mp-picture-lg, .sas-reveal .mp-picture-lg, .ld-choice .mp-picture-lg { width: 120px; height: 120px; font-size: 78px; }
+  .stw-word .mp-picture-lg { width: 128px; height: 128px; font-size: 84px; }
+  .stw-pair { gap: 14px; flex-wrap: nowrap; }
+  .stw-word { padding: 0 6px 10px; }
+  .ftm-plate .mp-picture-lg, .sas-reveal .mp-picture-lg, .ld-choice .mp-picture-lg { width: 120px; height: 120px; font-size: 78px; }
   .ftm-monster { width: 160px; height: 160px; }
   .stw-star { font-size: 30px; }
   .st-car { width: 46px; height: 42px; }
@@ -96,31 +113,64 @@
   .st-engine { width: 58px; height: 44px; }
 }
 
-/* Bubble Pop's quiet underwater scene. Decorative motion never moves the tap target away. */
-.bubble-pop { position: relative; isolation: isolate; overflow: hidden; min-height: 460px; background: linear-gradient(#75d4e2, #258fb7 65%, #216b91); border-color: #6cc9da; }
+/* Bubble Pop: a bright reef. Bubbles rise from the sea floor, left at a random --x (0–1), and take --rise
+   seconds to reach the top, where they hover below the word legend until popped. */
+.bubble-pop { --bubble: 128px; --bubble-top: 74px; background: #dff6fb; border-color: #9fdcea; padding: 12px; }
+.bp-sea { position: relative; isolation: isolate; width: 100%; height: 480px; overflow: hidden; border-radius: 22px; background: linear-gradient(#6ff0f2, #22b8e0 38%, #1677c4 78%, #11549e); }
 .bp-ocean { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
-.bp-rays { position: absolute; inset: 0; background: repeating-conic-gradient(from -25deg at 50% -20%, transparent 0deg 12deg, #ffffff16 12deg 22deg, transparent 22deg 40deg); }
-.bp-seafloor { position: absolute; bottom: 0; width: 100%; height: 120px; }
-.bp-tiny-bubble { position: absolute; bottom: -30px; width: 14px; height: 14px; border: 1px solid #ffffff80; border-radius: 50%; background: #ffffff12; animation: bp-drift 12s linear infinite; }
-@keyframes bp-drift { to { transform: translateY(-550px); opacity: 0; } }
-.bubble-pop .bp-stage { min-height: 310px; z-index: 1; }
-.bubble-pop .bp-bubble { position: relative; width: 220px; height: 220px; background: radial-gradient(circle at 28% 22%, #ffffffe6, #e3fbff66 30%, #b7ebf344 65%, #ffffffaa); border: 3px solid #ffffffbb; box-shadow: inset -10px -14px 26px #d3f6ff55, inset 6px 6px 14px #fff9, 0 12px 28px #15577733; animation: bp-rise .8s ease-out; }
-@keyframes bp-rise { from { transform: translateY(170px) scale(.8); opacity: 0; } }
-.bubble-pop .bp-bubble:focus-visible { outline: 4px solid #fff; outline-offset: 6px; }
-.bubble-pop .bp-bubble.popped { background: transparent; border-color: transparent; box-shadow: none; animation: none; }
+.bp-rays { position: absolute; inset: 0; width: 100%; height: 100%; }
+.bp-seafloor { position: absolute; bottom: 0; left: 0; width: 100%; height: 170px; }
+.bp-weed { transform-box: fill-box; transform-origin: 50% 100%; animation: bp-sway 4s ease-in-out infinite; }
+.bp-weed-slow { animation-duration: 5.5s; animation-delay: -2s; }
+@keyframes bp-sway { 50% { transform: rotate(5deg); } }
+.bp-tiny-bubble { position: absolute; bottom: -20px; width: 12px; height: 12px; border: 2px solid #ffffffa0; border-radius: 50%; background: #ffffff22; animation: bp-drift 12s linear infinite; }
+@keyframes bp-drift { to { transform: translateY(-520px) translateX(14px); opacity: 0; } }
+.bp-fish { position: absolute; width: 54px; height: 32px; animation: bp-swim 16s linear infinite; }
+.bp-fish-1 { top: 34%; animation-delay: -3s; }
+.bp-fish-2 { top: 52%; width: 42px; animation-duration: 21s; animation-delay: -12s; }
+.bp-fish-3 { top: 22%; width: 38px; animation-name: bp-swim-back; animation-duration: 18s; animation-delay: -7s; }
+@keyframes bp-swim { from { left: 110%; } to { left: -15%; } }
+@keyframes bp-swim-back { from { left: -15%; transform: scaleX(-1); } to { left: 110%; transform: scaleX(-1); } }
+
+.bp-legend { position: absolute; top: 10px; left: 10px; z-index: 3; display: flex; gap: 10px; padding: 6px 12px 6px 8px; border-radius: 18px; background: #ffffffe0; box-shadow: 0 3px 0 #0e4f8a33; }
+.bp-legend-word { display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 900; color: #1d4f7a; }
+.bp-legend .mp-picture-lg { width: 44px; height: 44px; font-size: 30px; }
+.bp-legend .mp-placeholder-text { display: none; }
+
+.bp-bubble { position: absolute; z-index: 2; left: calc((100% - var(--bubble)) * var(--x)); top: 100%; width: var(--bubble); height: var(--bubble); display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: none;
+  background: radial-gradient(circle at 30% 24%, #ffffffee, #e3fbff77 28%, #b7ebf333 62%, #ffffffaa); border: 3px solid #ffffffcc; box-shadow: inset -10px -14px 26px #d3f6ff55, inset 6px 6px 14px #fff9, 0 10px 24px #0d3f6b44;
+  animation: bp-float var(--rise) linear forwards, bp-hover 2.2s ease-in-out var(--rise) infinite; }
+@keyframes bp-float { to { top: var(--bubble-top); } }
+@keyframes bp-hover { 50% { transform: translateY(-7px); } }
+.bp-bubble-inner { display: flex; animation: bp-wiggle 2.6s ease-in-out infinite; }
+@keyframes bp-wiggle { 25% { transform: translateX(-5px) rotate(-3deg); } 75% { transform: translateX(5px) rotate(3deg); } }
+.bp-bubble .mp-picture-lg { width: calc(var(--bubble) * .7); height: calc(var(--bubble) * .7); font-size: calc(var(--bubble) * .45); background: #ffffff99; border-radius: 50%; }
+.bp-bubble:focus-visible { outline: 4px solid #fff; outline-offset: 4px; }
+.bp-bubble.turn { border-color: #fff3a6; box-shadow: 0 0 0 5px #ffd93d, 0 0 26px 10px #ffe066aa; }
+.bp-bubble:disabled { opacity: 1; cursor: default; }
+.bp-bubble.popped { background: transparent; border-color: transparent; box-shadow: none; pointer-events: none; }
+.bubble-pop.paused .bp-bubble, .bubble-pop.paused .bp-bubble-inner { animation-play-state: paused; pointer-events: none; }
 .bp-splash { position: absolute; inset: 0; }
-.bp-splash i { position: absolute; left: calc(50% - 9px); top: calc(50% - 9px); width: 18px; height: 18px; border: 2px solid #fff; border-radius: 50%; animation: bp-splash .6s ease-out forwards; }
-@keyframes bp-splash { from { transform: translateY(-35px) scale(1); } to { transform: translateY(-130px) scale(.4); opacity: 0; } }
-.bubble-pop .mp-game-cheer { color: #fff; text-shadow: 0 2px 4px #185777; font-size: 23px; }
-.bp-progress { width: min(200px, 65%); height: 8px; background: #124f7266; border-radius: 20px; overflow: hidden; z-index: 1; }
-.bp-progress span { display: block; height: 100%; background: #d5fbff; border-radius: inherit; transition: width .3s; }
-.bp-count { color: white; font-size: 14px; z-index: 1; }
-.bp-ocean-finish { color: white; font-size: 25px; font-weight: 800; }
+.bp-splash i { position: absolute; left: calc(50% - 9px); top: calc(50% - 9px); width: 18px; height: 18px; border: 3px solid #fff; border-radius: 50%; animation: bp-splash .6s ease-out forwards; }
+@keyframes bp-splash { from { transform: translateY(-20px) scale(1); } to { transform: translateY(-90px) scale(.4); opacity: 0; } }
+
+.bubble-pop .mp-game-cheer { color: #1d4f7a; font-size: 21px; }
+.bp-progress { width: min(240px, 70%); height: 10px; background: #b9e6f1; border-radius: 20px; overflow: hidden; }
+.bp-progress span { display: block; height: 100%; background: #22b8e0; border-radius: inherit; transition: width .3s; }
+.bp-count { color: #1d4f7a; font-size: 14px; font-weight: 800; }
+.bubble-pop .mp-pace label { border-color: #9fdcea; color: #1d4f7a; }
+.bubble-pop .mp-pace label.selected { background: #22b8e0; border-color: #1677c4; color: white; }
+.bp-ocean-finish { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-size: 25px; font-weight: 800; text-shadow: 0 2px 6px #0d3f6b; }
 .bp-ocean-finish > span { display: block; font-size: 90px; }
-.bp-adult-option { align-self: center; display: flex; align-items: center; gap: 10px; padding: 12px; font-size: 14px; }
-.bp-adult-option input { width: 20px; height: 20px; }
-@media (max-width: 600px) { .bubble-pop { min-height: 410px; } .bubble-pop .bp-bubble { width: 190px; height: 190px; } }
+@media (max-width: 600px) {
+  .bubble-pop { --bubble: 104px; --bubble-top: 66px; padding: 8px; }
+  .bp-sea { height: 440px; }
+  .bp-legend .mp-picture-lg { width: 38px; height: 38px; font-size: 26px; }
+}
+/* Rising is the game itself, so it stays; the decoration holds still. */
 @media (prefers-reduced-motion: reduce) {
-  .bubble-pop *, .bubble-pop *::before, .bubble-pop *::after { animation: none !important; transition: none !important; }
-  .bp-splash i { transform: translateY(-85px); }
+  .bp-weed, .bp-tiny-bubble, .bp-fish, .bp-bubble-inner { animation: none; }
+  .bp-tiny-bubble, .bp-fish { display: none; }
+  .bp-bubble { animation: bp-float var(--rise) linear forwards; }
+  .bp-splash i { animation-duration: .01s; }
 }

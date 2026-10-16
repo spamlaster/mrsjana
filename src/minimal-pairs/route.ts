@@ -3,7 +3,7 @@ import { pairListeningReady } from './content/readiness'
 import { getPair, getProcess, library, pairsFor, positionsFor, soundsFor } from './content/selectors'
 import type { MinimalPair, Position, ProcessId } from './content/types'
 import { previewMode } from './preview'
-import { isTrialCount, type TrialCount } from './session/trialSession'
+import { defaultTrialCount, isTrialCount, type TrialCount } from './session/trialSession'
 
 // Routes under #/phonological. Every segment is checked against the content, and an invalid one
 // falls back to the nearest valid screen above it, like the articulation routes in routing/router.ts.
@@ -15,11 +15,11 @@ import { isTrialCount, type TrialCount } from './session/trialSession'
 //   #/phonological/fronting/k                              choose beginning or end of word
 //   #/phonological/fronting/k/initial                      choose a pair
 //   #/phonological/fronting/k/initial/key-tea              choose an activity
-//   #/phonological/fronting/k/initial/key-tea/bubble-pop   choose 10 or 20 turns
-//   #/phonological/fronting/k/initial/key-tea/bubble-pop?trials=20         play
+//   #/phonological/fronting/k/initial/key-tea/bubble-pop   play 20 turns
+//   #/phonological/fronting/k/initial/key-tea/bubble-pop?trials=10         play a shorter game
 //   #/phonological/fronting/k/initial/key-tea/bubble-pop/complete          session summary
 
-export type CenterView = 'processes' | 'review' | 'recordings' | 'sounds' | 'positions' | 'pairs' | 'activities' | 'setup' | 'playing' | 'complete'
+export type CenterView = 'processes' | 'review' | 'recordings' | 'sounds' | 'positions' | 'pairs' | 'activities' | 'playing' | 'complete'
 
 export interface CenterRoute {
   view: CenterView
@@ -56,7 +56,7 @@ export function parseCenterRoute(parts: string[], query = '', options: CenterRou
   const withActivity = { ...withPair, activityId: activity.id }
   if (result === 'complete') return { view: 'complete', ...withActivity }
   const trials = Number(new URLSearchParams(query).get('trials'))
-  return isTrialCount(trials) ? { view: 'playing', ...withActivity, trials } : { view: 'setup', ...withActivity }
+  return { view: 'playing', ...withActivity, trials: isTrialCount(trials) ? trials : defaultTrialCount }
 }
 
 // The path for a route, without the leading #. Stops at the first missing segment.
@@ -67,5 +67,5 @@ export function centerPath(route: Omit<CenterRoute, 'view'> & { view?: CenterVie
   const end = segments.findIndex(segment => !segment)
   const path = ['/phonological', ...segments.slice(0, end === -1 ? segments.length : end)].join('/')
   if (route.view === 'complete') return `${path}/complete`
-  return route.view === 'playing' && route.trials ? `${path}?trials=${route.trials}` : path
+  return route.view === 'playing' && route.trials && route.trials !== defaultTrialCount ? `${path}?trials=${route.trials}` : path
 }

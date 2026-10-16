@@ -14,6 +14,12 @@ export interface ActivityInfo {
   revealsWord?: boolean
   // The game shows the word's picture itself, so the prompt above it shows only the word and listen button.
   pictureInGame?: boolean
+  // The game shows both words itself and points to the current one, so there is no prompt above it.
+  promptInGame?: boolean
+  // Unscored practice the child can do alone, unless a grown-up turns scoring on.
+  practiceByDefault?: boolean
+  // What a turn is called in the grown-up options, e.g. "bubbles". Defaults to "turns".
+  turnNoun?: string
 }
 
 export const activityCatalog: ActivityInfo[] = [
@@ -30,17 +36,21 @@ export const activityCatalog: ActivityInfo[] = [
     name: 'Say the Word',
     icon: '🗣️',
     kind: 'production',
-    description: 'One big picture at a time. Say the word and earn a star.',
-    howTo: 'Look at the picture and say the word.',
+    description: 'Both pictures side by side. An arrow points to the word to say, and the game moves on by itself.',
+    howTo: 'Say the word the arrow is pointing to.',
+    promptInGame: true,
+    practiceByDefault: true,
   },
   {
     id: 'bubble-pop',
     name: 'Bubble Pop',
     icon: '🫧',
     kind: 'production',
-    description: 'Every word floats in a bubble. Say it, then pop it!',
-    howTo: 'Say the word in the big bubble, then pop it!',
+    description: 'Bubbles float up from the sea floor. Say each word and pop its bubble before it reaches the top!',
+    howTo: 'Say the word in a bubble, then pop it before it reaches the top!',
     pictureInGame: true,
+    practiceByDefault: true,
+    turnNoun: 'bubbles',
   },
   {
     id: 'feed-the-monster',

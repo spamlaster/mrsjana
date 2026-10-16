@@ -62,7 +62,7 @@ assert.match(bar(0), /Preview note/)
 const words = [activityWord('key', false), activityWord('tea', false)]
 const props = (completed, total = 10) => ({
   total, completed, current: completed < total ? { word: words[completed % 2] } : null,
-  done: Array.from({ length: completed }, (_, i) => words[i % 2]), words, markId: completed, lastAction: completed ? 'mark' : 'start', revealed: true, onReveal() {},
+  done: Array.from({ length: completed }, (_, i) => words[i % 2]), sequence: Array.from({ length: total }, (_, i) => words[i % 2]), words, markId: completed, lastAction: completed ? 'mark' : 'start', revealed: true, onReveal() {},
 })
 const finishedText = {
   'say-the-word': /Every star is shining/, 'bubble-pop': /All the bubbles are popped/, 'feed-the-monster': /Munch is full and happy/,
@@ -79,7 +79,15 @@ for (const [id, Game] of Object.entries(productionGames)) {
   }
 }
 assert.equal(count(render(h(productionGames['say-the-word'], props(4))), 'stw-star lit'), 4, 'Say the Word lights one star per scored turn')
+const scoredSay = render(h(productionGames['say-the-word'], props(3)))
+assert.equal(count(scoredSay, 'stw-arrow"'), 1, 'With grown-up scoring, the arrow points at once')
+assert.match(scoredSay, /stw-word pointed">[\s\S]*?aria-label="Say tea"/, 'The arrow points to the current word')
+assert.doesNotMatch(scoredSay, /Start|Seconds per word/, 'Scored Say the Word waits for the grown-up, not a timer')
 assert.match(render(h(productionGames['bubble-pop'], props(4))), /aria-valuenow="4"/, 'Bubble progress follows completed turns')
+const bubbles = render(h(productionGames['bubble-pop'], { ...props(0), onComplete() {} }))
+assert.equal(count(bubbles, 'class="bp-legend-word"'), 2, 'Both words are pictured in the corner')
+assert.doesNotMatch(bubbles, /class="bp-bubble/, 'No bubbles until Start')
+assert.match(bubbles, /▶ Start[\s\S]*Seconds per bubble[\s\S]*checked=""[^>]*\/>3s/, 'Bubbles default to one every 3 seconds')
 assert.equal(count(render(h(productionGames['treasure-reveal'], props(4))), 'tr-tile lifted'), 4, 'Treasure Reveal lifts one tile per turn')
 assert.equal(count(render(h(productionGames['treasure-reveal'], props(3))), 'tr-tile lifted'), 3, 'Undo puts a tile back')
 assert.match(render(h(productionGames['sound-train'], props(5))), /\+2/, 'Sound Train shows the extra cars')
@@ -116,16 +124,22 @@ assert.match(activities, /Optional/)
 assert.doesNotMatch(activities, /Not ready yet/, 'key / tea has pictures and reviewed recordings, so Listening is open')
 if (!illustrationRecords.catch) assert.match(screen('deaffrication/ch/final/catch-cat'), /Not ready yet\. Needs a picture of “catch”/, 'Listening explains what is missing')
 assert.ok(activities.indexOf('Listening Game') < activities.indexOf('Say the Word'), 'Listening is listed first')
-assert.match(screen('fronting/k/initial/key-tea/bubble-pop'), /10<\/span><span>turns · 5 of each word[\s\S]*20<\/span><span>turns · 10 of each word/)
-assert.match(screen('backing/t/initial/key-tea/bubble-pop'), /mp-pair-target"><span class="mp-picture[^"]*"[^>]*>[\s\S]*?<span>tea<\/span>/, 'Backing makes tea the target')
+const defaultGame = screen('fronting/k/initial/key-tea/spin-and-say')
+assert.match(defaultGame, /Turn 1 of 20/, 'Games start at 20 turns')
+assert.match(defaultGame, /<input type="checkbox"\/><span><strong>Fewer turns: 5 of each word<\/strong><small>Now 20 turns, 10 of each word/, 'The shorter game is offered, unchecked')
+assert.match(screen('fronting/k/initial/key-tea/spin-and-say?trials=10'), /<input type="checkbox" checked=""\/><span><strong>Fewer turns: 5 of each word<\/strong><small>10 turns in all/)
+assert.match(screen('fronting/k/initial/key-tea/listening'), /Fewer turns: 5 of each word/, 'Listening offers the shorter game too')
+assert.match(screen('fronting/k/initial/key-tea/bubble-pop'), /Fewer bubbles: 5 of each word[\s\S]*Now 20 bubbles, 10 of each word/, 'Bubble Pop talks about bubbles')
+assert.ok(screen('fronting/k/initial/key-tea/bubble-pop').indexOf('Fewer bubbles') < screen('fronting/k/initial/key-tea/bubble-pop').indexOf('bp-sea'), 'The options sit above the game')
+assert.match(screen('backing/t/initial/key-tea'), /mp-pair-target"><span class="mp-picture[^"]*"[^>]*>[\s\S]*?<span>tea<\/span>/, 'Backing makes tea the target')
 
 // Playing: every production game in the full shell, with the grown-up bar and preview note.
 for (const activity of activityCatalog.filter(item => item.kind === 'production')) {
   const html = screen(`fronting/k/initial/key-tea/${activity.id}?trials=10`)
   assert.match(html, /Grown-up scoring/, `${activity.id} offers scoring`)
-  if (activity.id === 'bubble-pop') {
-    assert.doesNotMatch(html, /mp-scoring-buttons/, 'Bubble Pop defaults to independent, unscored practice')
-    assert.match(html, /bp-seafloor/, 'Bubble Pop includes an underwater scene')
+  if (activity.practiceByDefault) {
+    assert.doesNotMatch(html, /mp-scoring-buttons/, `${activity.id} defaults to independent, unscored practice`)
+    if (activity.id === 'bubble-pop') assert.match(html, /bp-seafloor/, 'Bubble Pop includes an underwater scene')
     continue
   }
   assert.match(html, /Turn 1 of 10/)
@@ -136,6 +150,13 @@ for (const activity of activityCatalog.filter(item => item.kind === 'production'
   if (activity.id !== 'spin-and-say') assert.match(html, /Hear it/, `${activity.id} offers the reviewed recording`)
 }
 assert.match(screen('fronting/k/initial/key-tea/spin-and-say?trials=20'), /Turn 1 of 20/)
+const sayTheWord = screen('fronting/k/initial/key-tea/say-the-word')
+assert.match(sayTheWord, /Say the word the arrow is pointing to/, 'Say the Word gives the arrow instructions')
+assert.doesNotMatch(sayTheWord, /mp-prompt/, 'Say the Word shows both words itself, with no prompt that gives the word away')
+assert.equal(count(sayTheWord, 'class="stw-word"'), 2, 'Both words are side by side')
+assert.doesNotMatch(sayTheWord, /stw-arrow"/, 'No arrow until Start')
+assert.match(sayTheWord, /▶ Start/)
+assert.match(sayTheWord, /Seconds per word[\s\S]*2s[\s\S]*checked=""[^>]*\/>3s[\s\S]*4s[\s\S]*5s/, 'Pace defaults to 3 seconds, with 2, 4, and 5')
 
 // Summary: target and contrast separately, cued separately, a copy button, and nothing saved.
 const result = {
