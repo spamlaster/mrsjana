@@ -2,3 +2,57 @@
 .home-stories { display: flex; align-items: center; gap: 24px; background: #ffeacd; border: 2px solid #efd5ad; border-radius: 26px; padding: 28px; margin: 20px 0; }.home-stories > span { font-size: 55px; }.home-stories h2 { font-size: 26px; margin-bottom: 8px; }.home-stories p { color: var(--text-light); }.home-stories .cta-button { flex-shrink: 0; margin-left: auto; }
 .story-listen { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin: -4px 0 22px; }.story-listen .cta-button { display: inline-flex; align-items: center; gap: 10px; }.story-listen p { font-weight: 800; color: #57418c; }
 @media (max-width: 600px) { .story-page { padding: 20px; }.story-controls { flex-wrap: wrap; }.story-controls .cta-button { width: 100%; }.home-stories { flex-direction: column; text-align: center; }.home-stories .cta-button { margin: 0; } }
+
+/* Keep the full artwork visible while leaving room for the story above the fold. */
+.story-cover {
+  width: 100%;
+  height: 140px;
+  object-fit: contain;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  background: #fff6e7;
+}
+.story-reader { padding-top: 8px; }
+.story-reader > .eyebrow { margin-top: 8px; }
+.story-tip { margin: 10px 0; }
+.story-page {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr);
+  align-items: center;
+  gap: 16px 24px;
+  margin: 14px 0;
+  padding: 20px;
+}
+.story-picture {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  display: block;
+  width: 100%;
+  height: min(34svh, 300px);
+  object-fit: contain;
+  margin: 0 auto;
+  border-radius: 16px;
+  background: #fff6e7;
+}
+.story-text {
+  grid-column: 2;
+  margin: 0;
+  font-size: clamp(22px, 2.3vw, 27px);
+  line-height: 1.55;
+}
+.story-listen { grid-column: 2; margin: 0; gap: 8px; }
+.story-practice { grid-column: 1 / -1; padding: 14px 16px; }
+.story-practice p { margin: 4px 0 10px; }
+.story-practice ul { gap: 8px; }
+.story-practice li { padding: 5px 10px; }
+.story-filters { margin: 18px 0; gap: 8px; }
+.story-card { padding: 18px; }
+.story-card h2 { margin-bottom: 8px; }
+
+@media (max-width: 600px) {
+  .story-page { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 16px; }
+  .story-picture { grid-column: 1; grid-row: auto; height: min(23svh, 180px); }
+  .story-text, .story-listen, .story-practice { grid-column: 1; }
+  .story-text { font-size: 22px; line-height: 1.5; }
+  .story-cover { height: 120px; }
+}

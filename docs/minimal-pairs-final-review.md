@@ -18,13 +18,11 @@ The center practices **minimal pairs**: two real words that differ by one sound,
 A session goes like this:
 
 1. Choose the sound pattern (for example Fronting).
-2. Choose the sound (for example /k/).
-3. Choose where the sound is: the beginning or the end of the word.
-4. Choose a word pair (for example *key / tea*).
-5. Choose a game.
-6. Play. Games are 20 turns (10 of each word) by default; tick "Fewer turns: 5 of each word" above the game before starting for 10 (Bubble Pop says "Fewer bubbles"). Each word comes up exactly half the time, in a shuffled order, and never more than three times in a row.
-7. Play. After each try, the grown-up taps **Correct**, **Incorrect**, or **Cued**. **Undo** takes back the last tap. The game rewards every turn whatever the score, so the child is never penalized by the game.
-8. See the summary: results for each word, cued responses counted separately, and a button to copy the summary into your own notes.
+2. Choose the sound and where it is in one tap: each sound card (for example /k/) has its own **Beginning of the word** and **End of the word** buttons.
+3. Choose a word pair (for example *key / tea*).
+4. Choose a game.
+5. Play. Games are 20 turns (10 of each word) by default; tick "Fewer turns: 5 of each word" above the game before starting for 10 (Bubble Pop says "Fewer bubbles"). Each word comes up exactly half the time, in a shuffled order, and never more than three times in a row. In scored games, after each try the grown-up taps **Correct**, **Incorrect**, or **Cued**, and **Undo** takes back the last tap. The game rewards every turn whatever the score, so the child is never penalized by the game.
+6. See the summary: results for each word, cued responses counted separately, and a button to copy the summary into your own notes.
 
 The center never listens to the child or scores speech automatically. Only the grown-up scores. It keeps no child accounts and saves nothing about the child: the summary disappears when the page is refreshed or closed.
 
@@ -219,7 +217,7 @@ The site manager starts preview mode on a computer with the project (`npm run de
 
 For each game:
 
-1. On the first screen, choose a pattern. Then choose a sound, beginning or end of the word, and a word pair. *key / tea* is a good first pair, because both words have pictures.
+1. On the first screen, choose a pattern. Then tap **Beginning of the word** or **End of the word** on a sound's card, and choose a word pair. *key / tea* is a good first pair, because both words have pictures.
 2. Choose the game, then tick **Fewer turns: 5 of each word**.
 3. Play a few turns, tapping **Correct**, **Incorrect**, and **Cued** at least once each. Check that the game moves forward every time.
 4. Tap **Undo** and check that the game goes back one step: one fewer star, bubble, tile, or train car.
@@ -248,7 +246,7 @@ Things to look at along the way:
 ## 10. Decisions checklist
 
 ### Overall
-- ☐ The flow (pattern → sound → position → pair → game → play → summary) works for Jana.
+- ☐ The flow (pattern → sound and beginning/end → pair → game → play → summary) works for Jana.
 - ☐ The Correct / Incorrect / Cued / Undo scoring works as she wants. Cued is kept separate in the summary.
 - ☐ The wording on the screens and in the copied summary is right.
 - ☐ Each of the seven games is suitable: Listening Game, Say the Word, Bubble Pop, Feed the Monster, Spin & Say, Treasure Reveal, Sound Train.

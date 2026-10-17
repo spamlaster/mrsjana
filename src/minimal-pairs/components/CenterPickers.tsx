@@ -53,45 +53,33 @@ export function ProcessPicker({ preview }: { preview: boolean }) {
   )
 }
 
+// Each sound card holds its own beginning / end of the word choices, so a parent picks the sound and
+// where it is in one tap and goes straight to the word pairs.
 export function SoundPicker({ processId, preview }: { processId: ProcessId; preview: boolean }) {
   return (
     <section className="mp-picker">
       <p className="eyebrow">STEP 2 · CHOOSE A SOUND</p>
       <h2>Which sound should we practice?</h2>
+      <p className="mp-picker-hint">Pick a sound, then whether it’s at the beginning or the end of the word.</p>
       <div className="mp-card-grid">
         {soundsFor(processId, library, preview).map((sound, i) => {
           const positions = positionsFor(processId, sound, library, preview)
-          const pairs = positions.flatMap(position => pairsFor(processId, sound, position, library, preview))
+          const sample = pairsFor(processId, sound, positions[0], library, preview)[0]
           const errors = errorSoundsFor(processId, sound).map(soundLabel).join(' or ')
           return (
-            <button key={sound} className={`mp-card mp-tone-${i % 5}`} onClick={() => (positions.length === 1 ? go(processId, sound, positions[0]) : go(processId, sound))}>
+            <div key={sound} className={`mp-card mp-sound-card mp-tone-${i % 5}`} role="group" aria-label={`${soundLabel(sound)} sound`}>
               <span className="mp-card-sound">{soundLabel(sound)}</span>
               <span className="mp-card-tagline">Instead of {errors}</span>
-              {pairs[0] && <PairFaces pair={pairs[0]} processId={processId} sound={sound} />}
-              <span className="mp-card-foot">{count(pairs.length, 'word pair')} · {positions.map(position => positionLabels[position].short).join(' & ')} of word</span>
-            </button>
-          )
-        })}
-      </div>
-    </section>
-  )
-}
-
-export function PositionPicker({ processId, sound, preview }: { processId: ProcessId; sound: string; preview: boolean }) {
-  return (
-    <section className="mp-picker">
-      <p className="eyebrow">STEP 3 · WHERE IS THE SOUND?</p>
-      <h2>Practice {soundLabel(sound)} at the…</h2>
-      <div className="mp-card-grid mp-two-grid">
-        {positionsFor(processId, sound, library, preview).map((position, i) => {
-          const pairs = pairsFor(processId, sound, position, library, preview)
-          return (
-            <button key={position} className={`mp-card mp-tone-${i + 1}`} onClick={() => go(processId, sound, position)}>
-              <span className="mp-card-icon" aria-hidden="true">{position === 'initial' ? '⏮️' : '⏭️'}</span>
-              <span className="mp-card-title">{positionLabels[position].name}</span>
-              {pairs[0] && <PairFaces pair={pairs[0]} processId={processId} sound={sound} />}
-              <span className="mp-card-foot">{count(pairs.length, 'word pair')} →</span>
-            </button>
+              {sample && <PairFaces pair={sample} processId={processId} sound={sound} />}
+              <div className="mp-position-choices">
+                {positions.map(position => (
+                  <button key={position} className="mp-position-choice" onClick={() => go(processId, sound, position)}>
+                    <span className="mp-position-name">{positionLabels[position].name}</span>
+                    <span className="mp-position-count">{count(pairsFor(processId, sound, position, library, preview).length, 'word pair')} →</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           )
         })}
       </div>
@@ -107,7 +95,7 @@ export function PairPicker({ processId, sound, position, preview }: { processId:
     .filter(group => group.pairs.length)
   return (
     <section className="mp-picker">
-      <p className="eyebrow">STEP 4 · CHOOSE A WORD PAIR</p>
+      <p className="eyebrow">STEP 3 · CHOOSE A WORD PAIR</p>
       <h2>Pick two words to practice</h2>
       <p className="mp-picker-hint">The first word has the {soundLabel(sound)} sound. The second word is what it can sound like instead.</p>
       {groups.map(group => (
@@ -145,7 +133,7 @@ export function ActivityPicker({ processId, sound, position, pair, preview }: { 
   const needs = listeningNeeds(pair)
   return (
     <section className="mp-picker">
-      <p className="eyebrow">STEP 5 · CHOOSE A GAME</p>
+      <p className="eyebrow">STEP 4 · CHOOSE A GAME</p>
       <div className="mp-pair-hero">
         <PairFaces pair={pair} processId={processId} sound={sound} size="md" />
         {preview && <StatusBadge pair={pair} />}

@@ -103,12 +103,12 @@ const center = (path, options = {}) => {
 }
 for (const [path, view] of [
   ['', 'processes'], ['review', 'review'], ['nope', 'processes'],
-  ['fronting', 'sounds'], ['fronting/x', 'sounds'], ['fronting/t', 'sounds'], ['backing/t', 'positions'],
-  ['fronting/k', 'positions'], ['fronting/k/medial', 'positions'], ['fronting/k/initial', 'pairs'],
+  ['fronting', 'sounds'], ['fronting/x', 'sounds'], ['fronting/t', 'sounds'], ['backing/t', 'sounds'],
+  ['fronting/k', 'sounds'], ['fronting/k/medial', 'sounds'], ['fronting/k/initial', 'pairs'],
   ['fronting/k/initial/missing', 'pairs'], ['fronting/k/initial/back-bat', 'pairs'], ['fronting/g/initial/key-tea', 'pairs'],
   ['fronting/k/initial/key-tea', 'activities'], ['backing/t/initial/key-tea', 'activities'],
   ['stopping/ch', 'sounds'], ['deaffrication/ch/final/catch-cat', 'activities'], ['stopping/th/initial/thin-pin', 'activities'],
-  ['cluster-reduction/st/final', 'positions'], ['cluster-reduction/st/initial/stop-top', 'activities'],
+  ['cluster-reduction/st/final', 'sounds'], ['cluster-reduction/st/initial/stop-top', 'activities'],
   ['fronting/k/initial/key-tea/unknown', 'activities'], ['fronting/k/initial/key-tea/bubble-pop', 'playing'],
   ['fronting/k/initial/key-tea/bubble-pop?trials=15', 'playing'], ['fronting/k/initial/key-tea/bubble-pop?trials=20', 'playing'],
   ['fronting/k/initial/key-tea/sound-train/complete', 'complete'], ['review/recordings', 'recordings'],
@@ -119,7 +119,7 @@ assert.equal(center('fronting/k/initial/key-tea/spin-and-say?trials=15').trials,
 assert.equal(center('fronting/k/initial/key-tea/spin-and-say?trials=10').trials, 10)
 assert.equal(center('fronting/k/initial/key-tea/listening', { listeningReady: () => false }).view, 'activities', 'Listening stays closed until the pair is ready')
 assert.equal(center('fronting/k/initial/key-tea/listening', { listeningReady: () => true }).view, 'playing', 'Listening opens once the pair is ready')
-for (const path of ['fronting', 'fronting/k', 'fronting/k/initial/key-tea', 'fronting/k/initial/key-tea/feed-the-monster', 'fronting/k/initial/key-tea/feed-the-monster?trials=10', 'fronting/k/initial/key-tea/feed-the-monster/complete', 'review']) {
+for (const path of ['fronting', 'fronting/k/initial', 'fronting/k/initial/key-tea', 'fronting/k/initial/key-tea/feed-the-monster', 'fronting/k/initial/key-tea/feed-the-monster?trials=10', 'fronting/k/initial/key-tea/feed-the-monster/complete', 'review']) {
   assert.equal(centerPath(center(path)), `/phonological/${path}`, `centerPath round-trips ${path}`)
 }
 const result = { kind: 'production', pairId: 'key-tea', activityId: 'sound-train', summary: { target: { correct: 5, incorrect: 0, cued: 0, total: 5 }, contrast: { correct: 4, incorrect: 1, cued: 0, total: 5 } } }

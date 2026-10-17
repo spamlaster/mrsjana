@@ -256,8 +256,7 @@ Hash routes nested under the existing `#/phonological` page, validated against t
 ```
 #/phonological                                        choose a process
 #/phonological/review                                 review status (preview mode only)
-#/phonological/fronting                               choose a target sound
-#/phonological/fronting/k                             choose beginning or end of word
+#/phonological/fronting                               choose a sound and beginning or end of word
 #/phonological/fronting/k/initial                     choose a pair
 #/phonological/fronting/k/initial/key-tea             choose an activity
 #/phonological/fronting/k/initial/key-tea/bubble-pop  play 20 turns
@@ -265,7 +264,7 @@ Hash routes nested under the existing `#/phonological` page, validated against t
 #/phonological/fronting/k/initial/key-tea/bubble-pop/complete
 ```
 
-Games default to 20 turns. Before the first turn, a "Fewer turns: 5 of each word" checkbox above the game ("Fewer bubbles" in Bubble Pop) switches to `?trials=10` and starts a fresh session. `trials` accepts only `10` or `20`; any other value plays 20. A sound with only one position (every s-blend) links straight to its pairs. The session summary travels in `history.state`, like existing game results, and is lost on refresh by design. A "copy summary" button can let the adult take notes without the app storing anything.
+Games default to 20 turns. Before the first turn, a "Fewer turns: 5 of each word" checkbox above the game ("Fewer bubbles" in Bubble Pop) switches to `?trials=10` and starts a fresh session. `trials` accepts only `10` or `20`; any other value plays 20. Each sound card carries its own **Beginning of the word** / **End of the word** buttons (only **Beginning** for s-blends), so there is no separate position page; `#/phonological/fronting/k` falls back to the sound cards. The session summary travels in `history.state`, like existing game results, and is lost on refresh by design. A "copy summary" button can let the adult take notes without the app storing anything.
 
 ## Audio and pictures
 

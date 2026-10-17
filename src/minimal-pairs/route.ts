@@ -11,15 +11,14 @@ import { defaultTrialCount, isTrialCount, type TrialCount } from './session/tria
 //   #/phonological                                         choose a process
 //   #/phonological/review                                  review status (preview mode only)
 //   #/phonological/review/recordings                       recordings checklist (preview mode only)
-//   #/phonological/fronting                                choose a target sound
-//   #/phonological/fronting/k                              choose beginning or end of word
-//   #/phonological/fronting/k/initial                      choose a pair
+//   #/phonological/fronting                                choose a target sound and beginning or end of word
+//   #/phonological/fronting/k/initial                      choose a pair (fronting/k alone goes back to the sounds)
 //   #/phonological/fronting/k/initial/key-tea              choose an activity
 //   #/phonological/fronting/k/initial/key-tea/bubble-pop   play 20 turns
 //   #/phonological/fronting/k/initial/key-tea/bubble-pop?trials=10         play a shorter game
 //   #/phonological/fronting/k/initial/key-tea/bubble-pop/complete          session summary
 
-export type CenterView = 'processes' | 'review' | 'recordings' | 'sounds' | 'positions' | 'pairs' | 'activities' | 'playing' | 'complete'
+export type CenterView = 'processes' | 'review' | 'recordings' | 'sounds' | 'pairs' | 'activities' | 'playing' | 'complete'
 
 export interface CenterRoute {
   view: CenterView
@@ -46,7 +45,8 @@ export function parseCenterRoute(parts: string[], query = '', options: CenterRou
   const base = { processId: process.id }
   if (!sound || !soundsFor(process.id, lib, preview).includes(sound)) return { view: 'sounds', ...base }
   const positions = positionsFor(process.id, sound, lib, preview)
-  if (!positions.includes(position as Position)) return { view: 'positions', ...base, sound }
+  // The sound cards hold the beginning / end choice, so a sound without a valid position goes back to them.
+  if (!positions.includes(position as Position)) return { view: 'sounds', ...base }
   const at = { ...base, sound, position: position as Position }
   const pair = pairId ? getPair(pairId, lib) : undefined
   if (!pair || !pairsFor(process.id, sound, at.position, lib, preview).includes(pair)) return { view: 'pairs', ...at }

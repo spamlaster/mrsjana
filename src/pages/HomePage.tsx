@@ -5,6 +5,7 @@ import { SectionNav } from '../components/SectionNav'
 import type { SpeechSound } from '../types'
 import { studentTracking } from '../practice/features'
 import practiceWithMsJana from '../assets/practice-with-ms-jana.jpg'
+import storytimeWithMsJana from '../assets/ms-jana-storytime.png'
 import './HomePage.css'
 import './StoriesPage.css'
 
@@ -41,6 +42,7 @@ export function HomePage({ sounds, onStartPractice, onOpenStories }: HomePagePro
         </section>
         <div className="play-strip"><span>✦ A little learning</span><span>♡ A lot of cheering</span><span>★ A whole bunch of fun</span></div>
         <section className="sounds-section" id="sounds"><SoundSelector sounds={sounds} onSelect={onStartPractice} /></section>
+        <div className="home-feature-cards">
         <section className="coach-feature">
           <img src={practiceWithMsJana} alt="Ms. Jana smiling, with the words Practice with Ms. Jana" />
           <div>
@@ -51,10 +53,11 @@ export function HomePage({ sounds, onStartPractice, onOpenStories }: HomePagePro
             {studentTracking && <a className="review-link" href="#/review">Adult review →</a>}
           </div>
         </section>
-        <section className="home-stories">
-          <span aria-hidden="true">📚</span><div><p className="eyebrow">READ · DISCOVER · SAY</p><h2>It’s story time!</h2><p>Little adventures with letters to spot and words to practice.</p></div>
-          <button className="cta-button" onClick={onOpenStories}>Explore stories →</button>
+        <section className="coach-feature storytime-feature">
+          <img className="home-stories-image" src={storytimeWithMsJana} alt="Ms. Jana sharing a colorful picture book, surrounded by stacks of books" width={1536} height={1024} loading="lazy" decoding="async" /><div><p className="eyebrow">READ · DISCOVER · SAY</p><h2>It’s story time!</h2><p>Little adventures with letters to spot and words to practice.</p>
+          <button className="cta-button" onClick={onOpenStories}>Explore stories →</button></div>
         </section>
+        </div>
         <section className="adventure-preview">
           <p className="eyebrow">A PEEK AT PLAYTIME</p><h2>Four ways to say “I did it!”</h2>
           <div className="preview-grid">

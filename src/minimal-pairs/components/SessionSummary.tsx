@@ -30,7 +30,7 @@ function RoleCard({ wordId, label, summary, listening }: { wordId: string; label
   )
 }
 
-// Step 8. The summary lives only in this page's history entry: it is not saved anywhere.
+// The last step. The summary lives only in this page's history entry: it is not saved anywhere.
 export function SessionSummary({ route, result }: SessionSummaryProps) {
   const [copied, setCopied] = useState<'idle' | 'done' | 'failed'>('idle')
   const matches = result && result.pairId === route.pairId && result.activityId === route.activityId
@@ -65,7 +65,7 @@ export function SessionSummary({ route, result }: SessionSummaryProps) {
   }
   return (
     <section className="mp-picker mp-summary">
-      <p className="eyebrow">STEP 8 · ALL DONE!</p>
+      <p className="eyebrow">ALL DONE!</p>
       <h2>{listening ? 'Super listening!' : 'Great practicing!'} <span aria-hidden="true">🎉</span></h2>
       <p className="mp-picker-hint">{result.activityName} · {result.total} turns{listening ? ' · listening, scored from taps' : ''}</p>
       {practice ? <p className="mp-picker-hint">You popped {result.total} bubbles! You practiced both words. Speech was not scored.</p> : <div className="mp-summary-grid">

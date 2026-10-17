@@ -42,6 +42,14 @@
 .mp-card-foot { margin-top: auto; padding-top: 8px; font-size: 14px; font-weight: 800; color: var(--tone-ink); }
 .mp-card-needs { font-weight: 700; color: #6b6178; }
 .mp-optional { margin-left: 8px; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; vertical-align: middle; background: white; color: var(--tone-ink); }
+/* Sound cards are not buttons themselves; their beginning / end choices are. */
+.mp-sound-card:hover { transform: none; }
+.mp-position-choices { display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: auto; padding-top: 8px; }
+.mp-position-choice { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; min-height: 52px; padding: 10px 14px; border-radius: 16px; background: white; border: 2px solid var(--tone-line); box-shadow: 0 4px 0 var(--tone-line); text-align: left; }
+.mp-position-choice:hover { transform: translateY(-2px); background: #fffdf8; }
+.mp-position-choice:active { transform: translateY(1px); box-shadow: 0 1px 0 var(--tone-line); }
+.mp-position-name { font-size: 17px; font-weight: 900; color: var(--tone-ink); }
+.mp-position-count { flex-shrink: 0; font-size: 13px; font-weight: 800; color: #625a70; }
 .mp-activity-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 
 .mp-pair-faces { display: flex; align-items: center; justify-content: center; gap: 10px; }

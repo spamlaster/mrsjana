@@ -1,7 +1,7 @@
 import { navigate } from '../routing/router'
 import { getActivity } from './activities/catalog'
 import { AudioCheck } from './components/AudioCheck'
-import { ActivityPicker, PairPicker, PositionPicker, ProcessPicker, SoundPicker } from './components/CenterPickers'
+import { ActivityPicker, PairPicker, ProcessPicker, SoundPicker } from './components/CenterPickers'
 import { ListeningSession } from './components/ListeningSession'
 import { PlaySession } from './components/PlaySession'
 import { ReviewStatus } from './components/ReviewStatus'
@@ -24,7 +24,6 @@ interface MinimalPairsCenterProps {
 const steps: { label: string; views: CenterView[] }[] = [
   { label: 'Pattern', views: ['processes'] },
   { label: 'Sound', views: ['sounds'] },
-  { label: 'Where', views: ['positions'] },
   { label: 'Words', views: ['pairs'] },
   { label: 'Game', views: ['activities'] },
   { label: 'Play!', views: ['playing', 'complete'] },
@@ -35,8 +34,8 @@ function Breadcrumbs({ route }: { route: CenterRoute }) {
   const pair = route.pairId ? getPair(route.pairId) : undefined
   const crumbs: { label: string; path: string }[] = [{ label: 'All patterns', path: '/phonological' }]
   if (route.processId) crumbs.push({ label: getProcess(route.processId)?.name ?? route.processId, path: centerPath({ processId: route.processId }) })
-  if (route.sound) crumbs.push({ label: soundLabel(route.sound), path: centerPath({ processId: route.processId, sound: route.sound }) })
-  if (route.position) crumbs.push({ label: positionLabels[route.position].short, path: centerPath({ processId: route.processId, sound: route.sound, position: route.position }) })
+  // Sound and position are chosen together, so they share one crumb that goes back to the pair list.
+  if (route.sound && route.position) crumbs.push({ label: `${soundLabel(route.sound)} · ${positionLabels[route.position].short} of word`, path: centerPath({ processId: route.processId, sound: route.sound, position: route.position }) })
   if (pair) crumbs.push({ label: pair.words.map(id => getWord(id)?.text).join(' / '), path: centerPath({ ...route, activityId: undefined }) })
   if (route.activityId) crumbs.push({ label: getActivity(route.activityId)?.name ?? '', path: centerPath({ ...route, view: 'playing' }) })
   if (crumbs.length < 2) return null
@@ -68,8 +67,7 @@ export function MinimalPairsCenter({ route, result, preview = previewMode }: Min
     if (view === 'review') return <ReviewStatus />
     if (view === 'recordings') return <AudioCheck />
     if (view === 'processes' || !processId) return <ProcessPicker preview={preview} />
-    if (view === 'sounds' || !sound) return <SoundPicker processId={processId} preview={preview} />
-    if (view === 'positions' || !position) return <PositionPicker processId={processId} sound={sound} preview={preview} />
+    if (view === 'sounds' || !sound || !position) return <SoundPicker processId={processId} preview={preview} />
     if (view === 'pairs' || !pair || !roles) return <PairPicker processId={processId} sound={sound} position={position} preview={preview} />
     if (view === 'activities' || !activity) return <ActivityPicker processId={processId} sound={sound} position={position} pair={pair} preview={preview} />
     if (view === 'complete') return <SessionSummary route={route} result={result} />

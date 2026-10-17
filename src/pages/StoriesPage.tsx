@@ -4,6 +4,7 @@ import { MsJana } from '../components/MsJana'
 import { readStoryPage, sayPhrase, stopSpeaking } from '../practice/speech'
 import { speechSounds } from '../data/speeches'
 import { stories, type PracticeStory } from '../data/stories'
+import { StoryPicture } from '../components/StoryPicture'
 import './StoriesPage.css'
 
 function HighlightedText({ text, letters }: { text: string; letters: string }) {
@@ -49,7 +50,7 @@ function StoryReader({ story }: { story: PracticeStory }) {
         <p className="story-tip">Read together or on your own. Look for the highlighted {story.targetLetters.toUpperCase()} letters!</p>
         <progress value={page + 1} max={story.pages.length} aria-label="Story progress" />
         <div className="story-page" key={page}>
-          <span className="story-picture" aria-hidden="true">{current.emoji}</span>
+          <StoryPicture storyId={story.id} page={page} />
           <p className="story-text"><HighlightedText text={current.text} letters={story.targetLetters} /></p>
           <ListenToMsJana storyId={story.id} pageNumber={page + 1} text={current.text} />
           <div className="story-practice"><h2>Pause & say</h2><p>Try these words aloud. Take your time!</p>
@@ -79,7 +80,7 @@ export function StoriesPage() {
       {[{ id: 'all', name: 'All stories' }, ...speechSounds].map(item => <button key={item.id} aria-pressed={sound === item.id} onClick={() => navigate(item.id === 'all' ? '/stories' : `/stories?sound=${item.id}`)}>{item.name}</button>)}
     </div>
     <div className="story-grid">{available.map(story => <button className="story-card" key={story.id} onClick={() => navigate(`/stories/${story.id}/1`)}>
-      <span className="story-cover" aria-hidden="true">{story.emoji}</span><span className="eyebrow">{story.targetLetters.toUpperCase()} LETTER PRACTICE · {story.pages.length} PAGES</span>
+      <StoryPicture storyId={story.id} page={0} cover /><span className="eyebrow">{story.targetLetters.toUpperCase()} LETTER PRACTICE · {story.pages.length} PAGES</span>
       <h2>{story.title}</h2><p>{story.description}</p><span className="game-play">Read the story →</span>
     </button>)}</div>
     {available.length === 0 && <div className="story-empty"><span aria-hidden="true">📚</span><h2>More adventures are on the way!</h2><p>There aren’t any stories for this sound yet. Choose “All stories” to explore.</p></div>}
