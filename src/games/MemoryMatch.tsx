@@ -40,11 +40,16 @@ export function MemoryMatch({ words, onComplete }: GameProps) {
   }
 
   const handleCardClick = (cardId: string) => {
-    if (flipped.includes(cardId) || matched.includes(cardId)) return
-    if (flipped.length >= 2) return
-    sayWord(cards.find(c => c.id === cardId)!.word.word)
+    // Tapping a face-up card plays its word; flipping a card is silent
+    if (matched.includes(cardId) || flipped.includes(cardId)) {
+      sayWord(cards.find(c => c.id === cardId)!.word.word)
+      return
+    }
+    // A non-matching pair stays open so the student can say both words;
+    // tapping the next card turns them back over and flips the new one
+    const showingMiss = flipped.length === 2
 
-    const newFlipped = [...flipped, cardId]
+    const newFlipped = showingMiss ? [cardId] : [...flipped, cardId]
     setFlipped(newFlipped)
 
     if (newFlipped.length === 2) {
@@ -67,9 +72,7 @@ export function MemoryMatch({ words, onComplete }: GameProps) {
           }, 1000)
         }
 
-        setTimeout(() => setFlipped([]), 600)
-      } else {
-        setTimeout(() => setFlipped([]), 800)
+        setFlipped([])
       }
     }
   }
@@ -88,8 +91,7 @@ export function MemoryMatch({ words, onComplete }: GameProps) {
               key={card.id}
               className={`memory-card ${flipped.includes(card.id) || matched.includes(card.id) ? 'flipped' : ''}`}
               onClick={() => handleCardClick(card.id)}
-              disabled={matched.includes(card.id)}
-              aria-label={flipped.includes(card.id) || matched.includes(card.id) ? card.word.word : 'Flip a mystery card'}
+              aria-label={flipped.includes(card.id) || matched.includes(card.id) ? `Hear ${card.word.word}` : 'Flip a mystery card'}
               aria-pressed={flipped.includes(card.id) || matched.includes(card.id)}
             >
               <div className="card-inner">
@@ -115,7 +117,7 @@ export function MemoryMatch({ words, onComplete }: GameProps) {
       </div>
 
       <div className="game-hint">
-        <p>Flip cards to find matching pairs!</p>
+        <p>{flipped.length === 2 ? 'Not a match. Say both words, then tap the next card!' : 'Flip cards to find matching pairs! Tap a picture to hear the word.'}</p>
       </div>
 
       <div className="game-actions">

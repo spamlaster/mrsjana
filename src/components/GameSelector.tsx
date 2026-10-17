@@ -34,6 +34,7 @@ export function GameSelector({
           <button
             key={game.id}
             className="game-card"
+            data-game={game.id}
             onClick={() => onSelect(game.id)}
           >
             <span className="game-icon" aria-hidden="true">{game.id === 'key-house' ? '🔑' : game.id === 'memory-match' ? '🃏' : game.id === 'speech-pop' ? '🎈' : game.id === 'star-seekers' ? '⭐' : game.id === 'peek-a-picture' ? '🖼️' : '🏴‍☠️'}</span>
